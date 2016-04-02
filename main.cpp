@@ -1,52 +1,137 @@
 //Using SDL and standard IO
+
+#include <cstdlib>
+#include <cmath>
+
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_opengl.h>
+
+using namespace std;
 
 //Screen dimension constants
-const int SCREEN_WIDTH = 640;
-const int SCREEN_HEIGHT = 480;
+const int SCREEN_WIDTH = 800;
+const int SCREEN_HEIGHT = 600;
 
-
-int main( int argc, char* args[] )
+void perspectiveGL( GLdouble fovY, GLdouble aspect, GLdouble zNear, GLdouble zFar )
 {
-    //The window we'll be rendering to
-    SDL_Window* window = NULL;
+	const GLdouble pi = 3.1415926535897932384626433832795;
+	GLdouble fW, fH;
 
-    //The surface contained by the window
-    SDL_Surface* screenSurface = NULL;
+	//fH = tan( (fovY / 2) / 180 * pi ) * zNear;
+	fH = tan( fovY / 360 * pi ) * zNear;
+	fW = fH * aspect;
 
-    //Initialize SDL
-    if( SDL_Init( SDL_INIT_VIDEO ) < 0 )
-    {
-        printf( "SDL could not initialize! SDL_Error: %s\n", SDL_GetError() );
-    }
-	else
-	{
-		//Create window
-		window = SDL_CreateWindow( "SDL Tutorial", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN );
-		if( window == NULL )
-		{
-			printf( "Window could not be created! SDL_Error: %s\n", SDL_GetError() );
-		}
-		else
-		{
-			//Get window surface
-			screenSurface = SDL_GetWindowSurface( window );
+	glFrustum( -fW, fW, -fH, fH, zNear, zFar );
+}
 
-			//Fill the surface white
-			SDL_FillRect( screenSurface, NULL, SDL_MapRGB( screenSurface->format, 0xFF, 0xFF, 0xFF ) );
+void Display_InitGL()
+{
+	/* Enable smooth shading */
+	glShadeModel( GL_SMOOTH );
 
-			//Update the surface
-			SDL_UpdateWindowSurface( window );
+	/* Set the background black */
+	glClearColor( 0.0f, 0.0f, 0.0f, 0.0f );
 
-			//Wait two seconds
-			SDL_Delay( 2000 );
-		}
+	/* Depth buffer setup */
+	glClearDepth( 1.0f );
+
+	/* Enables Depth Testing */
+	glEnable( GL_DEPTH_TEST );
+
+	/* The Type Of Depth Test To Do */
+	glDepthFunc( GL_LEQUAL );
+
+	/* Really Nice Perspective Calculations */
+	glHint( GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST );
+}
+
+/* function to reset our viewport after a window resize */
+int Display_SetViewport( int width, int height )
+{
+	/* Height / width ration */
+	GLfloat ratio;
+
+	/* Protect against a divide by zero */
+	if ( height == 0 ) {
+		height = 1;
 	}
 
-	//Destroy window
-	SDL_DestroyWindow( window );
+	ratio = ( GLfloat )width / ( GLfloat )height;
 
-	//Quit SDL subsystems
+	/* Setup our viewport. */
+	glViewport( 0, 0, ( GLsizei )width, ( GLsizei )height );
+
+	/* change to the projection matrix and set our viewing volume. */
+	glMatrixMode( GL_PROJECTION );
+	glLoadIdentity( );
+
+	/* Set our perspective */
+	perspectiveGL( 45.0f, ratio, 0.1f, 100.0f );
+
+	/* Make sure we're chaning the model view and not the projection */
+	glMatrixMode( GL_MODELVIEW );
+
+	/* Reset The View */
+	glLoadIdentity( );
+
+	return 1;
+}
+
+void Display_Render(SDL_Renderer* displayRenderer)
+{
+	/* Set the background black */
+	glClearColor( 0.0f, 0.0f, 0.0f, 0.0f );
+	/* Clear The Screen And The Depth Buffer */
+	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
+
+	/* Move Left 1.5 Units And Into The Screen 6.0 */
+	glLoadIdentity();
+	glTranslatef( -1.5f, 0.0f, -6.0f );
+
+	glBegin( GL_TRIANGLES );            /* Drawing Using Triangles */
+	glVertex3f(  0.0f,  1.0f, 0.0f ); /* Top */
+	glVertex3f( -1.0f, -1.0f, 0.0f ); /* Bottom Left */
+	glVertex3f(  1.0f, -1.0f, 0.0f ); /* Bottom Right */
+	glEnd( );                           /* Finished Drawing The Triangle */
+
+	/* Move Right 3 Units */
+	glTranslatef( 3.0f, 0.0f, 0.0f );
+
+	glBegin( GL_QUADS );                /* Draw A Quad */
+	glVertex3f( -1.0f,  1.0f, 0.0f ); /* Top Left */
+	glVertex3f(  1.0f,  1.0f, 0.0f ); /* Top Right */
+	glVertex3f(  1.0f, -1.0f, 0.0f ); /* Bottom Right */
+	glVertex3f( -1.0f, -1.0f, 0.0f ); /* Bottom Left */
+	glEnd( );                           /* Done Drawing The Quad */
+
+	SDL_RenderPresent(displayRenderer);
+}
+
+
+int main()
+{
+	SDL_Init(SDL_INIT_VIDEO);
+	SDL_Window* displayWindow;
+	SDL_Renderer* displayRenderer;
+	SDL_RendererInfo displayRendererInfo;
+	SDL_CreateWindowAndRenderer(SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_OPENGL, &displayWindow, &displayRenderer);
+	SDL_GetRendererInfo(displayRenderer, &displayRendererInfo);
+	/*TODO: Check that we have OpenGL */
+	if ((displayRendererInfo.flags & SDL_RENDERER_ACCELERATED) == 0 ||
+		(displayRendererInfo.flags & SDL_RENDERER_TARGETTEXTURE) == 0) {
+		/*TODO: Handle this. We have no render surface and not accelerated. */
+	}
+
+
+	Display_InitGL();
+
+	Display_SetViewport(800, 600);
+
+	Display_Render(displayRenderer);
+
+
+	SDL_Delay(5000);
+	SDL_DestroyWindow(displayWindow);
 	SDL_Quit();
 
 	return 0;
