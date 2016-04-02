@@ -7,7 +7,7 @@ find_package(PkgConfig REQUIRED)
 pkg_search_module(SDL2 REQUIRED sdl2)
 find_package(OpenGL REQUIRED)
 
-set(SOURCE_FILES main.cpp)
+set(SOURCE_FILES main.cpp shader.cpp shader.h)
 
 add_executable(a_retro_ui ${SOURCE_FILES})
 
