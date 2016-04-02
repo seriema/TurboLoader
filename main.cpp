@@ -1,138 +1,230 @@
-//Using SDL and standard IO
-
-#include <cstdlib>
-#include <cmath>
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_opengl.h>
 
-using namespace std;
 
 //Screen dimension constants
 const int SCREEN_WIDTH = 800;
 const int SCREEN_HEIGHT = 600;
 
-void perspectiveGL( GLdouble fovY, GLdouble aspect, GLdouble zNear, GLdouble zFar )
+
+//Main loop flag
+bool quit = false;
+
+
+//Starts up SDL, creates window, and initializes OpenGL
+bool init();
+
+//Initializes matrices and clear color
+bool initGL();
+
+//Input handler
+void handleKeys( unsigned char key, int x, int y );
+
+//Per frame update
+void update();
+
+//Renders quad to the screen
+void render();
+
+//Frees media and shuts down SDL
+void close();
+
+//The window we'll be rendering to
+SDL_Window* gWindow = NULL;
+
+//OpenGL context
+SDL_GLContext gContext;
+
+//Render flag
+bool gRenderQuad = true;
+
+bool init()
 {
-	const GLdouble pi = 3.1415926535897932384626433832795;
-	GLdouble fW, fH;
+	//Initialization flag
+	bool success = true;
 
-	//fH = tan( (fovY / 2) / 180 * pi ) * zNear;
-	fH = tan( fovY / 360 * pi ) * zNear;
-	fW = fH * aspect;
+	//Initialize SDL
+	if( SDL_Init( SDL_INIT_VIDEO ) < 0 )
+	{
+		printf( "SDL could not initialize! SDL Error: %s\n", SDL_GetError() );
+		success = false;
+	}
+	else
+	{
+		//Use OpenGL 2.1
+		SDL_GL_SetAttribute( SDL_GL_CONTEXT_MAJOR_VERSION, 2 );
+		SDL_GL_SetAttribute( SDL_GL_CONTEXT_MINOR_VERSION, 1 );
 
-	glFrustum( -fW, fW, -fH, fH, zNear, zFar );
-}
+		//Create window
+		gWindow = SDL_CreateWindow( "SDL Tutorial", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN );
+		if( gWindow == NULL )
+		{
+			printf( "Window could not be created! SDL Error: %s\n", SDL_GetError() );
+			success = false;
+		}
+		else
+		{
+			//Create context
+			gContext = SDL_GL_CreateContext( gWindow );
+			if( gContext == NULL )
+			{
+				printf( "OpenGL context could not be created! SDL Error: %s\n", SDL_GetError() );
+				success = false;
+			}
+			else
+			{
+				//Use Vsync
+				if( SDL_GL_SetSwapInterval( 1 ) < 0 )
+				{
+					printf( "Warning: Unable to set VSync! SDL Error: %s\n", SDL_GetError() );
+				}
 
-void Display_InitGL()
-{
-	/* Enable smooth shading */
-	glShadeModel( GL_SMOOTH );
-
-	/* Set the background black */
-	glClearColor( 0.0f, 0.0f, 0.0f, 0.0f );
-
-	/* Depth buffer setup */
-	glClearDepth( 1.0f );
-
-	/* Enables Depth Testing */
-	glEnable( GL_DEPTH_TEST );
-
-	/* The Type Of Depth Test To Do */
-	glDepthFunc( GL_LEQUAL );
-
-	/* Really Nice Perspective Calculations */
-	glHint( GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST );
-}
-
-/* function to reset our viewport after a window resize */
-int Display_SetViewport( int width, int height )
-{
-	/* Height / width ration */
-	GLfloat ratio;
-
-	/* Protect against a divide by zero */
-	if ( height == 0 ) {
-		height = 1;
+				//Initialize OpenGL
+				if( !initGL() )
+				{
+					printf( "Unable to initialize OpenGL!\n" );
+					success = false;
+				}
+			}
+		}
 	}
 
-	ratio = ( GLfloat )width / ( GLfloat )height;
+	return success;
+}
 
-	/* Setup our viewport. */
-	glViewport( 0, 0, ( GLsizei )width, ( GLsizei )height );
+bool initGL()
+{
+	bool success = true;
 
-	/* change to the projection matrix and set our viewing volume. */
+	//Initialize Projection Matrix
 	glMatrixMode( GL_PROJECTION );
-	glLoadIdentity( );
-
-	/* Set our perspective */
-	perspectiveGL( 45.0f, ratio, 0.1f, 100.0f );
-
-	/* Make sure we're chaning the model view and not the projection */
-	glMatrixMode( GL_MODELVIEW );
-
-	/* Reset The View */
-	glLoadIdentity( );
-
-	return 1;
-}
-
-void Display_Render(SDL_Renderer* displayRenderer)
-{
-	/* Set the background black */
-	glClearColor( 0.0f, 0.0f, 0.0f, 0.0f );
-	/* Clear The Screen And The Depth Buffer */
-	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
-
-	/* Move Left 1.5 Units And Into The Screen 6.0 */
 	glLoadIdentity();
-	glTranslatef( -1.5f, 0.0f, -6.0f );
 
-	glBegin( GL_TRIANGLES );            /* Drawing Using Triangles */
-	glVertex3f(  0.0f,  1.0f, 0.0f ); /* Top */
-	glVertex3f( -1.0f, -1.0f, 0.0f ); /* Bottom Left */
-	glVertex3f(  1.0f, -1.0f, 0.0f ); /* Bottom Right */
-	glEnd( );                           /* Finished Drawing The Triangle */
-
-	/* Move Right 3 Units */
-	glTranslatef( 3.0f, 0.0f, 0.0f );
-
-	glBegin( GL_QUADS );                /* Draw A Quad */
-	glVertex3f( -1.0f,  1.0f, 0.0f ); /* Top Left */
-	glVertex3f(  1.0f,  1.0f, 0.0f ); /* Top Right */
-	glVertex3f(  1.0f, -1.0f, 0.0f ); /* Bottom Right */
-	glVertex3f( -1.0f, -1.0f, 0.0f ); /* Bottom Left */
-	glEnd( );                           /* Done Drawing The Quad */
-
-	SDL_RenderPresent(displayRenderer);
-}
-
-
-int main()
-{
-	SDL_Init(SDL_INIT_VIDEO);
-	SDL_Window* displayWindow;
-	SDL_Renderer* displayRenderer;
-	SDL_RendererInfo displayRendererInfo;
-	SDL_CreateWindowAndRenderer(SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_OPENGL, &displayWindow, &displayRenderer);
-	SDL_GetRendererInfo(displayRenderer, &displayRendererInfo);
-	/*TODO: Check that we have OpenGL */
-	if ((displayRendererInfo.flags & SDL_RENDERER_ACCELERATED) == 0 ||
-		(displayRendererInfo.flags & SDL_RENDERER_TARGETTEXTURE) == 0) {
-		/*TODO: Handle this. We have no render surface and not accelerated. */
+	//Check for error
+	GLenum error = glGetError();
+	if( error != GL_NO_ERROR )
+	{
+		success = false;
 	}
 
+	//Initialize Modelview Matrix
+	glMatrixMode( GL_MODELVIEW );
+	glLoadIdentity();
 
-	Display_InitGL();
+	//Check for error
+	error = glGetError();
+	if( error != GL_NO_ERROR )
+	{
+		success = false;
+	}
 
-	Display_SetViewport(800, 600);
+	//Initialize clear color
+	glClearColor( 0.f, 0.f, 0.f, 1.f );
 
-	Display_Render(displayRenderer);
+	//Check for error
+	error = glGetError();
+	if( error != GL_NO_ERROR )
+	{
+		success = false;
+	}
 
+	return success;
+}
 
-	SDL_Delay(5000);
-	SDL_DestroyWindow(displayWindow);
+void handleKeys( unsigned char key, int x, int y )
+{
+	if( key == 'q' )
+	{
+		quit = true;
+	}
+}
+
+void update()
+{
+	//No per frame update needed
+}
+
+void render()
+{
+	//Clear color buffer
+	glClear( GL_COLOR_BUFFER_BIT );
+
+	//Render quad
+	if( gRenderQuad )
+	{
+		glRotatef(0.4f,0.0f,1.0f,0.0f);    // Rotate The cube around the Y axis
+		glRotatef(0.2f,1.0f,1.0f,1.0f);
+		glColor3f(0.0f,1.0f,0.0f);
+
+		glBegin( GL_QUADS );
+		glVertex2f( -0.5f, -0.5f );
+		glVertex2f( 0.5f, -0.5f );
+		glVertex2f( 0.5f, 0.5f );
+		glVertex2f( -0.5f, 0.5f );
+		glEnd();
+	}
+}
+
+void close()
+{
+	//Destroy window
+	SDL_DestroyWindow( gWindow );
+	gWindow = NULL;
+
+	//Quit SDL subsystems
 	SDL_Quit();
+}
+
+int main( int argc, char* args[] )
+{
+	//Start up SDL and create window
+	if( !init() )
+	{
+		printf( "Failed to initialize!\n" );
+	}
+	else
+	{
+
+		//Event handler
+		SDL_Event e;
+
+		//Enable text input
+		SDL_StartTextInput();
+
+		//While application is running
+		while( !quit )
+		{
+			//Handle events on queue
+			while( SDL_PollEvent( &e ) != 0 )
+			{
+				//User requests quit
+				if( e.type == SDL_QUIT )
+				{
+					quit = true;
+				}
+					//Handle keypress with current mouse position
+				else if( e.type == SDL_TEXTINPUT )
+				{
+					int x = 0, y = 0;
+					SDL_GetMouseState( &x, &y );
+					handleKeys( e.text.text[ 0 ], x, y );
+				}
+			}
+
+			//Render quad
+			render();
+
+			//Update screen
+			SDL_GL_SwapWindow( gWindow );
+		}
+
+		//Disable text input
+		SDL_StopTextInput();
+	}
+
+	//Free resources and close SDL
+	close();
 
 	return 0;
 }
