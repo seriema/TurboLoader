@@ -34,7 +34,7 @@ bool initGL();
 bool postInit();
 
 //Input handler
-void handleKeys( unsigned char key, int x, int y );
+void handleKeys(unsigned char key, int x, int y);
 
 //Per frame update
 void update();
@@ -52,7 +52,7 @@ void close();
 void mainLoop(SDL_Event &e);
 
 //The window we'll be rendering to
-SDL_Window* gWindow = NULL;
+SDL_Window *gWindow = NULL;
 
 //OpenGL context
 SDL_GLContext gContext;
@@ -68,40 +68,40 @@ const uint32_t floatsPerColor = 4;
 
 // This is the object we'll draw ( a simple diamond
 const GLfloat diamond[points][floatsPerPoint] = {
-		{  0.2,  0.2,  0.5 }, // Top right
-		{ -0.2,  0.2,  0.5 }, // Top left
-		{  0.0,  0.0,  0.5 }, // Center
+		{0.2,  0.2,  0.5}, // Top right
+		{-0.2, 0.2,  0.5}, // Top left
+		{0.0,  0.0,  0.5}, // Center
 
-		{  0.2,  0.2,  0.5 }, // Top right
-		{  0.2, -0.2,  0.5 }, // Bottom right
-		{  0.0,  0.0,  0.5 }, // Center
+		{0.2,  0.2,  0.5}, // Top right
+		{0.2,  -0.2, 0.5}, // Bottom right
+		{0.0,  0.0,  0.5}, // Center
 
-		{ -0.2, -0.2,  0.5 }, // Bottom left
-		{  0.2, -0.2,  0.5 }, // Bottom right
-		{  0.0,  0.0,  0.5 }, // Center
+		{-0.2, -0.2, 0.5}, // Bottom left
+		{0.2,  -0.2, 0.5}, // Bottom right
+		{0.0,  0.0,  0.5}, // Center
 
-		{ -0.2, -0.2,  0.5 }, // Bottom left
-		{ -0.2,  0.2,  0.5 }, // Top left
-		{  0.0,  0.0,  0.5 }, // Center
+		{-0.2, -0.2, 0.5}, // Bottom left
+		{-0.2, 0.2,  0.5}, // Top left
+		{0.0,  0.0,  0.5}, // Center
 };
 
 // This is the object we'll draw ( a simple diamond
 const GLfloat colors[points][floatsPerColor] = {
-		{ 0.5, 0.5, 0.5, 1.0f }, // Top right
-		{ 0.5, 0.5, 0.5, 1.0f }, // Bottom right
-		{ 0.0, 0.0, 0.0, 1.0f }, // Center
+		{0.5, 0.5, 0.5, 1.0f}, // Top right
+		{0.5, 0.5, 0.5, 1.0f}, // Bottom right
+		{0.0, 0.0, 0.0, 1.0f}, // Center
 
-		{ 0.5, 0.5, 0.5, 1.0f }, // Top left
-		{ 0.5, 0.5, 0.5, 1.0f }, // Top right
-		{ 0.0, 0.0, 0.0, 1.0f }, // Center
+		{0.5, 0.5, 0.5, 1.0f}, // Top left
+		{0.5, 0.5, 0.5, 1.0f}, // Top right
+		{0.0, 0.0, 0.0, 1.0f}, // Center
 
-		{ 0.5, 0.5, 0.5, 1.0f }, // Bottom left
-		{ 0.5, 0.5, 0.5, 1.0f }, // Bottom right
-		{ 0.0, 0.0, 0.0, 1.0f }, // Center
+		{0.5, 0.5, 0.5, 1.0f}, // Bottom left
+		{0.5, 0.5, 0.5, 1.0f}, // Bottom right
+		{0.0, 0.0, 0.0, 1.0f}, // Center
 
-		{ 0.5, 0.5, 0.5, 1.0f }, // Bottom left
-		{ 0.5, 0.5, 0.5, 1.0f }, // Top left
-		{ 0.0, 0.0, 0.0, 1.0f }, // Center
+		{0.5, 0.5, 0.5, 1.0f}, // Bottom left
+		{0.5, 0.5, 0.5, 1.0f}, // Top left
+		{0.0, 0.0, 0.0, 1.0f}, // Center
 };
 
 // Create variables for storing the ID of our VAO and VBO
@@ -113,44 +113,39 @@ const uint32_t positionAttributeIndex = 0, colorAttributeIndex = 1;
 // Our wrapper to simplify the shader code
 Shader shader;
 
-bool init()
-{
+bool init() {
 	//Initialize SDL
-	if( SDL_Init( SDL_INIT_VIDEO ) < 0 )
-	{
-		printf( "SDL could not initialize! SDL Error: %s\n", SDL_GetError() );
+	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+		printf("SDL could not initialize! SDL Error: %s\n", SDL_GetError());
 		return false;
 	}
 
 	//Create window
-	gWindow = SDL_CreateWindow(programName.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN );
-	if( gWindow == NULL )
-	{
-		printf( "Window could not be created! SDL Error: %s\n", SDL_GetError() );
+	gWindow = SDL_CreateWindow(programName.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH,
+							   SCREEN_HEIGHT, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
+	if (gWindow == NULL) {
+		printf("Window could not be created! SDL Error: %s\n", SDL_GetError());
 		return false;
 	}
 
 
 	//Initialize OpenGL
-	if( !initGL() )
-	{
-		printf( "Unable to initialize OpenGL!\n" );
+	if (!initGL()) {
+		printf("Unable to initialize OpenGL!\n");
 		return false;
 	}
 
 
 	//Create context
-	gContext = SDL_GL_CreateContext( gWindow );
-	if( gContext == NULL )
-	{
-		printf( "OpenGL context could not be created! SDL Error: %s\n", SDL_GetError() );
+	gContext = SDL_GL_CreateContext(gWindow);
+	if (gContext == NULL) {
+		printf("OpenGL context could not be created! SDL Error: %s\n", SDL_GetError());
 		return false;
 	}
 
 	//Use Vsync
-	if( SDL_GL_SetSwapInterval( 1 ) < 0 )
-	{
-		printf( "Warning: Unable to set VSync! SDL Error: %s\n", SDL_GetError() );
+	if (SDL_GL_SetSwapInterval(1) < 0) {
+		printf("Warning: Unable to set VSync! SDL Error: %s\n", SDL_GetError());
 	}
 
 	glEnable(GL_BLEND);
@@ -159,8 +154,7 @@ bool init()
 	return true;
 }
 
-bool initGL()
-{
+bool initGL() {
 	// Set our OpenGL version.
 	// SDL_GL_CONTEXT_CORE gives us only the newer version, deprecated functions are disabled
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
@@ -176,15 +170,13 @@ bool initGL()
 	return true;
 }
 
-bool postInit()
-{
+bool postInit() {
 	//Initialize clear color
-	glClearColor( 0.f, 0.f, 0.f, 1.f );
+	glClearColor(0.f, 0.f, 0.f, 1.f);
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	//Check for error
-	if( glGetError() != GL_NO_ERROR )
-	{
+	if (glGetError() != GL_NO_ERROR) {
 		return false;
 	}
 
@@ -193,21 +185,17 @@ bool postInit()
 	return true;
 }
 
-void handleKeys( unsigned char key, int x, int y )
-{
-	if( key == 'q' )
-	{
+void handleKeys(unsigned char key, int x, int y) {
+	if (key == 'q') {
 		quit = true;
 	}
 }
 
-void update()
-{
+void update() {
 	//No per frame update needed
 }
 
-void render()
-{
+void render() {
 	// First, render a square without any colors ( all vertexes will be black )
 	// ===================
 	// Make our background black
@@ -221,8 +209,7 @@ void render()
 	SDL_GL_SwapWindow(gWindow);
 }
 
-bool setupBufferObjects()
-{
+bool setupBufferObjects() {
 	// Generate and assign two Vertex Buffer Objects to our handle
 	glGenBuffers(2, vbo);
 
@@ -237,7 +224,7 @@ bool setupBufferObjects()
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
 
 	// Copy the vertex data from diamond to our buffer
-	glBufferData(GL_ARRAY_BUFFER, ( points * floatsPerColor) * sizeof(GLfloat), colors, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, (points * floatsPerColor) * sizeof(GLfloat), colors, GL_STATIC_DRAW);
 
 	// Specify that our coordinate data is going into attribute index 0, and contains three floats per vertex
 	glVertexAttribPointer(colorAttributeIndex, 4, GL_FLOAT, GL_FALSE, 0, 0);
@@ -248,7 +235,7 @@ bool setupBufferObjects()
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
 
 	// Copy the vertex data from diamond to our buffer
-	glBufferData(GL_ARRAY_BUFFER, ( points * floatsPerPoint) * sizeof(GLfloat), diamond, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, (points * floatsPerPoint) * sizeof(GLfloat), diamond, GL_STATIC_DRAW);
 
 	// Specify that our coordinate data is going into attribute index 0, and contains three floats per vertex
 	glVertexAttribPointer(positionAttributeIndex, 3, GL_FLOAT, GL_FALSE, 0, 0);
@@ -269,8 +256,7 @@ bool setupBufferObjects()
 	return true;
 }
 
-void close()
-{
+void close() {
 	// Cleanup all the things we bound and allocated
 	shader.CleanUp();
 
@@ -282,7 +268,7 @@ void close()
 	SDL_GL_DeleteContext(gContext);
 
 	//Destroy window
-	SDL_DestroyWindow( gWindow );
+	SDL_DestroyWindow(gWindow);
 	gWindow = NULL;
 
 	//Quit SDL subsystems
@@ -291,29 +277,23 @@ void close()
 
 void mainLoop(SDL_Event &e) {
 	//While application is running
-	while( !quit )
-	{
+	while (!quit) {
 		//Handle events on queue
-		while( SDL_PollEvent( &e ) != 0 )
-		{
+		while (SDL_PollEvent(&e) != 0) {
 			//User requests quit
-			if( e.type == SDL_QUIT )
-			{
+			if (e.type == SDL_QUIT) {
 				quit = true;
 			}
 
-			//Handle keypress with current mouse position
-			else if( e.type == SDL_TEXTINPUT )
-			{
+				//Handle keypress with current mouse position
+			else if (e.type == SDL_TEXTINPUT) {
 				int x = 0, y = 0;
-				SDL_GetMouseState( &x, &y );
-				handleKeys( e.text.text[ 0 ], x, y );
+				SDL_GetMouseState(&x, &y);
+				handleKeys(e.text.text[0], x, y);
 			}
 
-			else if (e.type == SDL_KEYDOWN)
-			{
-				switch (e.key.keysym.sym)
-				{
+			else if (e.type == SDL_KEYDOWN) {
+				switch (e.key.keysym.sym) {
 					case SDLK_ESCAPE:
 						quit = false;
 						break;
@@ -345,16 +325,14 @@ void mainLoop(SDL_Event &e) {
 		render();
 
 		//Update screen
-		SDL_GL_SwapWindow( gWindow );
+		SDL_GL_SwapWindow(gWindow);
 	}
 }
 
-int main(int argc, char* args[] )
-{
+int main(int argc, char *args[]) {
 	//Start up SDL and create window
 	std::cout << "Start up SDL" << std::endl;
-	if( !init() )
-	{
+	if (!init()) {
 		printf("Failed to initialize!\n");
 		return -1;
 	}
@@ -365,8 +343,7 @@ int main(int argc, char* args[] )
 	}
 
 	std::cout << "Setting up VBO + VAO..." << std::endl;
-	if (!setupBufferObjects())
-	{
+	if (!setupBufferObjects()) {
 		return -1;
 	}
 

@@ -13,9 +13,7 @@
 #endif
 
 
-
-class Shader
-{
+class Shader {
 public:
 	void BindAttributeLocation(int index, const std::string &attribute);
 
@@ -23,7 +21,7 @@ public:
 
 	bool Init();
 
-	bool LoadShader(const std::string& fileName, const std::string source, int shaderType);
+	bool LoadShader(const std::string &fileName, const std::string source, int shaderType);
 
 	void CleanUp();
 
@@ -34,7 +32,7 @@ private:
 
 	bool LinkShaders();
 
-	std::string ReadFile(const std::string& file);
+	std::string ReadFile(const std::string &file);
 
 	void PrintShaderLinkingError(int32_t shaderId);
 
