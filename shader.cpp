@@ -6,20 +6,13 @@
 #include <GL/gl3.h>
 #endif
 
-#include <SDL2/SDL.h>
-
-#include <string>
-#include <sstream>
-#include <fstream>
-#include <iostream>
-
-const std::string fragSource =
+const std::string fragmentShaderSource =
 #include "shader.frag"
 ;
-const std::string vertSource =
+const std::string vertexShaderSource =
 #include "shader.vert"
 ;
-const std::string geomSource =
+const std::string geometryShaderSource =
 #include "shader.geom"
 ;
 
@@ -44,7 +37,7 @@ std::string Shader::ReadFile(const std::string &file) {
 void Shader::BindAttributeLocation(int index, const std::string &attribute) {
 	// Bind attribute index 0 (coordinates) to in_Position and attribute index 1 (color) to in_Color
 	// Attribute locations must be setup before calling glLinkProgram
-	glBindAttribLocation(shaderProgram, index, attribute.c_str());
+	glBindAttribLocation(shaderProgram, (GLuint) index, attribute.c_str());
 }
 
 void Shader::UseProgram() {
@@ -60,23 +53,23 @@ bool Shader::Init() {
 	BindAttributeLocation(0, "in_Position");
 	BindAttributeLocation(1, "in_Color");
 
-	if (!LoadShader("geometry", geomSource, GL_GEOMETRY_SHADER))
+	if (!LoadShader("geometry", geometryShaderSource, GL_GEOMETRY_SHADER))
 		return false;
 
-	if (!LoadShader("vertex", vertSource, GL_VERTEX_SHADER))
+	if (!LoadShader("vertex", vertexShaderSource, GL_VERTEX_SHADER))
 		return false;
 
-	if (!LoadShader("fragment", fragSource, GL_FRAGMENT_SHADER))
+	if (!LoadShader("fragment", fragmentShaderSource, GL_FRAGMENT_SHADER))
 		return false;
 
 	// All shaders have been create, now we must put them together into one large object
 	return LinkShaders();
 }
 
-bool Shader::LoadShader(const std::string &fileName, const std::string source, int shaderType) {
+bool Shader::LoadShader(const std::string &fileName, const std::string source, GLenum shaderType) {
 	std::cout << "Loading Shader : " << fileName << std::endl;
 
-	int shaderId = CreateShader(source, shaderType);
+	GLuint shaderId = CreateShader(source, shaderType);
 
 	if (TryCompileShader(shaderId)) {
 		glAttachShader(shaderProgram, shaderId);
@@ -95,7 +88,7 @@ bool Shader::LinkShaders() {
 
 	// Verify that the linking succeeded
 	int isLinked;
-	glGetProgramiv(shaderProgram, GL_LINK_STATUS, (int *) &isLinked);
+	glGetProgramiv(shaderProgram, GL_LINK_STATUS, &isLinked);
 
 	if (isLinked == false)
 		PrintShaderLinkingError(shaderProgram);
@@ -103,7 +96,7 @@ bool Shader::LinkShaders() {
 	return isLinked != 0;
 }
 
-void Shader::PrintShaderLinkingError(int32_t shaderId) {
+void Shader::PrintShaderLinkingError(GLuint shaderId) {
 	std::cout << "=======================================\n";
 	std::cout << "Shader linking failed : " << std::endl;
 
@@ -126,7 +119,7 @@ void Shader::PrintShaderLinkingError(int32_t shaderId) {
 }
 
 // If something went wrong while compiling the shaders, we'll use this function to find the error
-void Shader::PrintShaderCompilationErrorInfo(int shaderId) {
+void Shader::PrintShaderCompilationErrorInfo(GLuint shaderId) {
 	std::cout << "=======================================\n";
 	std::cout << "Shader compilation failed : " << std::endl;
 
@@ -148,34 +141,35 @@ void Shader::PrintShaderCompilationErrorInfo(int shaderId) {
 void Shader::CleanUp() {
 	/* Cleanup all the things we bound and allocated */
 	glUseProgram(0);
-	glDetachShader(shaderProgram, vertexshader);
+	glDetachShader(shaderProgram, vertexShader);
 	glDetachShader(shaderProgram, fragmentShader);
 
 	glDeleteProgram(shaderProgram);
 
 
-	glDeleteShader(vertexshader);
+	glDeleteShader(vertexShader);
 	glDeleteShader(fragmentShader);
 }
 
-int Shader::CreateShader(const std::string &source, GLenum shaderType) {
+GLuint Shader::CreateShader(const std::string &source, GLenum shaderType) {
 	// Read file as std::string
 	std::string str = source; // We'll skip ReadFile() call as we're currently including the source through C++11 magic
 
 	// c_str() gives us a const char*, but we need a non-const one
+	// NOTE: JP: It works fine without the const cast. Is it a cross platform thing?
 	char *src = const_cast<char *>( str.c_str());
-	int32_t size = str.length();
+	int32_t size = (int32_t) str.length();
 
 	// Create an empty vertex shader handle
-	int shaderId = glCreateShader(shaderType);
+	GLuint shaderId = glCreateShader(shaderType);
 
 	// Send the vertex shader source code to OpenGL
-	glShaderSource(shaderId, 1, &src, &size);
+	glShaderSource(shaderId, 1, (const GLchar *const *) &src, &size);
 
 	return shaderId;
 }
 
-bool Shader::TryCompileShader(int shaderId) {
+bool Shader::TryCompileShader(GLuint shaderId) {
 	// Compile the vertex shader
 	glCompileShader(shaderId);
 

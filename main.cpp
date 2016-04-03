@@ -34,7 +34,7 @@ bool initGL();
 bool postInit();
 
 //Input handler
-void handleKeys(unsigned char key, int x, int y);
+void handleKeyDown(SDL_Keycode key);
 
 //Per frame update
 void update();
@@ -68,40 +68,40 @@ const uint32_t floatsPerColor = 4;
 
 // This is the object we'll draw ( a simple diamond
 const GLfloat diamond[points][floatsPerPoint] = {
-		{0.2,  0.2,  0.5}, // Top right
-		{-0.2, 0.2,  0.5}, // Top left
-		{0.0,  0.0,  0.5}, // Center
+		{0.2f,  0.2f,  0.5f}, // Top right
+		{-0.2f, 0.2f,  0.5f}, // Top left
+		{0.0f,  0.0f,  0.5f}, // Center
 
-		{0.2,  0.2,  0.5}, // Top right
-		{0.2,  -0.2, 0.5}, // Bottom right
-		{0.0,  0.0,  0.5}, // Center
+		{0.2f,  0.2f,  0.5f}, // Top right
+		{0.2f,  -0.2f, 0.5f}, // Bottom right
+		{0.0f,  0.0f,  0.5f}, // Center
 
-		{-0.2, -0.2, 0.5}, // Bottom left
-		{0.2,  -0.2, 0.5}, // Bottom right
-		{0.0,  0.0,  0.5}, // Center
+		{-0.2f, -0.2f, 0.5f}, // Bottom left
+		{0.2f,  -0.2f, 0.5f}, // Bottom right
+		{0.0f,  0.0f,  0.5f}, // Center
 
-		{-0.2, -0.2, 0.5}, // Bottom left
-		{-0.2, 0.2,  0.5}, // Top left
-		{0.0,  0.0,  0.5}, // Center
+		{-0.2f, -0.2f, 0.5f}, // Bottom left
+		{-0.2f, 0.2f,  0.5f}, // Top left
+		{0.0f,  0.0f,  0.5f}, // Center
 };
 
 // This is the object we'll draw ( a simple diamond
 const GLfloat colors[points][floatsPerColor] = {
-		{0.5, 0.5, 0.5, 1.0f}, // Top right
-		{0.5, 0.5, 0.5, 1.0f}, // Bottom right
-		{0.0, 0.0, 0.0, 1.0f}, // Center
+		{0.5f, 0.5f, 0.5f, 1.0f}, // Top right
+		{0.5f, 0.5f, 0.5f, 1.0f}, // Bottom right
+		{0.0f, 0.0f, 0.0f, 1.0f}, // Center
 
-		{0.5, 0.5, 0.5, 1.0f}, // Top left
-		{0.5, 0.5, 0.5, 1.0f}, // Top right
-		{0.0, 0.0, 0.0, 1.0f}, // Center
+		{0.5f, 0.5f, 0.5f, 1.0f}, // Top left
+		{0.5f, 0.5f, 0.5f, 1.0f}, // Top right
+		{0.0f, 0.0f, 0.0f, 1.0f}, // Center
 
-		{0.5, 0.5, 0.5, 1.0f}, // Bottom left
-		{0.5, 0.5, 0.5, 1.0f}, // Bottom right
-		{0.0, 0.0, 0.0, 1.0f}, // Center
+		{0.5f, 0.5f, 0.5f, 1.0f}, // Bottom left
+		{0.5f, 0.5f, 0.5f, 1.0f}, // Bottom right
+		{0.0f, 0.0f, 0.0f, 1.0f}, // Center
 
-		{0.5, 0.5, 0.5, 1.0f}, // Bottom left
-		{0.5, 0.5, 0.5, 1.0f}, // Top left
-		{0.0, 0.0, 0.0, 1.0f}, // Center
+		{0.5f, 0.5f, 0.5f, 1.0f}, // Bottom left
+		{0.5f, 0.5f, 0.5f, 1.0f}, // Top left
+		{0.0f, 0.0f, 0.0f, 1.0f}, // Center
 };
 
 // Create variables for storing the ID of our VAO and VBO
@@ -185,9 +185,31 @@ bool postInit() {
 	return true;
 }
 
-void handleKeys(unsigned char key, int x, int y) {
-	if (key == 'q') {
-		quit = true;
+void handleKeyDown(SDL_Keycode key) {
+	switch (key) {
+		case SDLK_ESCAPE:
+			quit = false;
+			break;
+		case SDLK_r:
+			// Cover with red and update
+			glClearColor(1.0, 0.0, 0.0, 1.0);
+			glClear(GL_COLOR_BUFFER_BIT);
+			SDL_GL_SwapWindow(gWindow);
+			break;
+		case SDLK_g:
+			// Cover with green and update
+			glClearColor(0.0, 1.0, 0.0, 1.0);
+			glClear(GL_COLOR_BUFFER_BIT);
+			SDL_GL_SwapWindow(gWindow);
+			break;
+		case SDLK_b:
+			// Cover with blue and update
+			glClearColor(0.0, 0.0, 1.0, 1.0);
+			glClear(GL_COLOR_BUFFER_BIT);
+			SDL_GL_SwapWindow(gWindow);
+			break;
+		default:
+			break;
 	}
 }
 
@@ -285,39 +307,17 @@ void mainLoop(SDL_Event &e) {
 				quit = true;
 			}
 
-				//Handle keypress with current mouse position
+			//Handle keypress with current mouse position
 			else if (e.type == SDL_TEXTINPUT) {
 				int x = 0, y = 0;
 				SDL_GetMouseState(&x, &y);
-				handleKeys(e.text.text[0], x, y);
+				if (e.text.text[0] == 'q') {
+					quit = true;
+				}
 			}
 
 			else if (e.type == SDL_KEYDOWN) {
-				switch (e.key.keysym.sym) {
-					case SDLK_ESCAPE:
-						quit = false;
-						break;
-					case SDLK_r:
-						// Cover with red and update
-						glClearColor(1.0, 0.0, 0.0, 1.0);
-						glClear(GL_COLOR_BUFFER_BIT);
-						SDL_GL_SwapWindow(gWindow);
-						break;
-					case SDLK_g:
-						// Cover with green and update
-						glClearColor(0.0, 1.0, 0.0, 1.0);
-						glClear(GL_COLOR_BUFFER_BIT);
-						SDL_GL_SwapWindow(gWindow);
-						break;
-					case SDLK_b:
-						// Cover with blue and update
-						glClearColor(0.0, 0.0, 1.0, 1.0);
-						glClear(GL_COLOR_BUFFER_BIT);
-						SDL_GL_SwapWindow(gWindow);
-						break;
-					default:
-						break;
-				}
+				handleKeyDown(e.key.keysym.sym);
 			}
 		}
 
@@ -348,7 +348,7 @@ int main(int argc, char *args[]) {
 	}
 
 	//Event handler
-	SDL_Event e;
+//	SDL_Event e;
 
 	//Enable text input
 	SDL_StartTextInput();
