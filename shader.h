@@ -90,7 +90,7 @@ public:
 
 	bool LinkShaders()
 	{
-		// Link. At this point, our shaders will be inspected/optized and the binary code generated
+		// Link. At this point, our shaders will be inspected/optimized and the binary code generated
 		// The binary code will then be uploaded to the GPU
 		glLinkProgram(shaderProgram);
 
@@ -178,7 +178,7 @@ private:
 		return;
 	}
 
-	// If something went wrong whil compiling the shaders, we'll use this function to find the error
+	// If something went wrong while compiling the shaders, we'll use this function to find the error
 	void PrintShaderCompilationErrorInfo(int32_t shaderId)
 	{
 
@@ -209,7 +209,7 @@ private:
 	bool matrixIDSet;
 
 	std::vector<int32_t> shaderIds;
-	// The handles to the induvidual shader
-	GLuint vertexshader, fragmentShader;
+	// The handles to the individual shader
+	GLuint vertexShader, fragmentShader;
 
 };

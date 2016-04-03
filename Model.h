@@ -110,7 +110,7 @@ class Model
 		return true;
 	}
 
-	// A generic function that takes a path as a paramater
+	// A generic function that takes a path as a parameter
 	// Returns the information as a char*
 	static std::vector<GLfloat> ReadFile(const char* file)
 	{
@@ -147,7 +147,7 @@ class Model
 	// Create variables for storing the ID of our VAO and VBO
 	GLuint vbo[2], vao[1];
 
-	// The positons of the position and color data within the VAO
+	// The positions of the position and color data within the VAO
 	const uint32_t positionAttributeIndex, colorAttributeIndex;
 
 	// Model matrix : an identity matrix (model will be at the origin)

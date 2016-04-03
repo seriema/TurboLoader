@@ -7,9 +7,9 @@
 
 // Event structures
 // Notes :
-// 		The struvture of the events might seem siilar to those of SLD_Event, but theere are some differences:
+// 		The structure of the events might seem similar to those of SLD_Event, but there are some differences:
 // 			1. Simpler
-// 			2. Code is freely avaible and easy to modify
+// 			2. Code is freely available and easy to modify
 // 			3. Every enumeration is a stored as enum class, so you can't use the wrong enum value or implicitly convert to int
 //
 // Buttons ( keyboard, mouse, joystick )
@@ -129,7 +129,7 @@ class EventHandler
 	// State ( SDL_MOUSEBUTTONDOWN, SDL_MOUSEBUTTONDOWN )
 	std::map< MouseButton, ButtonState > mouseButton;
 
-	// Wether the SDL_Quit even has been recieved
+	// Whether the SDL_Quit even has been received
 	bool quit;
 };
 

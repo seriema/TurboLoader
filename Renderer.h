@@ -26,22 +26,22 @@ class Renderer
 	public :
 	Renderer()
 	{
-		// Set up our matricies
+		// Set up our matrices
 		// I strongly encourage you to mess around with the values here and see what they do
 		// It's a lot of fun, and you'll learn a lot
 		// It'll also give you a better sense of what's going on
 		// ...Which will make it easier for you to debug
 
-		// Set up projection matric
+		// Set up projection matrix
 		projection = glm::perspective
 		(
 			45.0f,       // Field of view ( how far out to the sides we can see
-			1.0f / 1.0f, // Aspect ratio ( stretch image in widh or height )
+			1.0f / 1.0f, // Aspect ratio ( stretch image in width or height )
 			0.1f,        // Near plane ( anything close than this will be cut off )
 			100.0f       // Far plane ( anything further away than this will be cut off )
 		);
 
-		// Set up view matric
+		// Set up view matrix
 		view = glm::lookAt
 		(
 			glm::vec3(0,0,-4), // Camera is at (0,0,-4), in World Space
@@ -75,7 +75,7 @@ class Renderer
 		// Create our opengl context and attach it to our window
 		mainContext = SDL_GL_CreateContext(mainWindow );
 
-		// This makes our buffer swap syncronized with the monitor's vertical refresh
+		// This makes our buffer swap synchronized with the monitor's vertical refresh
 		// 		( which means it enables v-sync)
 		// Setting this to 0 will disable V-sync
 		// 		Which means our application could run at unlimited fps
@@ -178,7 +178,7 @@ class Renderer
 	// This set our extra OpenGL options we'll need
 	void SetOpenGLOptions()
 	{
-		// Enable blending so that we can have transparanet object
+		// Enable blending so that we can have transparent object
 		glEnable(GL_BLEND ) ;
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -193,7 +193,7 @@ class Renderer
 		// SDL_GL_CONTEXT_CORE gives us only the newer version, deprecated functions are disabled
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 
-		// 3.2 is part of the modern versions of OpenGL, but most video cards whould be able to run it
+		// 3.2 is part of the modern versions of OpenGL, but most video cards would be able to run it
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
 
@@ -204,7 +204,7 @@ class Renderer
 		return true;
 	}
 
-	// Our SDL_Window ( just like with SDL2 wihout OpenGL)
+	// Our SDL_Window ( just like with SDL2 without OpenGL)
 	SDL_Window *mainWindow;
 
 	// Our opengl context handle
@@ -213,7 +213,7 @@ class Renderer
 	// Our wrapper to simplify the shader code
 	Shader simpleShader;
 
-	// Matricies
+	// Matrices
 	glm::mat4 projection;
 	glm::mat4 view;
 };
