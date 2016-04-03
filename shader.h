@@ -16,7 +16,7 @@
 class Shader
 {
 public:
-	std::string ReadFile(const char* file);
+	std::string ReadFile(const std::string& file);
 
 	void BindAttributeLocation(int index, const std::string &attribute);
 
