@@ -19,6 +19,9 @@ const std::string fragSource =
 const std::string vertSource =
 #include "shader.vert"
 ;
+const std::string geomSource =
+#include "shader.geom"
+;
 
 std::string Shader::ReadFile(const std::string& file)
 {
@@ -62,79 +65,34 @@ bool Shader::Init()
 	BindAttributeLocation(0, "in_Position");
 	BindAttributeLocation(1, "in_Color");
 
-	if (!LoadVertexShader(vertSource))
+	if (!LoadShader("geometry", geomSource, GL_GEOMETRY_SHADER))
 		return false;
 
-	if (!LoadFragmentShader(fragSource))
+	if (!LoadShader("vertex", vertSource, GL_VERTEX_SHADER))
 		return false;
 
-	// All shaders has been create, now we must put them together into one large object
+	if (!LoadShader("fragment", fragSource, GL_FRAGMENT_SHADER))
+		return false;
+
+	// All shaders have been create, now we must put them together into one large object
 	return LinkShaders();
 }
 
-
-bool Shader::LoadVertexShader(const std::string &source)
+bool Shader::LoadShader(const std::string& fileName, const std::string source, int shaderType)
 {
-	std::cout << "Linking Vertex shader" << std::endl;
+	std::cout << "Loading Shader : " << fileName << std::endl;
 
-	std::string str = source;
+	int shaderId = CreateShader(source, shaderType);
 
-	// c_str() gives us a const char*, but we need a non-const one
-	char* src = const_cast<char*>( str.c_str());
-	int32_t size = str.length();
-
-	// Create an empty vertex shader handle
-	vertexshader = glCreateShader(GL_VERTEX_SHADER);
-
-	// Send the vertex shader source code to OpenGL
-	glShaderSource(vertexshader, 1, &src, &size);
-
-	// Compile the vertex shader
-	glCompileShader(vertexshader);
-
-	int wasCompiled = 0;
-	glGetShaderiv(vertexshader, GL_COMPILE_STATUS, &wasCompiled );
-
-	if (wasCompiled == 0)
+	if (TryCompileShader(shaderId))
 	{
-		PrintShaderCompilationErrorInfo(vertexshader);
-		return false;
+		glAttachShader(shaderProgram, shaderId);
+		shaderIds.push_back(shaderId);
+
+		return true;
 	}
 
-	glAttachShader(shaderProgram, vertexshader);
-	return true;
-}
-
-bool Shader::LoadFragmentShader(const std::string &source)
-{
-	std::cout << "Loading Fragment Shader" << std::endl;
-
-	std::string str = source;
-
-	// c_str() gives us a const char*, but we need a non-const one
-	char* src = const_cast<char*>( str.c_str());
-	int32_t size = str.length();
-
-	// Create an empty vertex shader handle
-	fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-
-	// Send the vertex shader source code to OpenGL
-	glShaderSource(fragmentShader, 1, &src, &size);
-
-	// Compile the vertex shader
-	glCompileShader(fragmentShader);
-
-	int wasCompiled = 0;
-	glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &wasCompiled );
-
-	if (wasCompiled == false)
-	{
-		PrintShaderCompilationErrorInfo(fragmentShader);
-		return false;
-	}
-
-	glAttachShader(shaderProgram, fragmentShader);
-	return true;
+	return false;
 }
 
 bool Shader::LinkShaders()
@@ -177,7 +135,7 @@ void Shader::PrintShaderLinkingError(int32_t shaderId)
 }
 
 // If something went wrong whil compiling the shaders, we'll use this function to find the error
-void Shader::PrintShaderCompilationErrorInfo(int32_t shaderId)
+void Shader::PrintShaderCompilationErrorInfo(int shaderId)
 {
 	std::cout << "=======================================\n";
 	std::cout << "Shader compilation failed : " << std::endl;
@@ -210,3 +168,41 @@ void Shader::CleanUp()
 	glDeleteShader(vertexshader);
 	glDeleteShader(fragmentShader);
 }
+
+int Shader::CreateShader(const std::string &source, GLenum shaderType) {
+	// Read file as std::string
+	std::string str = source; // We'll skip ReadFile() call as we're currently including the source through C++11 magic
+
+	// c_str() gives us a const char*, but we need a non-const one
+	char* src = const_cast<char*>( str.c_str());
+	int32_t size = str.length();
+
+	// Create an empty vertex shader handle
+	int shaderId = glCreateShader(shaderType);
+
+	// Send the vertex shader source code to OpenGL
+	glShaderSource(shaderId , 1, &src, &size);
+
+	return shaderId;
+}
+
+bool Shader::TryCompileShader(int shaderId) {
+	// Compile the vertex shader
+	glCompileShader(shaderId);
+
+	// Ask OpenGL if the shaders was compiled
+	int wasCompiled = 0;
+	glGetShaderiv(shaderId, GL_COMPILE_STATUS, &wasCompiled);
+
+	// Return false if compilation failed
+	if (wasCompiled == 0) {
+		PrintShaderCompilationErrorInfo(shaderId);
+		return false;
+	}
+
+	return true;
+}
+
+
+
+
