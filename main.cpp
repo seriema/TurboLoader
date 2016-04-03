@@ -371,7 +371,10 @@ int main(int argc, char* args[] )
 	SDL_StartTextInput();
 
 	//Start main application loop
-	mainLoop(e);
+//	mainLoop(e);
+	render();
+	std::cout << "Rendering done! Press ENTER to quit.\n";
+	std::cin.ignore();
 
 	//Disable text input
 	SDL_StopTextInput();
