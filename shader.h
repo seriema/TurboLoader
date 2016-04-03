@@ -21,29 +21,29 @@ public:
 
 	bool Init();
 
-	bool LoadShader(const std::string &fileName, const std::string source, int shaderType);
+	bool LoadShader(const std::string &fileName, const std::string source, GLenum shaderType);
 
 	void CleanUp();
 
 private:
-	int CreateShader(const std::string &source, GLenum shaderType);
+	GLuint CreateShader(const std::string &source, GLenum shaderType);
 
-	bool TryCompileShader(int shaderId);
+	bool TryCompileShader(GLuint shaderId);
 
 	bool LinkShaders();
 
 	std::string ReadFile(const std::string &file);
 
-	void PrintShaderLinkingError(int32_t shaderId);
+	void PrintShaderLinkingError(GLuint shaderId);
 
 	// If something went wrong while compiling the shaders, we'll use this function to find the error
-	void PrintShaderCompilationErrorInfo(int shaderId);
+	void PrintShaderCompilationErrorInfo(GLuint shaderId);
 
 	// The handle to our shader program
 	GLuint shaderProgram;
 
 	// The handles to the individual shader
-	GLuint vertexshader, fragmentShader;
+	GLuint vertexShader, fragmentShader;
 
 	std::vector<int32_t> shaderIds;
 };
