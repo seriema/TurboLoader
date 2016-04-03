@@ -48,14 +48,14 @@ bool setupBufferObjects();
 //Frees media and shuts down SDL
 void close();
 
+//Main application loop
+void mainLoop(SDL_Event &e);
+
 //The window we'll be rendering to
 SDL_Window* gWindow = NULL;
 
 //OpenGL context
 SDL_GLContext gContext;
-
-//Render flag
-bool gRenderQuad = true;
 
 // Our object has 4 points
 const uint32_t points = 4;
@@ -129,10 +129,6 @@ bool init()
 	if( SDL_GL_SetSwapInterval( 1 ) < 0 )
 	{
 		printf( "Warning: Unable to set VSync! SDL Error: %s\n", SDL_GetError() );
-	}
-
-	if (!postInit()) {
-		return false;
 	}
 
 	return true;
@@ -287,26 +283,7 @@ void close()
 	SDL_Quit();
 }
 
-int main( int argc, char* args[] )
-{
-	//Start up SDL and create window
-	if( !init() )
-	{
-		printf("Failed to initialize!\n");
-		return -1;
-	}
-
-	if (!setupBufferObjects())
-	{
-		return -1;
-	}
-
-	//Event handler
-	SDL_Event e;
-
-	//Enable text input
-	SDL_StartTextInput();
-
+void mainLoop(SDL_Event &e) {
 	//While application is running
 	while( !quit )
 	{
@@ -364,6 +341,37 @@ int main( int argc, char* args[] )
 		//Update screen
 		SDL_GL_SwapWindow( gWindow );
 	}
+}
+
+int main(int argc, char* args[] )
+{
+	//Start up SDL and create window
+	std::cout << "Start up SDL" << std::endl;
+	if( !init() )
+	{
+		printf("Failed to initialize!\n");
+		return -1;
+	}
+
+	std::cout << "Clear our buffer background" << std::endl;
+	if (!postInit()) {
+		return -1;
+	}
+
+	std::cout << "Setting up VBO + VAO..." << std::endl;
+	if (!setupBufferObjects())
+	{
+		return -1;
+	}
+
+	//Event handler
+	SDL_Event e;
+
+	//Enable text input
+	SDL_StartTextInput();
+
+	//Start main application loop
+	mainLoop(e);
 
 	//Disable text input
 	SDL_StopTextInput();
