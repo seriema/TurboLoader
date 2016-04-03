@@ -3,6 +3,9 @@ project(a_retro_ui)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
+add_definitions(-DENTRY_CONFIG_USE_SDL=1)
+add_definitions(-DBGFX_CONFIG_RENDERER_OPENGL=1)
+
 # include bgfx directories
 include_directories(dependencies/bgfx/include)
 include_directories(dependencies/bgfx/examples/common)
@@ -20,40 +23,33 @@ set(BGFX_3RDPARTY_FILES
 	dependencies/bgfx/3rdparty/ocornut-imgui/imgui_draw.cpp
 	dependencies/bgfx/3rdparty/ocornut-imgui/imgui_wm.cpp
 )
+add_library(bgfx_3rdparty
+	${BGFX_3RDPARTY_FILES}
+)
 
-# bgfx example files
-file(GLOB BGFX_EXAMPLE_FILES
-	dependencies/bgfx/examples/common/*.cpp
-	dependencies/bgfx/examples/common/debugdraw/*.cpp
-	dependencies/bgfx/examples/common/font/*.cpp
-	dependencies/bgfx/examples/common/imgui/*.cpp
-	dependencies/bgfx/examples/common/nanovg/*.cpp
-	dependencies/bgfx/examples/common/nanovg/*.cpp
-	)
-list(APPEND BGFX_EXAMPLE_FILES
-	dependencies/bgfx/examples/common/entry/cmd.cpp
-	dependencies/bgfx/examples/common/entry/dbg.cpp
-	dependencies/bgfx/examples/common/entry/input.cpp
-	dependencies/bgfx/examples/common/entry/entry.cpp
-	dependencies/bgfx/examples/common/entry/entry_osx.mm
+# bgfx files
+add_library(bgfx
+	dependencies/bgfx/src/amalgamated.mm
 )
 
 # Platform dependent libraries
 IF(APPLE)
-	set(CMAKE_CXX_LINK_FLAGS "${CMAKE_CXX_LINK_FLAGS}")
 	set(PLATFORM_LIBRARIES
 		${COCOA_LIBRARY} # needed for _OBJC_CLASS_$_NSOpenGLPixelFormat etc
-		"-framework QuartzCore" # needed for _OBJC_CLASS_$_CAMetalLayer etc
-		"-framework Metal" # needed for _MTLCreateSystemDefaultDevice etc Metal stuff
-		)
+	)
 endif(APPLE)
 
-# MAIN
-add_executable(a_retro_ui
-	main.cpp
-
-	${BGFX_3RDPARTY_FILES}
-	${BGFX_EXAMPLE_FILES}
-	dependencies/bgfx/src/amalgamated.mm
+#find_library(GL_LIBRARY OpenGL REQUIRED)
+set(CROSS_PLATFORM_LIBRARIES
+	${SDL2_LIBRARIES}
+#	${GL_LIBRARY}
 )
-target_link_libraries(a_retro_ui ${PLATFORM_LIBRARIES})
+
+# MAIN
+add_executable(a_retro_ui main.cpp)
+target_link_libraries(a_retro_ui
+	#bgfx_3rdparty
+	bgfx
+	${PLATFORM_LIBRARIES}
+	${CROSS_PLATFORM_LIBRARIES}
+)
