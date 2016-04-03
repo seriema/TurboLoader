@@ -19,6 +19,16 @@
 #include <fstream>
 #include <iostream>
 
+// TODO: HACK: This is because we haven't figured out how to bundle shaders with CMake yet
+const std::string fragmentShaderSource =
+#include "frag.glsl"
+;
+const std::string vertexShaderSource =
+#include "vert.glsl"
+;
+
+
+
 class Shader
 {
 public:
@@ -124,7 +134,7 @@ private:
 	int CreateShader(const std::string &fileName, GLenum shaderType)
 	{
 		// Read file as std::string
-		std::string str = ReadFile(fileName.c_str());
+		std::string str = ReadFile(fileName);
 
 		 // c_str() gives us a const char*, but we need a non-const one
 		char* src = const_cast<char*>( str.c_str());
@@ -141,12 +151,18 @@ private:
 
 
 
-	std::string ReadFile(const char* file)
+	std::string ReadFile(const std::string &filename)
 	{
-		// Open file
-		std::ifstream t(file);
+		// TODO: HACK: This is because we haven't figured out how to bundle shaders with CMake yet
+		if (filename == "vert.glsl")
+			return vertexShaderSource;
+		if (filename == "frag.glsl")
+			return fragmentShaderSource;
 
-		// Read file into buffer
+		// Open filename
+		std::ifstream t(filename);
+
+		// Read filename into buffer
 		std::stringstream buffer;
 		buffer << t.rdbuf();
 

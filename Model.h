@@ -10,8 +10,17 @@
 #include <glm/glm.hpp>
 
 #include <vector>
+#include <sstream>
 
 #include "Shader.h"
+
+// TODO: HACK: This is because we haven't figured out how to bundle shaders with CMake yet
+const std::string positionsSource =
+#include "positions.txt"
+;
+const std::string colorsSource =
+#include "colors.txt"
+;
 
 class Model
 {
@@ -112,23 +121,37 @@ class Model
 
 	// A generic function that takes a path as a parameter
 	// Returns the information as a char*
-	static std::vector<GLfloat> ReadFile(const char* file)
+	static std::vector<GLfloat> ReadFile(const std::string &filename)
 	{
-		// Open file
-		std::ifstream t(file);
+		std::cout << "Reading : " << filename << std::endl;
 
+		std::istream* data;
 		std::vector<GLfloat> result;
-		std::cout << "Reading : " << file << std::endl;
 
-		while (t.good())
+		if (filename == "positions.txt")
 		{
+			data = new std::istringstream(positionsSource);
+		}
+		else if (filename == "colors.txt")
+		{
+			data = new std::istringstream(colorsSource);
+		}
+		else
+		{
+			// Open file
+			data = new std::ifstream(filename);
+		}
+
+		while ( data->good() ) {
 			std::string str;
-			t >> str;
+			*data >> str;
 
 			GLfloat f = std::atof(str.c_str());
 
 			result.push_back(f);
 		}
+
+		delete data;
 
 		return result;
 	}
