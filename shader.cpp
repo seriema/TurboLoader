@@ -59,8 +59,8 @@ bool Shader::Init()
 	shaderProgram = glCreateProgram();
 
 	// Bind the location of our attributes
-//	BindAttributeLocation(0, "in_Position");
-//	BindAttributeLocation(1, "in_Color");
+	BindAttributeLocation(0, "in_Position");
+	BindAttributeLocation(1, "in_Color");
 
 	if (!LoadVertexShader(vertSource))
 		return false;
