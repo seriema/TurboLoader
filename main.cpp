@@ -57,8 +57,8 @@ SDL_Window* gWindow = NULL;
 //OpenGL context
 SDL_GLContext gContext;
 
-// Our object has 4 points
-const uint32_t points = 4;
+// Our object has 12 points
+const uint32_t points = 12;
 
 // Each poin has three values ( x, y, z)
 const uint32_t floatsPerPoint = 3;
@@ -66,20 +66,42 @@ const uint32_t floatsPerPoint = 3;
 // Each color has 4 values ( red, green, blue, alpha )
 const uint32_t floatsPerColor = 4;
 
-// This is the object we'll draw ( a simple square
+// This is the object we'll draw ( a simple diamond
 const GLfloat diamond[points][floatsPerPoint] = {
-		{ -0.5,  0.5,  0.5 }, // Top left
-		{  0.5,  0.5,  0.5 }, // Top right
-		{  0.5, -0.5,  0.5 }, // Bottom right
-		{ -0.5, -0.5,  0.5 }, // Bottom left
+		{  0.2,  0.2,  0.5 }, // Top right
+		{ -0.2,  0.2,  0.5 }, // Top left
+		{  0.0,  0.0,  0.5 }, // Center
+
+		{  0.2,  0.2,  0.5 }, // Top right
+		{  0.2, -0.2,  0.5 }, // Bottom right
+		{  0.0,  0.0,  0.5 }, // Center
+
+		{ -0.2, -0.2,  0.5 }, // Bottom left
+		{  0.2, -0.2,  0.5 }, // Bottom right
+		{  0.0,  0.0,  0.5 }, // Center
+
+		{ -0.2, -0.2,  0.5 }, // Bottom left
+		{ -0.2,  0.2,  0.5 }, // Top left
+		{  0.0,  0.0,  0.5 }, // Center
 };
 
-// This is the object we'll draw ( a simple square
+// This is the object we'll draw ( a simple diamond
 const GLfloat colors[points][floatsPerColor] = {
-		{ 0.0, 1.0, 0.0, 1.0 }, // Top left
-		{ 1.0, 1.0, 0.0, 1.0  }, // Top right
-		{ 1.0, 0.0, 0.0, 1.0  }, // Bottom right
-		{ 0.0, 0.0, 1.0, 1.0  }, // Bottom left
+		{ 0.5, 0.5, 0.5, 1.0f }, // Top right
+		{ 0.5, 0.5, 0.5, 1.0f }, // Bottom right
+		{ 0.0, 0.0, 0.0, 1.0f }, // Center
+
+		{ 0.5, 0.5, 0.5, 1.0f }, // Top left
+		{ 0.5, 0.5, 0.5, 1.0f }, // Top right
+		{ 0.0, 0.0, 0.0, 1.0f }, // Center
+
+		{ 0.5, 0.5, 0.5, 1.0f }, // Bottom left
+		{ 0.5, 0.5, 0.5, 1.0f }, // Bottom right
+		{ 0.0, 0.0, 0.0, 1.0f }, // Center
+
+		{ 0.5, 0.5, 0.5, 1.0f }, // Bottom left
+		{ 0.5, 0.5, 0.5, 1.0f }, // Top left
+		{ 0.0, 0.0, 0.0, 1.0f }, // Center
 };
 
 // Create variables for storing the ID of our VAO and VBO
@@ -130,6 +152,9 @@ bool init()
 	{
 		printf( "Warning: Unable to set VSync! SDL Error: %s\n", SDL_GetError() );
 	}
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	return true;
 }
@@ -185,30 +210,12 @@ void render()
 {
 	// First, render a square without any colors ( all vertexes will be black )
 	// ===================
-	// Make our background grey
-	glClearColor(0.5, 0.5, 0.5, 1.0);
-	glClear(GL_COLOR_BUFFER_BIT);
-
-	// Invoke glDrawArrays telling that our data is a line loop and we want to draw 2-4 vertexes
-	glDrawArrays(GL_LINE_LOOP, 0, 4);
-
-	// Swap our buffers to make our changes visible
-	SDL_GL_SwapWindow(gWindow);
-
-	std::cout << "Press ENTER to render next frame\n";
-	std::cin.ignore();
-
-	// Second, enable the colors and draw a solid square
-	// ===================
-	// Enable our attribute within the current VAO
-	glEnableVertexAttribArray(colorAttributeIndex);
-
 	// Make our background black
-	glClearColor(0.0, 0.0, 0.0, 0.0);
+	glClearColor(0.0, 0.0, 0.0, 1.0);
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	// Invoke glDrawArrays telling that our data is a line loop and we want to draw 2-4 vertexes
-	glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+	// Invoke glDrawArrays telling that our data is a line loop and we want to draw 4 vertexes
+	glDrawArrays(GL_TRIANGLES, 0, points);
 
 	// Swap our buffers to make our changes visible
 	SDL_GL_SwapWindow(gWindow);
@@ -225,23 +232,9 @@ bool setupBufferObjects()
 	// Bind our Vertex Array Object as the current used object
 	glBindVertexArray(vao[0]);
 
-	// Positions
-	// ===================
-	// Bind our first VBO as being the active buffer and storing vertex attributes (coordinates)
-	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
-
-	// Copy the vertex data from diamond to our buffer
-	glBufferData(GL_ARRAY_BUFFER, ( points * floatsPerPoint) * sizeof(GLfloat), diamond, GL_STATIC_DRAW);
-
-	// Specify that our coordinate data is going into attribute index 0, and contains three floats per vertex
-	glVertexAttribPointer(positionAttributeIndex, 3, GL_FLOAT, GL_FALSE, 0, 0);
-
-	// Enable our attribute within the current VAO
-	glEnableVertexAttribArray(positionAttributeIndex);
-
 	// Colors
 	// =======================
-	glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
 
 	// Copy the vertex data from diamond to our buffer
 	glBufferData(GL_ARRAY_BUFFER, ( points * floatsPerColor) * sizeof(GLfloat), colors, GL_STATIC_DRAW);
@@ -249,7 +242,20 @@ bool setupBufferObjects()
 	// Specify that our coordinate data is going into attribute index 0, and contains three floats per vertex
 	glVertexAttribPointer(colorAttributeIndex, 4, GL_FLOAT, GL_FALSE, 0, 0);
 
-	// Note : We didn't enable the colors here!
+	// Positions
+	// ===================
+	// Bind our first VBO as being the active buffer and storing vertex attributes (coordinates)
+	glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
+
+	// Copy the vertex data from diamond to our buffer
+	glBufferData(GL_ARRAY_BUFFER, ( points * floatsPerPoint) * sizeof(GLfloat), diamond, GL_STATIC_DRAW);
+
+	// Specify that our coordinate data is going into attribute index 0, and contains three floats per vertex
+	glVertexAttribPointer(positionAttributeIndex, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+	// Enable our attributes within the current VAO
+	glEnableVertexAttribArray(positionAttributeIndex);
+	glEnableVertexAttribArray(colorAttributeIndex);
 
 	// Set up shader ( will be covered in the next part )
 	// ===================
