@@ -13,6 +13,13 @@
 #include <fstream>
 #include <iostream>
 
+const std::string fragSource =
+#include "shader.frag"
+;
+const std::string vertSource =
+#include "shader.vert"
+;
+
 std::string Shader::ReadFile(const std::string& file)
 {
 	// Open file
@@ -55,10 +62,10 @@ bool Shader::Init()
 //	BindAttributeLocation(0, "in_Position");
 //	BindAttributeLocation(1, "in_Color");
 
-	if (!LoadVertexShader("/Users/jojoh/Documents/Github/a-retro-ui/shader.vert"))
+	if (!LoadVertexShader(vertSource))
 		return false;
 
-	if (!LoadFragmentShader("/Users/jojoh/Documents/Github/a-retro-ui/shader.frag"))
+	if (!LoadFragmentShader(fragSource))
 		return false;
 
 	// All shaders has been create, now we must put them together into one large object
@@ -66,16 +73,11 @@ bool Shader::Init()
 }
 
 
-bool Shader::LoadVertexShader(const std::string &filename)
+bool Shader::LoadVertexShader(const std::string &source)
 {
 	std::cout << "Linking Vertex shader" << std::endl;
 
-	// Read file as std::string
-	std::string str = ReadFile(filename);
-	if (str == "")
-	{
-		std::cout << "Vertex shader load failed : " << filename << std::endl;
-	}
+	std::string str = source;
 
 	// c_str() gives us a const char*, but we need a non-const one
 	char* src = const_cast<char*>( str.c_str());
@@ -103,17 +105,11 @@ bool Shader::LoadVertexShader(const std::string &filename)
 	return true;
 }
 
-bool Shader::LoadFragmentShader(const std::string &filename)
+bool Shader::LoadFragmentShader(const std::string &source)
 {
 	std::cout << "Loading Fragment Shader" << std::endl;
 
-	// Read file as std::string
-	std::string str = ReadFile(filename.c_str());
-	if (str == "")
-	{
-		std::cout << "Fragment shader load failed : " << filename << std::endl;
-		return false;
-	}
+	std::string str = source;
 
 	// c_str() gives us a const char*, but we need a non-const one
 	char* src = const_cast<char*>( str.c_str());

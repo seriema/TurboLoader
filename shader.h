@@ -24,9 +24,9 @@ public:
 
 	bool Init();
 
-	bool LoadVertexShader(const std::string &filename);
+	bool LoadVertexShader(const std::string &source);
 
-	bool LoadFragmentShader(const std::string &filename);
+	bool LoadFragmentShader(const std::string &source);
 
 	bool LinkShaders();
 
