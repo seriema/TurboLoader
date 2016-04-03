@@ -7,7 +7,7 @@ A retro UI
 You need [HomeBrew](http://brew.sh/) and then run:
 
 ```bash
-$ brew install cmake sdl2 pkg-config
+$ brew install cmake sdl2 pkg-config glm
 ```
 
 
