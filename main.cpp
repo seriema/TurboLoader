@@ -60,7 +60,7 @@ SDL_GLContext gContext;
 // Our object has 12 points
 const uint32_t points = 12;
 
-// Each poin has three values ( x, y, z)
+// Each point has three values ( x, y, z)
 const uint32_t floatsPerPoint = 3;
 
 // Each color has 4 values ( red, green, blue, alpha )
@@ -107,7 +107,7 @@ const GLfloat colors[points][floatsPerColor] = {
 // Create variables for storing the ID of our VAO and VBO
 GLuint vbo[2], vao[1];
 
-// The positons of the position and color data within the VAO
+// The positions of the position and color data within the VAO
 const uint32_t positionAttributeIndex = 0, colorAttributeIndex = 1;
 
 // Our wrapper to simplify the shader code
@@ -159,7 +159,7 @@ bool initGL() {
 	// SDL_GL_CONTEXT_CORE gives us only the newer version, deprecated functions are disabled
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 
-	// 3.2 is part of the modern versions of OpenGL, but most video cards whould be able to run it
+	// 3.2 is part of the modern versions of OpenGL, but most video cards would be able to run it
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
 
@@ -264,7 +264,7 @@ void close() {
 	glDeleteBuffers(1, vbo);
 	glDeleteVertexArrays(1, vao);
 
-	// Delete our OpengL context
+	// Delete our OpenGL context
 	SDL_GL_DeleteContext(gContext);
 
 	//Destroy window

@@ -42,7 +42,7 @@ private:
 	// The handle to our shader program
 	GLuint shaderProgram;
 
-	// The handles to the induvidual shader
+	// The handles to the individual shader
 	GLuint vertexshader, fragmentShader;
 
 	std::vector<int32_t> shaderIds;
