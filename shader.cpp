@@ -13,10 +13,15 @@
 #include <fstream>
 #include <iostream>
 
-std::string Shader::ReadFile(const char* file)
+std::string Shader::ReadFile(const std::string& file)
 {
 	// Open file
 	std::ifstream t(file);
+
+	if (!t.is_open())
+	{
+		return "";
+	}
 
 	// Read file into buffer
 	std::stringstream buffer;
@@ -47,13 +52,13 @@ bool Shader::Init()
 	shaderProgram = glCreateProgram();
 
 	// Bind the location of our attributes
-	BindAttributeLocation(0, "in_Position");
-	BindAttributeLocation(1, "in_Color");
+//	BindAttributeLocation(0, "in_Position");
+//	BindAttributeLocation(1, "in_Color");
 
-	if (!LoadVertexShader("tutorial2.vert"))
+	if (!LoadVertexShader("/Users/jojoh/Documents/Github/a-retro-ui/shader.vert"))
 		return false;
 
-	if (!LoadFragmentShader("tutorial2.frag"))
+	if (!LoadFragmentShader("/Users/jojoh/Documents/Github/a-retro-ui/shader.frag"))
 		return false;
 
 	// All shaders has been create, now we must put them together into one large object
@@ -66,7 +71,11 @@ bool Shader::LoadVertexShader(const std::string &filename)
 	std::cout << "Linking Vertex shader" << std::endl;
 
 	// Read file as std::string
-	std::string str = ReadFile(filename.c_str());
+	std::string str = ReadFile(filename);
+	if (str == "")
+	{
+		std::cout << "Vertex shader load failed : " << filename << std::endl;
+	}
 
 	// c_str() gives us a const char*, but we need a non-const one
 	char* src = const_cast<char*>( str.c_str());
@@ -100,6 +109,11 @@ bool Shader::LoadFragmentShader(const std::string &filename)
 
 	// Read file as std::string
 	std::string str = ReadFile(filename.c_str());
+	if (str == "")
+	{
+		std::cout << "Fragment shader load failed : " << filename << std::endl;
+		return false;
+	}
 
 	// c_str() gives us a const char*, but we need a non-const one
 	char* src = const_cast<char*>( str.c_str());
@@ -129,7 +143,7 @@ bool Shader::LoadFragmentShader(const std::string &filename)
 
 bool Shader::LinkShaders()
 {
-	// Link. At this point, our shaders will be inspected/optized and the binary code generated
+	// Link. At this point, our shaders will be inspected/optimized and the binary code generated
 	// The binary code will then be uploaded to the GPU
 	glLinkProgram(shaderProgram);
 
