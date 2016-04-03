@@ -125,7 +125,7 @@ void Shader::PrintShaderLinkingError(int32_t shaderId) {
 	return;
 }
 
-// If something went wrong whil compiling the shaders, we'll use this function to find the error
+// If something went wrong while compiling the shaders, we'll use this function to find the error
 void Shader::PrintShaderCompilationErrorInfo(int shaderId) {
 	std::cout << "=======================================\n";
 	std::cout << "Shader compilation failed : " << std::endl;
