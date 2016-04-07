@@ -29,9 +29,9 @@ add_library(bgfx_3rdparty
 
 # bgfx files
 #check if we're running on Raspberry Pi
-MESSAGE("Looking for bcm_host.h (raspberry pi)")
+MESSAGE("Looking for bcm_host.h (Raspberry PI)")
 if(EXISTS "/opt/vc/include/bcm_host.h")
-	MESSAGE("bcm_host.h found")
+	MESSAGE("bcm_host.h found - assuming this is a Raspberry PI")
 	#set(BCMHOST found)
 	#set(GLSystem "OpenGL ES")
 
@@ -48,20 +48,27 @@ else()
 	MESSAGE("bcm_host.h not found")
 endif()
 IF(APPLE)
+	MESSAGE("Building for OSX")
+
 	add_library(bgfx
 		dependencies/bgfx/src/amalgamated.mm
 	)
 
 	# Platform dependent libraries
 	set(PLATFORM_LIBRARIES
-		${COCOA_LIBRARY} # needed for _OBJC_CLASS_$_NSOpenGLPixelFormat etc
-	)
+#		${COCOA_LIBRARY} # needed for _OBJC_CLASS_$_NSOpenGLPixelFormat etc
+		"-framework Cocoa" # needed for _OBJC_CLASS_$_NSOpenGLPixelFormat etc
+		"-framework QuartzCore" # needed for _OBJC_CLASS_$_CAMetalLayer etc
+		"-framework Metal" # needed for _MTLCreateSystemDefaultDevice etc Metal stuff
+		"-framework Foundation" # needed for _NSLog
+		)
 endif(APPLE)
 
-#find_library(GL_LIBRARY OpenGL REQUIRED)
+find_library(GL_LIBRARY OpenGL REQUIRED)
+find_library(SDL2_LIBRARY SDL2 REQUIRED)
 set(CROSS_PLATFORM_LIBRARIES
-	${SDL2_LIBRARIES}
-#	${GL_LIBRARY}
+	${SDL2_LIBRARY}
+	#	${GL_LIBRARY}
 )
 
 # MAIN
