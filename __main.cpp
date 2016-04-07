@@ -1,6 +1,6 @@
 #include <SDL2/SDL.h>
-#include <SDL2/SDL_opengl.h>
-//#include <SDL2/SDL_opengles2.h>
+//#include <SDL2/SDL_opengl.h>
+#include <SDL2/SDL_opengles2.h>
 
 //Main loop flag
 bool quit = false;
@@ -51,8 +51,8 @@ bool init()
 	}
 
 	//Use OpenGL ES
-	_SDL_GL_SetAttribute( SDL_GL_CONTEXT_MAJOR_VERSION, 1 );
-	_SDL_GL_SetAttribute( SDL_GL_CONTEXT_MINOR_VERSION, 1 );
+	_SDL_GL_SetAttribute( SDL_GL_CONTEXT_MAJOR_VERSION, 2 );
+	_SDL_GL_SetAttribute( SDL_GL_CONTEXT_MINOR_VERSION, 0 );
 
 	//hide mouse cursor early
 //	SDL_ShowCursor(0);
@@ -68,15 +68,16 @@ bool init()
 	//SDL_GetDesktopDisplayMode(0, &dispMode);
 	SDL_GetCurrentDisplayMode(0, &dispMode);
 
-	printf("Screen size: %d %d", dispMode.w, dispMode.h);
+	printf("Screen size: %d %d\n", dispMode.w, dispMode.h);
 	//Create window
 	gWindow = SDL_CreateWindow(
 		"SDL Tutorial",
-		SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-//		dispMode.w, dispMode.h,
+		//SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+		SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+		dispMode.w, dispMode.h,
 //		640, 480,
-		0, 0,
-		SDL_WINDOW_OPENGL //| SDL_WINDOW_FULLSCREEN
+//		0, 0,
+		SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN | SDL_WINDOW_SHOWN
 	);
 	if( gWindow == NULL )
 	{
@@ -115,8 +116,8 @@ bool init()
 bool initGL()
 {
 	//Initialize Projection Matrix
-	glMatrixMode( GL_PROJECTION );
-	glLoadIdentity();
+//	glMatrixMode( GL_PROJECTION );
+//	glLoadIdentity();
 
 	//Check for error
 	GLenum error = glGetError();
@@ -126,8 +127,8 @@ bool initGL()
 	}
 
 	//Initialize Modelview Matrix
-	glMatrixMode( GL_MODELVIEW );
-	glLoadIdentity();
+//	glMatrixMode( GL_MODELVIEW );
+//	glLoadIdentity();
 
 	//Check for error
 	error = glGetError();
@@ -165,9 +166,10 @@ void update()
 void render()
 {
 	//Clear color buffer
-	//glClear( GL_COLOR_BUFFER_BIT );
+	glClear( GL_COLOR_BUFFER_BIT );
 
-glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+/*
 glColor3f(1.0f, 1.0f, 1.0f);
 
 glBegin(GL_TRIANGLES);
@@ -190,6 +192,7 @@ glEnd();
 		glVertex2f( -0.5f, 0.5f );
 		glEnd();
 	}
+*/
 }
 
 void close()
@@ -244,8 +247,9 @@ int main( int argc, char* args[] )
 			}
 
 			//Render quad
-			render();
-
+//			render();
+glClearColor(1.f, 0.f, 1.f, 1.f);
+	glClear(GL_COLOR_BUFFER_BIT);
 			//Update screen
 			SDL_GL_SwapWindow( gWindow );
 		}

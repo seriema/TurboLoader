@@ -59,9 +59,10 @@ bool init() {
 		display_height = dispMode.h;
 
 	//Create window
-	gWindow = SDL_CreateWindow("SDL Tutorial",
+	gWindow = SDL_CreateWindow("A retro UI",
 		SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-		display_width, display_height,
+//		display_width, display_height,
+		0, 0,
 		SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN);
 	if (gWindow == NULL) {
 		printf("Window could not be created! SDL Error: %s\n", SDL_GetError());

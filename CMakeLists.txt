@@ -118,7 +118,7 @@ add_library(bgfx_3rdparty ${BGFX_3RDPARTY_FILES}) # Doesn't seem to be needed?
 add_library(bgfx ${BGFX_AMALGAMATED_SOURCE})
 
 # MAIN
-add_executable(a_retro_ui main.cpp)
+add_executable(a_retro_ui __main.cpp)
 target_link_libraries(a_retro_ui
 	bgfx
 	bgfx_3rdparty
