@@ -53,9 +53,9 @@ bool init() {
 
 	SDL_DisplayMode dispMode;
 	SDL_GetDesktopDisplayMode(0, &dispMode);
-	if(display_width == 0)
+//	if(display_width == 0)
 		display_width = dispMode.w;
-	if(display_height == 0)
+//	if(display_height == 0)
 		display_height = dispMode.h;
 
 	//Create window

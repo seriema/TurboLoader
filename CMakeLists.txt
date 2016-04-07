@@ -47,12 +47,18 @@ if(EXISTS "/opt/vc/include/bcm_host.h")
 	MESSAGE("Building for Raspberry Pi")
 
 	add_definitions(-DBGFX_CONFIG_RENDERER_OPENGLES=1)
+# turning either of these on gives "Segmentation fault"
+#	add_definitions(-DBGFX_CONFIG_RENDERER_OPENGL=1)
+#	add_definitions(-DBGFX_CONFIG_MULTITHREADED=0)
 
 	# Fixes "UINT8_MAX was not declared in this scope" type errors (stdint.h fail).
 	# See https://github.com/bkaradzic/bgfx/issues/248#issuecomment-122395431
 	add_definitions(-D__STDC_LIMIT_MACROS=1)
 	add_definitions(-D__STDC_FORMAT_MACROS=1)
 	add_definitions(-D__STDC_CONSTANT_MACROS=1)
+# these give "warning: "BX_PLATFORM_RPI" redefined [enabled by default]"
+#	add_definitions(-DBGFX_USE_EGL=1)
+#	add_definitions(-DBX_PLATFORM_RPI=1)
 
 	set(BGFX_AMALGAMATED_SOURCE
 		dependencies/bgfx/src/amalgamated.cpp
@@ -108,14 +114,14 @@ set(CROSS_PLATFORM_LIBRARIES
 #	OpenGL
 )
 
-#add_library(bgfx_3rdparty ${BGFX_3RDPARTY_FILES}) # Doesn't seem to be needed?
+add_library(bgfx_3rdparty ${BGFX_3RDPARTY_FILES}) # Doesn't seem to be needed?
 add_library(bgfx ${BGFX_AMALGAMATED_SOURCE})
 
 # MAIN
 add_executable(a_retro_ui main.cpp)
 target_link_libraries(a_retro_ui
 	bgfx
-##	bgfx_3rdparty
+	bgfx_3rdparty
 	${PLATFORM_SPECIFIC_LIBRARIES}
 	${CROSS_PLATFORM_LIBRARIES}
 )
