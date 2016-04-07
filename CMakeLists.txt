@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 2.8)
 project(a_retro_ui)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
@@ -14,7 +14,6 @@ include_directories(dependencies/bgfx/3rdparty/khronos) # needed for gl/glext.h
 
 # include bx directories
 include_directories(dependencies/bx/include)
-include_directories(dependencies/bx/include/compat/osx) # needed for malloc.h
 
 # bgfx 3rd party files
 set(BGFX_3RDPARTY_FILES
@@ -35,9 +34,13 @@ if(EXISTS "/opt/vc/include/bcm_host.h")
 	#set(BCMHOST found)
 	#set(GLSystem "OpenGL ES")
 
+#	add_definitions(-D__STDC_LIMIT_MACROS=1)
+
 	add_library(bgfx
 		dependencies/bgfx/src/amalgamated.cpp
 	)
+
+#	include_directories(dependencies/bx/include/compat/freebsd)
 
 	# Platform dependent libraries
 #	set(PLATFORM_LIBRARIES
@@ -49,6 +52,8 @@ else()
 endif()
 IF(APPLE)
 	MESSAGE("Building for OSX")
+
+	include_directories(dependencies/bx/include/compat/osx) # needed for malloc.h
 
 	add_library(bgfx
 		dependencies/bgfx/src/amalgamated.mm
