@@ -28,12 +28,31 @@ add_library(bgfx_3rdparty
 )
 
 # bgfx files
-add_library(bgfx
-	dependencies/bgfx/src/amalgamated.mm
-)
+#check if we're running on Raspberry Pi
+MESSAGE("Looking for bcm_host.h (raspberry pi)")
+if(EXISTS "/opt/vc/include/bcm_host.h")
+	MESSAGE("bcm_host.h found")
+	#set(BCMHOST found)
+	#set(GLSystem "OpenGL ES")
 
-# Platform dependent libraries
+	add_library(bgfx
+		dependencies/bgfx/src/amalgamated.cpp
+	)
+
+	# Platform dependent libraries
+#	set(PLATFORM_LIBRARIES
+#		${COCOA_LIBRARY} # needed for _OBJC_CLASS_$_NSOpenGLPixelFormat etc
+#	)
+
+else()
+	MESSAGE("bcm_host.h not found")
+endif()
 IF(APPLE)
+	add_library(bgfx
+		dependencies/bgfx/src/amalgamated.mm
+	)
+
+	# Platform dependent libraries
 	set(PLATFORM_LIBRARIES
 		${COCOA_LIBRARY} # needed for _OBJC_CLASS_$_NSOpenGLPixelFormat etc
 	)
