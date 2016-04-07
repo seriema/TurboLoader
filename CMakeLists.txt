@@ -57,8 +57,12 @@ if(EXISTS "/opt/vc/include/bcm_host.h")
 	MESSAGE("bcm_host.h found - assuming this is a Raspberry PI")
 	#set(BCMHOST found)
 	#set(GLSystem "OpenGL ES")
+	add_definitions(-DBX_CPU_RPI=1)
+#	add_definitions(-DBGFX_CONFIG_RENDERER_OPENGL=0)
+#	add_definitions(-DBGFX_CONFIG_RENDERER_OPENGLES=1)
 
-#	add_definitions(-D__STDC_LIMIT_MACROS=1)
+
+	#	add_definitions(-D__STDC_LIMIT_MACROS=1)
 
 	add_library(bgfx
 		dependencies/bgfx/src/amalgamated.cpp
