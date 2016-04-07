@@ -1,11 +1,12 @@
 #include "shader.h"
 
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_opengl.h>
+//#include <SDL2/SDL.h>
+#include <SDL2/SDL_opengles2.h>
+#include <khronos/GLES3/gl3.h>
 
-#include <bgfx/bgfxplatform.h> // it must be included after SDL to enable SDL integration code path.
-#include <bgfx/bgfx.h>
-#include <khronos/GLES2/gl2.h>
+//#include <bgfx/bgfxplatform.h> // it must be included after SDL to enable SDL integration code path.
+//#include <bgfx/bgfx.h>
+//#include <khronos/GLES2/gl2.h>
 
 //#include <SDL2/SDL_opengles.h>
 //#if defined(__APPLE__)

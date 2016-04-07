@@ -6,7 +6,7 @@
 #include <iostream>
 #include <vector>
 
-#include <SDL2/SDL_opengl.h>
+#include <SDL2/SDL_opengles2.h>
 
 //#if defined(__APPLE__)
 //#include <OpenGL/gl3.h>
