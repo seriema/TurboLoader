@@ -62,6 +62,11 @@ if(EXISTS "/opt/vc/include/bcm_host.h")
 #	add_definitions(-DBGFX_USE_EGL=1)
 #	add_definitions(-DBX_PLATFORM_RPI=1)
 
+	include_directories(/usr/include/X11)
+	include_directories(/opt/vc/include)
+	include_directories(/opt/vc/include/interface/vcos/pthreads)
+	include_directories(/opt/vc/include/interface/vmcs_host/linux)
+
 	set(BGFX_AMALGAMATED_SOURCE
 		dependencies/bgfx/src/amalgamated.cpp
 	)
@@ -69,8 +74,10 @@ if(EXISTS "/opt/vc/include/bcm_host.h")
 	set(PLATFORM_SPECIFIC_LIBRARIES
 		dl # fixes: undefined reference to symbol 'dlsym@@GLIBC_2.4'
 		pthread # fixes: undefined reference to symbol 'sem_post@@GLIBC_2.4'
+
 		rt # fixes: undefined reference to symbol 'clock_gettime@@GLIBC_2.4'
 		/opt/vc/lib/libGLESv2.so
+		/opt/vc/lib/libbcm_host.so
 #		bcm_host
 #		EGL
 #		${OPENGLES_LIBRARIES}
@@ -116,14 +123,14 @@ set(CROSS_PLATFORM_LIBRARIES
 #	OpenGL
 )
 
-add_library(bgfx_3rdparty ${BGFX_3RDPARTY_FILES}) # Doesn't seem to be needed?
+#add_library(bgfx_3rdparty ${BGFX_3RDPARTY_FILES}) # Doesn't seem to be needed?
 add_library(bgfx ${BGFX_AMALGAMATED_SOURCE})
 
 # MAIN
-add_executable(a_retro_ui __main.cpp)
+add_executable(a_retro_ui main.cpp)
 target_link_libraries(a_retro_ui
 	bgfx
-	bgfx_3rdparty
+#	bgfx_3rdparty
 	${PLATFORM_SPECIFIC_LIBRARIES}
 	${CROSS_PLATFORM_LIBRARIES}
 )

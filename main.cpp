@@ -7,6 +7,8 @@
 #include <SDL2/SDL_syswm.h>
 #include <SDL2/SDL_opengl.h>
 
+#include <bcm_host.h>
+
 #include <bgfx/bgfxplatform.h> // it must be included after SDL to enable SDL integration code path.
 #include <bgfx/bgfx.h>
 #include <bx/uint32_t.h>
