@@ -3,15 +3,19 @@ project(a_retro_ui)
 
 #--- BASIC SETUP -------------------------------------------------------------------------------------------------------
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wno-attributes")
 
-find_library(SDL2_LIBRARY SDL2 REQUIRED) # fixes: undefined reference to `SDL_Init', etc
+#find_library(SDL2_LIBRARY SDL2 REQUIRED) # fixes: undefined reference to `SDL_Init', etc
+#find_package(SDL2 REQUIRED) 
 
 
 #--- BGFX SETUP --------------------------------------------------------------------------------------------------------
 
 # use SDL2
 add_definitions(-DENTRY_CONFIG_USE_SDL=1)
+# set debug output
+add_definitions(-DBGFX_CONFIG_DEBUG=1)
+
 
 # include bgfx directories
 include_directories(dependencies/bgfx/include)
@@ -78,25 +82,33 @@ else(APPLE)
 		"-framework QuartzCore" # needed for _OBJC_CLASS_$_CAMetalLayer etc
 		"-framework Metal" # needed for _MTLCreateSystemDefaultDevice etc Metal stuff
 		"-framework Foundation" # needed for _NSLog
-		)
+	)
 
 endif()
 
 
 #--- EXECUTABLE SETUP -------------------------------------------------------------------------------------------
 
+#INCLUDE(FindPkgConfig)
+#PKG_SEARCH_MODULE(SDL2 REQUIRED sdl2)
+#INCLUDE_DIRECTORIES(${SDL2_INCLUDE_DIRS})
+#TARGET_LINK_LIBRARIES(sdl2test ${SDL2_LIBRARIES})
+
 set(CROSS_PLATFORM_LIBRARIES
-	${SDL2_LIBRARY}
+#	${SDL2_LIBRARY}
+#	${SDL2_LIBRARES}
+#	${OPENGLES_LIBRARIES}
+	SDL2 # fixes: undefined reference to `SDL_Init'
 )
 
-add_library(bgfx_3rdparty ${BGFX_3RDPARTY_FILES}) # Doesn't seem to be needed?
+#add_library(bgfx_3rdparty ${BGFX_3RDPARTY_FILES}) # Doesn't seem to be needed?
 add_library(bgfx ${BGFX_AMALGAMATED_SOURCE})
 
 # MAIN
 add_executable(a_retro_ui main.cpp)
 target_link_libraries(a_retro_ui
 	bgfx
-	bgfx_3rdparty
+##	bgfx_3rdparty
 	${PLATFORM_SPECIFIC_LIBRARIES}
 	${CROSS_PLATFORM_LIBRARIES}
 )

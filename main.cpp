@@ -44,10 +44,13 @@ bool init() {
 		printf("SDL could not initialize! SDL Error: %s\n", SDL_GetError());
 		return false;
 	}
+	printf("SDL_Init done\n");
 
 	//Use OpenGL 2.1
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
+	printf("SD_GL_SetAttribute done\n");
+
 
 	//Create window
 	gWindow = SDL_CreateWindow("SDL Tutorial", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH,
@@ -56,8 +59,10 @@ bool init() {
 		printf("Window could not be created! SDL Error: %s\n", SDL_GetError());
 		return false;
 	}
+	printf("SDL_CreateWindow done\n");
 
 	bgfx::sdlSetWindow(gWindow);
+	printf("bgfx::sdlSetWindow done\n");
 
 //	//Create context
 //	gContext = SDL_GL_CreateContext(gWindow);
@@ -78,14 +83,19 @@ bool init() {
 //	}
 
 //	bgfx::init(args.m_type, args.m_pciId);
+
+
 	if (!bgfx::init()) {
 		printf("Unable to initialize bgfx!\n");
 	}
-
-	bgfx::reset(SCREEN_WIDTH, SCREEN_HEIGHT, BGFX_RESET_VSYNC);
+	printf("bgfx::init done\n");
 
 	// Enable debug text.
 	bgfx::setDebug(BGFX_DEBUG_TEXT);
+	printf("bgfx::setDebug done\n");
+
+	bgfx::reset(SCREEN_WIDTH, SCREEN_HEIGHT, BGFX_RESET_VSYNC);
+	printf("bgfx::reset done\n");
 
 	// Set view 0 clear state.
 	bgfx::setViewClear(0
@@ -94,6 +104,7 @@ bool init() {
 			, 1.0f
 			, 0
 	);
+	printf("bgfx::setViewClear done\n");
 
 	return true;
 }
@@ -133,11 +144,14 @@ void close() {
 }
 
 int main(int argc, char *args[]) {
+	printf("Attempting to initialize...\n");
+
 	//Start up SDL and create window
 	if (!init()) {
 		printf("Failed to initialize!\n");
 	}
 	else {
+		printf("Initializing!\n");
 
 		//Event handler
 		SDL_Event e;
