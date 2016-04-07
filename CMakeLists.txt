@@ -80,7 +80,7 @@ else(APPLE)
 
 	MESSAGE("Building for OSX")
 
-	add_definitions(-DBGFX_CONFIG_RENDERER_OPENGL=1)
+	add_definitions(-DBGFX_CONFIG_RENDERER_OPENGLES=1)
 
 	include_directories(dependencies/bx/include/compat/osx) # needed for malloc.h
 
@@ -120,7 +120,7 @@ add_library(bgfx_3rdparty ${BGFX_3RDPARTY_FILES}) # Doesn't seem to be needed?
 add_library(bgfx ${BGFX_AMALGAMATED_SOURCE})
 
 # MAIN
-add_executable(a_retro_ui main.cpp)
+add_executable(a_retro_ui main.cpp shader.cpp)
 target_link_libraries(a_retro_ui
 	bgfx
 	bgfx_3rdparty
