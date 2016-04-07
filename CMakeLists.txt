@@ -94,11 +94,14 @@ endif()
 #INCLUDE_DIRECTORIES(${SDL2_INCLUDE_DIRS})
 #TARGET_LINK_LIBRARIES(sdl2test ${SDL2_LIBRARIES})
 
+find_package(OpenGL REQUIRED)
 set(CROSS_PLATFORM_LIBRARIES
 #	${SDL2_LIBRARY}
 #	${SDL2_LIBRARES}
 #	${OPENGLES_LIBRARIES}
+	${OPENGL_LIBRARIES}
 	SDL2 # fixes: undefined reference to `SDL_Init'
+#	OpenGL
 )
 
 #add_library(bgfx_3rdparty ${BGFX_3RDPARTY_FILES}) # Doesn't seem to be needed?
