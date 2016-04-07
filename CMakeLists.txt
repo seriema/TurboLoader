@@ -10,13 +10,32 @@ add_definitions(-DBGFX_CONFIG_RENDERER_OPENGL=1)
 include_directories(dependencies/bgfx/include)
 include_directories(dependencies/bgfx/examples/common)
 include_directories(dependencies/bgfx/3rdparty) # needed for remotery/lib/Remotery.h
+include_directories(dependencies/bgfx/3rdparty/glsl-optimizer/include) # needed for stdint.h (I think)
+include_directories(dependencies/bgfx/3rdparty/glsl-optimizer/src) # needed for stdint.h (I think)
+include_directories(dependencies/bgfx/3rdparty/glsl-optimizer/src/mesa) ## needed for stdint.h (I think)
 include_directories(dependencies/bgfx/3rdparty/khronos) # needed for gl/glext.h
 
-# include bx directories
-include_directories(dependencies/bx/include)
+#ugh...
+file(GLOB glsl_sources
+	dependencies/bgfx/3rdparty/glsl-optimizer/src/glsl/glcpp/*.c
+	dependencies/bgfx/3rdparty/glsl-optimizer/src/glsl/*.cpp
+	dependencies/bgfx/3rdparty/glsl-optimizer/src/glsl/*.c
+	dependencies/bgfx/3rdparty/glsl-optimizer/src/mesa/*.c
+	dependencies/bgfx/3rdparty/glsl-optimizer/src/mesa/main/*.c
+	dependencies/bgfx/3rdparty/glsl-optimizer/src/mesa/program/*.c
+	dependencies/bgfx/3rdparty/glsl-optimizer/src/util/*.c
+	)
+file(GLOB glsl_sources_remove
+	dependencies/bgfx/3rdparty/glsl-optimizer/src/glsl/glcpp/glcpp.cpp
+	dependencies/bgfx/3rdparty/glsl-optimizer/src/glsl/ir_set_program_inouts.cpp
+	dependencies/bgfx/3rdparty/glsl-optimizer/src/glsl/main.cpp
+	dependencies/bgfx/3rdparty/glsl-optimizer/src/glsl/builtin_stubs.cpp
+	)
+list(REMOVE_ITEM glsl_sources ${glsl_sources_remove})
 
 # bgfx 3rd party files
 set(BGFX_3RDPARTY_FILES
+	${glsl_sources}
 	dependencies/bgfx/3rdparty/ib-compress/indexbufferdecompression.cpp
 	dependencies/bgfx/3rdparty/ocornut-imgui/imgui.cpp
 	dependencies/bgfx/3rdparty/ocornut-imgui/imgui_draw.cpp
@@ -25,6 +44,11 @@ set(BGFX_3RDPARTY_FILES
 add_library(bgfx_3rdparty
 	${BGFX_3RDPARTY_FILES}
 )
+
+
+
+# include bx directories
+include_directories(dependencies/bx/include)
 
 # bgfx files
 #check if we're running on Raspberry Pi
