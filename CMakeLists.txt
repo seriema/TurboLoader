@@ -62,6 +62,10 @@ if(EXISTS "/opt/vc/include/bcm_host.h")
 		dl # fixes: undefined reference to symbol 'dlsym@@GLIBC_2.4'
 		pthread # fixes: undefined reference to symbol 'sem_post@@GLIBC_2.4'
 		rt # fixes: undefined reference to symbol 'clock_gettime@@GLIBC_2.4'
+
+#		bcm_host
+#		EGL
+#		${OPENGLES_LIBRARIES}
 	)
 
 else(APPLE)

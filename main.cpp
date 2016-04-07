@@ -106,6 +106,7 @@ void render() {
 
 	// Use debug font to print information about this example.
 	bgfx::dbgTextClear();
+/*
 	bgfx::dbgTextImage(bx::uint16_max(display_width/2/8, 20)-20
 			, bx::uint16_max(display_height/2/16, 6)-6
 			, 40
@@ -113,6 +114,7 @@ void render() {
 			, s_logo
 			, 160
 	);
+*/
 	bgfx::dbgTextPrintf(0, 1, 0x4f, "bgfx/examples/00-helloworld");
 	bgfx::dbgTextPrintf(0, 2, 0x6f, "Description: Initialization and debug text.");
 
