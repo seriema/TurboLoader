@@ -5,6 +5,8 @@ project(a_retro_ui)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wno-attributes")
 
+set(CMAKE_LIBRARY_PATH /opt/vc/lib)
+
 #find_library(SDL2_LIBRARY SDL2 REQUIRED) # fixes: undefined reference to `SDL_Init', etc
 #find_package(SDL2 REQUIRED) 
 
@@ -68,7 +70,7 @@ if(EXISTS "/opt/vc/include/bcm_host.h")
 		dl # fixes: undefined reference to symbol 'dlsym@@GLIBC_2.4'
 		pthread # fixes: undefined reference to symbol 'sem_post@@GLIBC_2.4'
 		rt # fixes: undefined reference to symbol 'clock_gettime@@GLIBC_2.4'
-
+		/opt/vc/lib/libGLESv2.so
 #		bcm_host
 #		EGL
 #		${OPENGLES_LIBRARIES}
