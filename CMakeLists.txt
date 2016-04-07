@@ -4,7 +4,6 @@ project(a_retro_ui)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
 add_definitions(-DENTRY_CONFIG_USE_SDL=1)
-add_definitions(-DBGFX_CONFIG_RENDERER_OPENGL=1)
 
 # include bgfx directories
 include_directories(dependencies/bgfx/include)
@@ -57,12 +56,16 @@ if(EXISTS "/opt/vc/include/bcm_host.h")
 	MESSAGE("bcm_host.h found - assuming this is a Raspberry PI")
 	#set(BCMHOST found)
 	#set(GLSystem "OpenGL ES")
-	add_definitions(-DBX_CPU_RPI=1)
-#	add_definitions(-DBGFX_CONFIG_RENDERER_OPENGL=0)
-#	add_definitions(-DBGFX_CONFIG_RENDERER_OPENGLES=1)
+##	add_definitions(-DBX_CPU_RPI=1)
+	add_definitions(-DBGFX_CONFIG_RENDERER_OPENGLES=1)
 
+	add_definitions(-D__STDC_LIMIT_MACROS=1)
+	add_definitions(-D__STDC_FORMAT_MACROS=1)
+	add_definitions(-D__STDC_CONSTANT_MACROS=1)
 
 	#	add_definitions(-D__STDC_LIMIT_MACROS=1)
+
+#	find_package (Threads) # http://stackoverflow.com/a/29871891
 
 	add_library(bgfx
 		dependencies/bgfx/src/amalgamated.cpp
@@ -71,15 +74,20 @@ if(EXISTS "/opt/vc/include/bcm_host.h")
 #	include_directories(dependencies/bx/include/compat/freebsd)
 
 	# Platform dependent libraries
-#	set(PLATFORM_LIBRARIES
+	set(PLATFORM_LIBRARIES
 #		${COCOA_LIBRARY} # needed for _OBJC_CLASS_$_NSOpenGLPixelFormat etc
-#	)
+		dl # fixes: undefined reference to symbol 'dlsym@@GLIBC_2.4'
+		pthread # fixes: undefined reference to symbol 'sem_post@@GLIBC_2.4'
+		rt # fixes: undefined reference to symbol 'clock_gettime@@GLIBC_2.4'
+	)
 
 else()
 	MESSAGE("bcm_host.h not found")
 endif()
 IF(APPLE)
 	MESSAGE("Building for OSX")
+
+	add_definitions(-DBGFX_CONFIG_RENDERER_OPENGL=1)
 
 	include_directories(dependencies/bx/include/compat/osx) # needed for malloc.h
 
