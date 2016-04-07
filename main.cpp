@@ -15,9 +15,8 @@
 
 
 //Screen dimension constants
-const int SCREEN_WIDTH = 800;
-const int SCREEN_HEIGHT = 600;
-
+unsigned int display_width = 800;
+unsigned int display_height = 600;
 
 //Main loop flag
 bool quit = false;
@@ -44,48 +43,47 @@ bool init() {
 		printf("SDL could not initialize! SDL Error: %s\n", SDL_GetError());
 		return false;
 	}
+	printf("SDL_Init done\n");
 
 	//Use OpenGL 2.1
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 1);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
+	printf("SD_GL_SetAttribute done\n");
+
+
+	SDL_DisplayMode dispMode;
+	SDL_GetDesktopDisplayMode(0, &dispMode);
+//	if(display_width == 0)
+		display_width = dispMode.w;
+//	if(display_height == 0)
+		display_height = dispMode.h;
 
 	//Create window
-	gWindow = SDL_CreateWindow("SDL Tutorial", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH,
-							   SCREEN_HEIGHT, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
+	gWindow = SDL_CreateWindow("A retro UI",
+		SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+//		display_width, display_height,
+		0, 0,
+		SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN);
 	if (gWindow == NULL) {
 		printf("Window could not be created! SDL Error: %s\n", SDL_GetError());
 		return false;
 	}
+	printf("SDL_CreateWindow done\n");
 
 	bgfx::sdlSetWindow(gWindow);
+	printf("bgfx::sdlSetWindow done\n");
 
-//	//Create context
-//	gContext = SDL_GL_CreateContext(gWindow);
-//	if (gContext == NULL) {
-//		printf("OpenGL context could not be created! SDL Error: %s\n", SDL_GetError());
-//		return false;
-//	}
-//
-//	//Use Vsync
-//	if (SDL_GL_SetSwapInterval(1) < 0) {
-//		printf("Warning: Unable to set VSync! SDL Error: %s\n", SDL_GetError());
-//	}
-//
-//	//Initialize OpenGL
-//	if (!initGL()) {
-//		printf("Unable to initialize OpenGL!\n");
-//		return false;
-//	}
-
-//	bgfx::init(args.m_type, args.m_pciId);
 	if (!bgfx::init()) {
 		printf("Unable to initialize bgfx!\n");
 	}
-
-	bgfx::reset(SCREEN_WIDTH, SCREEN_HEIGHT, BGFX_RESET_VSYNC);
+	printf("bgfx::init done\n");
 
 	// Enable debug text.
 	bgfx::setDebug(BGFX_DEBUG_TEXT);
+	printf("bgfx::setDebug done\n");
+
+	bgfx::reset(display_width, display_height, BGFX_RESET_VSYNC);
+	printf("bgfx::reset done\n");
 
 	// Set view 0 clear state.
 	bgfx::setViewClear(0
@@ -94,13 +92,14 @@ bool init() {
 			, 1.0f
 			, 0
 	);
+	printf("bgfx::setViewClear done\n");
 
 	return true;
 }
 
 void render() {
 	// Set view 0 default viewport.
-	bgfx::setViewRect(0, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	bgfx::setViewRect(0, 0, 0, display_width, display_height);
 
 	// This dummy draw call is here to make sure that view 0 is cleared
 	// if no other draw calls are submitted to view 0.
@@ -108,13 +107,15 @@ void render() {
 
 	// Use debug font to print information about this example.
 	bgfx::dbgTextClear();
-	bgfx::dbgTextImage(bx::uint16_max(SCREEN_WIDTH /2/8, 20)-20
-			, bx::uint16_max(SCREEN_HEIGHT/2/16, 6)-6
+/*
+	bgfx::dbgTextImage(bx::uint16_max(display_width/2/8, 20)-20
+			, bx::uint16_max(display_height/2/16, 6)-6
 			, 40
 			, 12
 			, s_logo
 			, 160
 	);
+*/
 	bgfx::dbgTextPrintf(0, 1, 0x4f, "bgfx/examples/00-helloworld");
 	bgfx::dbgTextPrintf(0, 2, 0x6f, "Description: Initialization and debug text.");
 
@@ -133,11 +134,14 @@ void close() {
 }
 
 int main(int argc, char *args[]) {
+	printf("Attempting to initialize...\n");
+
 	//Start up SDL and create window
 	if (!init()) {
 		printf("Failed to initialize!\n");
 	}
 	else {
+		printf("Initializing!\n");
 
 		//Event handler
 		SDL_Event e;
