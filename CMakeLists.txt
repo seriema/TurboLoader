@@ -9,6 +9,10 @@ set(CMAKE_LIBRARY_PATH /opt/vc/lib)
 
 #find_library(SDL2_LIBRARY SDL2 REQUIRED) # fixes: undefined reference to `SDL_Init', etc
 #find_package(SDL2 REQUIRED)
+find_package(PkgConfig REQUIRED)
+pkg_search_module(SDL2 REQUIRED sdl2)
+find_package(OpenGL REQUIRED)
+find_package(GLM REQUIRED)
 
 
 #--- BGFX SETUP --------------------------------------------------------------------------------------------------------
@@ -120,7 +124,7 @@ add_library(bgfx_3rdparty ${BGFX_3RDPARTY_FILES}) # Doesn't seem to be needed?
 add_library(bgfx ${BGFX_AMALGAMATED_SOURCE})
 
 # MAIN
-add_executable(a_retro_ui main.cpp)
+add_executable(a_retro_ui main.cpp EventHandler.cpp)
 target_link_libraries(a_retro_ui
 	bgfx
 	bgfx_3rdparty
