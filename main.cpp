@@ -11,11 +11,11 @@
 
 
 #if defined(__APPLE__)
-	#include <OpenGL/gl.h>
+	#include <OpenGL/gl3.h>
 #elif defined(_WIN32)
-	#include <GL/gl.h>
+	#include <GL/gl3.h>
 #else // RPI
-	#include <GLES/gl.h>
+	#include <GLES2/gl2.h>
 #endif
 
 #include "shader.h"

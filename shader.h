@@ -6,7 +6,7 @@
 #elif defined(_WIN32)
 	#include <GL/gl3.h>
 #else // RPI
-	#include <GLES/gl.h>
+	#include <GLES2/gl2.h>
 #endif
 
 #include <string>
