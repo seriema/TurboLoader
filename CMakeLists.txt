@@ -19,6 +19,11 @@ find_package(OpenGL REQUIRED)
 # use SDL2
 add_definitions(-DENTRY_CONFIG_USE_SDL=1)
 
+# SDL2 breaks because both gl.h and gl3.h is included, should be fixed in v2.0.4
+# http://stackoverflow.com/questions/19072278/sdl2-mac-os-x-and-opengl-how-to-avoid-including-both-gl-h-and-gl3-h
+add_definitions(-D__gl_h_=1)
+add_definitions(-DGL_DO_NOT_WARN_IF_MULTI_GL_VERSION_HEADERS_INCLUDED=1)
+
 #--- PLATFORM SPECIFIC SETUP -------------------------------------------------------------------------------------------
 #---  COMPILER SETUP ---------------------------------------------------------------------------------------------------
 

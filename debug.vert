@@ -1,3 +1,4 @@
+R"(
 # version 150 core
 
 in vec3 vert;
@@ -15,3 +16,4 @@ void main (void)
     gl_Position = pMat * vMat * vec4(vert, 1.f);
     col = vec4(clr, 1.f);
 }
+)"

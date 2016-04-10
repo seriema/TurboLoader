@@ -1,3 +1,4 @@
+R"(
 #version 150 core
 
 smooth in vec4 col;
@@ -10,3 +11,4 @@ void main (void)
 {
     fragColor = col;
 }
+)"

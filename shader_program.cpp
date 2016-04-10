@@ -1,10 +1,3 @@
-//
-//  Shader.cpp
-//  plato
-//
-//  Created by glupsk on 2012-10-14.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
-//
 
 #include <iostream>
 #include <fstream>
