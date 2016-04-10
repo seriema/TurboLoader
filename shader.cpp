@@ -158,9 +158,6 @@ void Shader::link_program()
 	if (success != GL_TRUE)
 		fail_program<ProgramLinkError>();
 
-	glGenVertexArrays(1, &vao);
-	glBindVertexArray(vao);
-
 	glValidateProgram(m_program);
 	glGetProgramiv(m_program, GL_VALIDATE_STATUS, &success);
 	if (success != GL_TRUE)

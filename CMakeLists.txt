@@ -45,6 +45,11 @@ endif()
 
 #--- PLATFORM LIBRARIES SETUP ------------------------------------------------------------------------------------------
 
+
+include_directories(dependencies/bgfx/3rdparty) # needed for remotery/lib/Remotery.h
+include_directories(dependencies/bgfx/3rdparty/khronos) # needed for gl/glext.h
+
+
 #check if we're running on Raspberry Pi
 if(EXISTS "/opt/vc/include/bcm_host.h")
 
@@ -52,6 +57,12 @@ if(EXISTS "/opt/vc/include/bcm_host.h")
 
 #	find_package(OpenGLES2 REQUIRED)
 	find_package(OpenGLES REQUIRED)
+
+		if ( OPENGLES_FOUND )
+			MESSAGE( WARNING "FOUND OPENGLES" )
+		else()
+			MESSAGE( WARNING "COULDNT FIND OPENGLES" )
+		endif()
 
 	set(PLATFORM_SPECIFIC_LIBRARIES
 		dl # fixes: undefined reference to symbol 'dlsym@@GLIBC_2.4'
