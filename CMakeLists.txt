@@ -57,9 +57,13 @@ if(EXISTS "/opt/vc/include/bcm_host.h")
 		dl # fixes: undefined reference to symbol 'dlsym@@GLIBC_2.4'
 		pthread # fixes: undefined reference to symbol 'sem_post@@GLIBC_2.4'
 		rt # fixes: undefined reference to symbol 'clock_gettime@@GLIBC_2.4'
-		/opt/vc/lib/libGLESv2.so
+		#/opt/vc/lib/libGLESv2.so
+		${OPENGLES_LIBRARIES}
 #		bcm_host
 #		EGL
+	)
+
+	include_directories(
 		${OPENGLES_INCLUDE_DIR}
 	)
 
