@@ -1,3 +1,5 @@
+
+#include <iostream>
 #include <SDL2/SDL.h>
 
 #if defined(__APPLE__) || defined(_WIN32)
@@ -5,6 +7,19 @@
 #else // RPI
 	#include <SDL2/SDL_opengles2.h>
 #endif
+
+
+
+#if defined(__APPLE__)
+	#include <OpenGL/gl.h>
+#elif defined(_WIN32)
+	#include <GL/gl.h>
+#else // RPI
+	#include <GLES/gl.h>
+#endif
+
+#include "shader.h"
+
 
 //Main loop flag
 bool quit = false;
@@ -35,6 +50,15 @@ SDL_GLContext gContext;
 
 //Render flag
 bool gRenderQuad = true;
+
+
+
+
+Shader* shader = NULL;
+
+
+
+
 
 void _SDL_GL_SetAttribute(SDL_GLattr attr, int value)
 {
@@ -147,8 +171,28 @@ bool initGL()
 		return false;
 	}
 
+
+
+
+	glEnable( GL_CULL_FACE );
+	glCullFace( GL_BACK );
+	glFrontFace( GL_CCW );
+
+	// fragment blending
+	glEnable( GL_BLEND );
+	glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+
+	// depth
+	glEnable( GL_DEPTH_TEST );
+	glDepthFunc( GL_LEQUAL );
+	glDepthMask( GL_TRUE );
+
+
+
+
+
 	//Initialize clear color
-	glClearColor( 0.5f, 0.f, 0.f, 1.f );
+	glClearColor( .5f, 0.f, 0.f, 1.f );
 
 	//Check for error
 	error = glGetError();
@@ -192,6 +236,8 @@ void close()
 
 int main( int argc, char* args[] )
 {
+	std::cout << "STARTING IN: " << args[0] << std::endl;
+
 	//Start up SDL and create window
 	printf("Initializing...\n");
 	if( !init() )
@@ -200,6 +246,11 @@ int main( int argc, char* args[] )
 	}
 	else
 	{
+		shader = Shader::create( "debug" );
+		shader->bind();
+		glUseProgram( 0 );
+		delete shader;
+
 		printf("Initialized\n");
 
 		//Event handler

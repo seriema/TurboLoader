@@ -6,9 +6,19 @@
 #include <iostream>
 #include <fstream>
 
-
 #define VERT_SHADER_SUFFIX ".vert"
 #define FRAG_SHADER_SUFFIX ".frag"
+
+
+
+// TODO: HACK: This is because we haven't figured out how to bundle shaders with CMake yet
+const std::string fragmentShaderSource =
+#include "debug.frag"
+;
+const std::string vertexShaderSource =
+#include "debug.vert"
+;
+
 
 
 std::map<std::string, Shader *> Shader::shader_cache;
@@ -104,15 +114,26 @@ void Shader::fail_program()
 
 void Shader::compile_shader(const std::string & name, GLenum shader_type)
 {
-	std::ifstream file(name);
+	std::cout << "READ SHADER FILE: " << name << std::endl;
+//	std::ifstream file(name);
 
-	if (!file.is_open())
-		throw FileOpenError("File not found or could not be opened.");
+//	if (!file.is_open())
+//		throw FileOpenError("File not found or could not be opened.");
+//
+//	std::string str;
+//	getline(file, str, (char) EOF);
+//	file.close();
+//	const GLchar * src = str.c_str();
 
-	std::string str;
-	getline(file, str, (char) EOF);
-	file.close();
-	const GLchar * src = str.c_str();
+
+	// TODO: HACK: This is because we haven't figured out how to bundle shaders with CMake yet
+	const GLchar * src;
+	if (name == "debug.vert")
+		src = vertexShaderSource.c_str();
+	if (name == "debug.frag")
+		src = fragmentShaderSource.c_str();
+
+
 
 	GLuint shader_handle = glCreateShader(shader_type);
 	glShaderSource(shader_handle, 1, &src, NULL);
