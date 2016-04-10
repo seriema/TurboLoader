@@ -1,25 +1,39 @@
 cmake_minimum_required(VERSION 2.8.4)
 project(a_retro_ui)
 
-#-------------------------------------------------------------------------------
-#add local find scripts to CMAKE path
+#--- CMAKE SETUP -------------------------------------------------------------------------------------------------------
+
+# Add local find scripts to CMAKE path
 LIST(APPEND CMAKE_MODULE_PATH
 	${CMAKE_CURRENT_SOURCE_DIR}/CMake
 )
 
 
-#--- BASIC SETUP -------------------------------------------------------------------------------------------------------
+#--- PACKAGES SETUP ----------------------------------------------------------------------------------------------------
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wno-attributes")
-
-#find_library(SDL2_LIBRARY SDL2 REQUIRED) # fixes: undefined reference to `SDL_Init', etc
 find_package(SDL2 REQUIRED)
-#include_directories(${SDL2_INCLUDE_DIR})
-
-#find_package(OpenGL REQUIRED)
+find_package(OpenGL REQUIRED)
 
 
-#--- PLATFORM SPECIFIC SETUP -------------------------------------------------------------------------------------------
+#---  COMPILER SETUP ---------------------------------------------------------------------------------------------------
+
+if(MSVC)
+	set(CMAKE_DEBUG_POSTFIX "d")
+	add_definitions(-D_CRT_SECURE_NO_DEPRECATE)
+	add_definitions(-D_CRT_NONSTDC_NO_DEPRECATE)
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP") #multi-processor compilation
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /MP") #multi-processor compilation
+elseif(CMAKE_COMPILER_IS_GNUCXX)
+	#set up compiler flags for GCC
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wno-attributes -O3") #support C++11 for std::, optimize
+	set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -O3")  #-s = strip binary
+else() #??
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+endif()
+
+
+
+#--- PLATFORM LIBRARIES SETUP ------------------------------------------------------------------------------------------
 
 #check if we're running on Raspberry Pi
 if(EXISTS "/opt/vc/include/bcm_host.h")
@@ -58,22 +72,17 @@ elseif(MSVC)
 endif()
 
 
-#--- EXECUTABLE SETUP -------------------------------------------------------------------------------------------
+#--- CROSS-PLATFORM LIBRARIES SETUP ------------------------------------------------------------------------------------
 
-#INCLUDE(FindPkgConfig)
-#PKG_SEARCH_MODULE(SDL2 REQUIRED sdl2)
-#INCLUDE_DIRECTORIES(${SDL2_INCLUDE_DIRS})
-#TARGET_LINK_LIBRARIES(sdl2test ${SDL2_LIBRARIES})
+include_directories(${SDL2_INCLUDE_DIR})
 
-find_package(OpenGL REQUIRED)
 set(CROSS_PLATFORM_LIBRARIES
 	${SDL2_LIBRARY}
-#	${SDL2_LIBRARES}
-#	${OPENGLES_LIBRARIES}
 	${OPENGL_LIBRARIES}
-###	SDL2 # fixes: undefined reference to `SDL_Init'
-#	OpenGL
 )
+
+
+#--- EXECUTABLE SETUP --------------------------------------------------------------------------------------------------
 
 # MAIN
 add_executable(a_retro_ui main.cpp)
