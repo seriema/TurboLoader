@@ -11,60 +11,19 @@ set(CMAKE_LIBRARY_PATH /opt/vc/lib)
 #find_package(SDL2 REQUIRED)
 
 
-#--- BGFX SETUP --------------------------------------------------------------------------------------------------------
+#--- SDL2 SETUP --------------------------------------------------------------------------------------------------------
 
 # use SDL2
 add_definitions(-DENTRY_CONFIG_USE_SDL=1)
-# set debug output
-add_definitions(-DBGFX_CONFIG_DEBUG=1)
-
-
-# include bgfx directories
-include_directories(dependencies/bgfx/include)
-include_directories(dependencies/bgfx/examples/common)
-include_directories(dependencies/bgfx/3rdparty) # needed for remotery/lib/Remotery.h
-include_directories(dependencies/bgfx/3rdparty/khronos) # needed for gl/glext.h
-
-# bgfx 3rd party files
-set(BGFX_3RDPARTY_FILES
-	dependencies/bgfx/3rdparty/ib-compress/indexbufferdecompression.cpp
-	dependencies/bgfx/3rdparty/ocornut-imgui/imgui.cpp
-	dependencies/bgfx/3rdparty/ocornut-imgui/imgui_draw.cpp
-	dependencies/bgfx/3rdparty/ocornut-imgui/imgui_wm.cpp
-)
-
-
-
-#--- BX SETUP ----------------------------------------------------------------------------------------------------------
-
-# include bx directories
-include_directories(dependencies/bx/include)
-
 
 #--- PLATFORM SPECIFIC SETUP -------------------------------------------------------------------------------------------
 
 #check if we're running on Raspberry Pi
 if(EXISTS "/opt/vc/include/bcm_host.h")
 
-	MESSAGE("Building for Raspberry Pi")
+	MESSAGE(WARNING Building for Raspberry Pi)
 
-	add_definitions(-DBGFX_CONFIG_RENDERER_OPENGLES=1)
-# turning either of these on gives "Segmentation fault"
-#	add_definitions(-DBGFX_CONFIG_RENDERER_OPENGL=1)
-#	add_definitions(-DBGFX_CONFIG_MULTITHREADED=0)
-
-	# Fixes "UINT8_MAX was not declared in this scope" type errors (stdint.h fail).
-	# See https://github.com/bkaradzic/bgfx/issues/248#issuecomment-122395431
-	add_definitions(-D__STDC_LIMIT_MACROS=1)
-	add_definitions(-D__STDC_FORMAT_MACROS=1)
-	add_definitions(-D__STDC_CONSTANT_MACROS=1)
-# these give "warning: "BX_PLATFORM_RPI" redefined [enabled by default]"
-#	add_definitions(-DBGFX_USE_EGL=1)
-#	add_definitions(-DBX_PLATFORM_RPI=1)
-
-	set(BGFX_AMALGAMATED_SOURCE
-		dependencies/bgfx/src/amalgamated.cpp
-	)
+	find_package(OpenGL REQUIRED)
 
 	set(PLATFORM_SPECIFIC_LIBRARIES
 		dl # fixes: undefined reference to symbol 'dlsym@@GLIBC_2.4'
@@ -73,57 +32,51 @@ if(EXISTS "/opt/vc/include/bcm_host.h")
 		/opt/vc/lib/libGLESv2.so
 #		bcm_host
 #		EGL
-#		${OPENGLES_LIBRARIES}
+		${OPENGLES_LIBRARIES}
 	)
 
 else(APPLE)
 
-	MESSAGE("Building for OSX")
+	MESSAGE(WARNING "Building for OSX")
 
-	add_definitions(-DBGFX_CONFIG_RENDERER_OPENGL=1)
-
-	include_directories(dependencies/bx/include/compat/osx) # needed for malloc.h
-
-	set(BGFX_AMALGAMATED_SOURCE
-		dependencies/bgfx/src/amalgamated.mm
-	)
+	find_package(OpenGL REQUIRED)
 
 	# Platform dependent libraries
 	set(PLATFORM_SPECIFIC_LIBRARIES
 		"-framework Cocoa" # needed for _OBJC_CLASS_$_NSOpenGLPixelFormat etc
-		"-framework QuartzCore" # needed for _OBJC_CLASS_$_CAMetalLayer etc
-		"-framework Metal" # needed for _MTLCreateSystemDefaultDevice etc Metal stuff
+#		"-framework QuartzCore" # needed for _OBJC_CLASS_$_CAMetalLayer etc
+#		"-framework Metal" # needed for _MTLCreateSystemDefaultDevice etc Metal stuff
 		"-framework Foundation" # needed for _NSLog
+		${OPENGL_LIBRARIES}
 	)
 
 endif()
 
 
-#--- EXECUTABLE SETUP -------------------------------------------------------------------------------------------
+#--- EXECUTABLE SETUP --------------------------------------------------------------------------------------------------
 
 #INCLUDE(FindPkgConfig)
 #PKG_SEARCH_MODULE(SDL2 REQUIRED sdl2)
 #INCLUDE_DIRECTORIES(${SDL2_INCLUDE_DIRS})
 #TARGET_LINK_LIBRARIES(sdl2test ${SDL2_LIBRARIES})
 
-find_package(OpenGL REQUIRED)
 set(CROSS_PLATFORM_LIBRARIES
 #	${SDL2_LIBRARY}
 #	${SDL2_LIBRARES}
 #	${OPENGLES_LIBRARIES}
-	${OPENGL_LIBRARIES}
 	SDL2 # fixes: undefined reference to `SDL_Init'
 #	OpenGL
 )
 
-add_library(bgfx_3rdparty ${BGFX_3RDPARTY_FILES}) # Doesn't seem to be needed?
-add_library(bgfx ${BGFX_AMALGAMATED_SOURCE})
-
 # MAIN
-add_executable(a_retro_ui main.cpp)
+add_executable(a_retro_ui
+		main.cpp
+		shader.h
+		shader.cpp
+		shader_program.h
+		shader_program.cpp)
+
 target_link_libraries(a_retro_ui
-	bgfx
-	bgfx_3rdparty
 	${PLATFORM_SPECIFIC_LIBRARIES}
 	${CROSS_PLATFORM_LIBRARIES}
 )

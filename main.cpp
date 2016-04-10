@@ -1,10 +1,13 @@
 #include <SDL2/SDL.h>
-//#include <SDL2/SDL_opengl.h>
-#include <SDL2/SDL_opengles2.h>
+
+#if defined(__APPLE__) || defined(_WIN32)
+	#include <SDL2/SDL_opengl.h>
+#else // RPI
+	#include <SDL2/SDL_opengles2.h>
+#endif
 
 //Main loop flag
 bool quit = false;
-
 
 //Starts up SDL, creates window, and initializes OpenGL
 bool init();
@@ -50,10 +53,6 @@ bool init()
 		return false;
 	}
 
-	//Use OpenGL ES
-	_SDL_GL_SetAttribute( SDL_GL_CONTEXT_MAJOR_VERSION, 2 );
-	_SDL_GL_SetAttribute( SDL_GL_CONTEXT_MINOR_VERSION, 0 );
-
 	//hide mouse cursor early
 //	SDL_ShowCursor(0);
 
@@ -62,7 +61,16 @@ bool init()
 	_SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
 	_SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
 	_SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-//	_SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
+
+#if defined(__APPLE__) || defined(_WIN32)
+	_SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+	_SDL_GL_SetAttribute( SDL_GL_CONTEXT_MAJOR_VERSION, 2 );
+	_SDL_GL_SetAttribute( SDL_GL_CONTEXT_MINOR_VERSION, 0 );
+#else // RPI
+	_SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
+	_SDL_GL_SetAttribute( SDL_GL_CONTEXT_MAJOR_VERSION, 2 );
+	_SDL_GL_SetAttribute( SDL_GL_CONTEXT_MINOR_VERSION, 0 );
+#endif
 
 	SDL_DisplayMode dispMode;
 	//SDL_GetDesktopDisplayMode(0, &dispMode);
@@ -72,12 +80,14 @@ bool init()
 	//Create window
 	gWindow = SDL_CreateWindow(
 		"SDL Tutorial",
-		//SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
 		SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+#if defined(__APPLE__) || defined(_WIN32)
+		960, 480,
+		SDL_WINDOW_OPENGL | SDL_WINDOW_BORDERLESS
+#else
 		dispMode.w, dispMode.h,
-//		640, 480,
-//		0, 0,
-		SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN | SDL_WINDOW_SHOWN
+		SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN
+#endif
 	);
 	if( gWindow == NULL )
 	{
