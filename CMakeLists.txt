@@ -14,7 +14,12 @@ LIST(APPEND CMAKE_MODULE_PATH
 find_package(SDL2 REQUIRED)
 find_package(OpenGL REQUIRED)
 
+#--- SDL2 SETUP --------------------------------------------------------------------------------------------------------
 
+# use SDL2
+add_definitions(-DENTRY_CONFIG_USE_SDL=1)
+
+#--- PLATFORM SPECIFIC SETUP -------------------------------------------------------------------------------------------
 #---  COMPILER SETUP ---------------------------------------------------------------------------------------------------
 
 if(MSVC)
@@ -38,9 +43,9 @@ endif()
 #check if we're running on Raspberry Pi
 if(EXISTS "/opt/vc/include/bcm_host.h")
 
-	MESSAGE("Building for Raspberry Pi")
+	MESSAGE(WARNING Building for Raspberry Pi)
 
-	set(CMAKE_LIBRARY_PATH /opt/vc/lib)
+	find_package(OpenGL REQUIRED)
 
 	set(PLATFORM_SPECIFIC_LIBRARIES
 		dl # fixes: undefined reference to symbol 'dlsym@@GLIBC_2.4'
@@ -49,21 +54,22 @@ if(EXISTS "/opt/vc/include/bcm_host.h")
 		/opt/vc/lib/libGLESv2.so
 #		bcm_host
 #		EGL
-#		${OPENGLES_LIBRARIES}
+		${OPENGLES_LIBRARIES}
 	)
 
 elseif(APPLE)
 
-	MESSAGE("Building for OSX")
+	MESSAGE(WARNING "Building for OSX")
 
-	include_directories(dependencies/bgfx/3rdparty/khronos) # needed for gl/glext.h
+	find_package(OpenGL REQUIRED)
 
 	# Platform dependent libraries
 	set(PLATFORM_SPECIFIC_LIBRARIES
 		"-framework Cocoa" # needed for _OBJC_CLASS_$_NSOpenGLPixelFormat etc
-		"-framework QuartzCore" # needed for _OBJC_CLASS_$_CAMetalLayer etc
-		"-framework Metal" # needed for _MTLCreateSystemDefaultDevice etc Metal stuff
+#		"-framework QuartzCore" # needed for _OBJC_CLASS_$_CAMetalLayer etc
+#		"-framework Metal" # needed for _MTLCreateSystemDefaultDevice etc Metal stuff
 		"-framework Foundation" # needed for _NSLog
+		${OPENGL_LIBRARIES}
 	)
 
 elseif(MSVC)
@@ -74,20 +80,30 @@ elseif(MSVC)
 endif()
 
 
+#--- EXECUTABLE SETUP --------------------------------------------------------------------------------------------------
 #--- CROSS-PLATFORM LIBRARIES SETUP ------------------------------------------------------------------------------------
 
 include_directories(${SDL2_INCLUDE_DIR})
 
 set(CROSS_PLATFORM_LIBRARIES
-	${SDL2_LIBRARY}
-	${OPENGL_LIBRARIES}
+#	${SDL2_LIBRARY}
+#	${SDL2_LIBRARES}
+#	${OPENGLES_LIBRARIES}
+	SDL2 # fixes: undefined reference to `SDL_Init'
+#	OpenGL
 )
 
 
 #--- EXECUTABLE SETUP --------------------------------------------------------------------------------------------------
 
 # MAIN
-add_executable(a_retro_ui main.cpp)
+add_executable(a_retro_ui
+		main.cpp
+		shader.h
+		shader.cpp
+		shader_program.h
+		shader_program.cpp)
+
 target_link_libraries(a_retro_ui
 	${PLATFORM_SPECIFIC_LIBRARIES}
 	${CROSS_PLATFORM_LIBRARIES}
