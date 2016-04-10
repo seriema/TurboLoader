@@ -50,7 +50,8 @@ if(EXISTS "/opt/vc/include/bcm_host.h")
 
 	MESSAGE(WARNING Building for Raspberry Pi)
 
-	find_package(OpenGL REQUIRED)
+#	find_package(OpenGLES2 REQUIRED)
+	find_package(OpenGLES REQUIRED)
 
 	set(PLATFORM_SPECIFIC_LIBRARIES
 		dl # fixes: undefined reference to symbol 'dlsym@@GLIBC_2.4'
@@ -59,7 +60,7 @@ if(EXISTS "/opt/vc/include/bcm_host.h")
 		/opt/vc/lib/libGLESv2.so
 #		bcm_host
 #		EGL
-		${OPENGLES_LIBRARIES}
+		${OPENGLES_INCLUDE_DIR}
 	)
 
 elseif(APPLE)
