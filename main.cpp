@@ -1,12 +1,20 @@
-#include <stdio.h>
 
-#include <SDL.h>
-#include <SDL2/SDL_opengl.h>
-//#include <SDL_opengles2.h>
+#include <iostream>
+#include <SDL2/SDL.h>
+
+#if defined(__APPLE__) || defined(_WIN32)
+	#include <SDL2/SDL_opengl.h>
+#else // RPI
+	#include <SDL2/SDL_opengles2.h>
+#endif
+
+
+#include "platform.h"
+#include "shader.h"
+
 
 //Main loop flag
 bool quit = false;
-
 
 //Starts up SDL, creates window, and initializes OpenGL
 bool init();
@@ -35,6 +43,15 @@ SDL_GLContext gContext;
 //Render flag
 bool gRenderQuad = true;
 
+
+
+
+Shader* shader = NULL;
+
+
+
+
+
 void _SDL_GL_SetAttribute(SDL_GLattr attr, int value)
 {
   if (SDL_GL_SetAttribute(attr, value) != 0)
@@ -52,10 +69,6 @@ bool init()
 		return false;
 	}
 
-	//Use OpenGL ES
-	_SDL_GL_SetAttribute( SDL_GL_CONTEXT_MAJOR_VERSION, 2 );
-	_SDL_GL_SetAttribute( SDL_GL_CONTEXT_MINOR_VERSION, 0 );
-
 	//hide mouse cursor early
 //	SDL_ShowCursor(0);
 
@@ -64,7 +77,17 @@ bool init()
 	_SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
 	_SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
 	_SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-//	_SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
+
+#if defined(__APPLE__) || defined(_WIN32)
+	//_SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+	_SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_COMPATIBILITY);
+	_SDL_GL_SetAttribute( SDL_GL_CONTEXT_MAJOR_VERSION, 2 );
+	_SDL_GL_SetAttribute( SDL_GL_CONTEXT_MINOR_VERSION, 1 );
+#else // RPI
+	_SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
+	_SDL_GL_SetAttribute( SDL_GL_CONTEXT_MAJOR_VERSION, 2 );
+	_SDL_GL_SetAttribute( SDL_GL_CONTEXT_MINOR_VERSION, 0 );
+#endif
 
 	SDL_DisplayMode dispMode;
 	//SDL_GetDesktopDisplayMode(0, &dispMode);
@@ -74,12 +97,14 @@ bool init()
 	//Create window
 	gWindow = SDL_CreateWindow(
 		"SDL Tutorial",
-		//SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
 		SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+#if defined(__APPLE__) || defined(_WIN32)
+		960, 480,
+		SDL_WINDOW_OPENGL | SDL_WINDOW_BORDERLESS
+#else
 		dispMode.w, dispMode.h,
-//		640, 480,
-//		0, 0,
-		SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN | SDL_WINDOW_SHOWN
+		SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN
+#endif
 	);
 	if( gWindow == NULL )
 	{
@@ -112,6 +137,15 @@ bool init()
 		return false;
 	}
 
+	printf("----------------------------------------------------------------\n");
+	printf("Initialized OpenGL\n");
+	printf("OpenGL Info\n");
+	printf("    Version: %s\n", glGetString(GL_VERSION));
+	printf("     Vendor: %s\n", glGetString(GL_VENDOR));
+	printf("   Renderer: %s\n", glGetString(GL_RENDERER));
+	printf("    Shading: %s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
+	printf("----------------------------------------------------------------\n");
+
 	return true;
 }
 
@@ -139,8 +173,28 @@ bool initGL()
 		return false;
 	}
 
+
+
+
+	glEnable( GL_CULL_FACE );
+	glCullFace( GL_BACK );
+	glFrontFace( GL_CCW );
+
+	// fragment blending
+	glEnable( GL_BLEND );
+	glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+
+	// depth
+	glEnable( GL_DEPTH_TEST );
+	glDepthFunc( GL_LEQUAL );
+	glDepthMask( GL_TRUE );
+
+
+
+
+
 	//Initialize clear color
-	glClearColor( 0.5f, 0.f, 0.f, 1.f );
+	//glClearColor( .5f, 0.f, 0.f, 1.f );
 
 	//Check for error
 	error = glGetError();
@@ -167,9 +221,6 @@ void update()
 
 void render()
 {
-	//Clear color buffer
-	glClearColor(1.f, 0.f, 1.f, 1.f);
-	glClear(GL_COLOR_BUFFER_BIT);
 }
 
 void close()
@@ -184,15 +235,42 @@ void close()
 
 int main( int argc, char* args[] )
 {
+	std::cout << "STARTING IN: " << args[0] << std::endl;
+
 	//Start up SDL and create window
 	printf("Initializing...\n");
-	if( !init() )
+	if( init() )
 	{
-		printf( "Failed to initialize!\n" );
-	}
-	else
-	{
-		printf("Initialized\n");
+		shader = Shader::create( "debug" );
+		shader->bind();
+
+		// Setup tri context
+
+		GLfloat verts[] =
+		{
+			 0.0f,  0.5f, 0.0f,
+			-0.5f, -0.5f, 0.0f,
+			 0.5f, -0.5f, 0.0f,
+		};
+
+		//GLuint vao;
+		//glGenVertexArrays( 1, &vao );
+		//glBindVertexArray( vao );
+
+		GLuint vbo;
+		glGenBuffers( 1, &vbo );
+		glBindBuffer( GL_ARRAY_BUFFER, vbo );
+		glBufferData( GL_ARRAY_BUFFER, sizeof(verts), verts, GL_STATIC_DRAW );
+
+
+		glEnableVertexAttribArray( (*shader)["pos"] );
+		glBindBuffer( GL_ARRAY_BUFFER, vbo );
+		glVertexAttribPointer( (*shader)["pos"], 3, GL_FLOAT, GL_FALSE, 3*sizeof(GL_FLOAT), 0 );
+
+
+
+		glClearColor( 1.0f, 0.1f, 1.0f, 1.0f );
+
 
 		//Event handler
 		SDL_Event e;
@@ -223,8 +301,12 @@ int main( int argc, char* args[] )
 				}
 			}
 
-			//Render quad
-			render();
+			//render();
+
+			glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
+			shader->bind();
+			glDrawArrays( GL_TRIANGLES, 0, 3 );
+
 
 			//Update screen
 			SDL_GL_SwapWindow( gWindow );
@@ -233,6 +315,16 @@ int main( int argc, char* args[] )
 		//Disable text input
 		SDL_StopTextInput();
 	}
+
+
+	delete shader;
+
+
+//	printf("ERRORS >>");
+//	printf( SDL_GetError() );
+//	printf("<< ERRORS");
+
+
 
 	//Free resources and close SDL
 	close();
