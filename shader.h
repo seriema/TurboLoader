@@ -9,6 +9,7 @@
 	#include <GLES2/gl2.h>
 #endif
 
+#include <stdexcept>
 #include <string>
 #include <map>
 
@@ -28,10 +29,7 @@ class Shader
 	void link_uniforms();
 
 	Shader(const std::string & name);
-
-
-	GLuint vao;
-
+	
 public:
 	GLuint m_program;
 	virtual ~Shader();
