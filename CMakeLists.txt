@@ -56,6 +56,8 @@ elseif(APPLE)
 
 	MESSAGE("Building for OSX")
 
+	include_directories(dependencies/bgfx/3rdparty/khronos) # needed for gl/glext.h
+
 	# Platform dependent libraries
 	set(PLATFORM_SPECIFIC_LIBRARIES
 		"-framework Cocoa" # needed for _OBJC_CLASS_$_NSOpenGLPixelFormat etc
