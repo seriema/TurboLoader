@@ -1,44 +1,22 @@
 cmake_minimum_required(VERSION 2.8)
 project(a_retro_ui)
 
+#-------------------------------------------------------------------------------
+#add local find scripts to CMAKE path
+LIST(APPEND CMAKE_MODULE_PATH
+	${CMAKE_CURRENT_SOURCE_DIR}/CMake
+)
+
+
 #--- BASIC SETUP -------------------------------------------------------------------------------------------------------
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wno-attributes")
 
-set(CMAKE_LIBRARY_PATH /opt/vc/lib)
-
 #find_library(SDL2_LIBRARY SDL2 REQUIRED) # fixes: undefined reference to `SDL_Init', etc
-#find_package(SDL2 REQUIRED)
+find_package(SDL2 REQUIRED)
+#include_directories(${SDL2_INCLUDE_DIR})
 
-
-#--- BGFX SETUP --------------------------------------------------------------------------------------------------------
-
-# use SDL2
-add_definitions(-DENTRY_CONFIG_USE_SDL=1)
-# set debug output
-add_definitions(-DBGFX_CONFIG_DEBUG=1)
-
-
-# include bgfx directories
-include_directories(dependencies/bgfx/include)
-include_directories(dependencies/bgfx/examples/common)
-include_directories(dependencies/bgfx/3rdparty) # needed for remotery/lib/Remotery.h
-include_directories(dependencies/bgfx/3rdparty/khronos) # needed for gl/glext.h
-
-# bgfx 3rd party files
-set(BGFX_3RDPARTY_FILES
-	dependencies/bgfx/3rdparty/ib-compress/indexbufferdecompression.cpp
-	dependencies/bgfx/3rdparty/ocornut-imgui/imgui.cpp
-	dependencies/bgfx/3rdparty/ocornut-imgui/imgui_draw.cpp
-	dependencies/bgfx/3rdparty/ocornut-imgui/imgui_wm.cpp
-)
-
-
-
-#--- BX SETUP ----------------------------------------------------------------------------------------------------------
-
-# include bx directories
-include_directories(dependencies/bx/include)
+#find_package(OpenGL REQUIRED)
 
 
 #--- PLATFORM SPECIFIC SETUP -------------------------------------------------------------------------------------------
@@ -48,23 +26,7 @@ if(EXISTS "/opt/vc/include/bcm_host.h")
 
 	MESSAGE("Building for Raspberry Pi")
 
-	add_definitions(-DBGFX_CONFIG_RENDERER_OPENGLES=1)
-# turning either of these on gives "Segmentation fault"
-#	add_definitions(-DBGFX_CONFIG_RENDERER_OPENGL=1)
-#	add_definitions(-DBGFX_CONFIG_MULTITHREADED=0)
-
-	# Fixes "UINT8_MAX was not declared in this scope" type errors (stdint.h fail).
-	# See https://github.com/bkaradzic/bgfx/issues/248#issuecomment-122395431
-	add_definitions(-D__STDC_LIMIT_MACROS=1)
-	add_definitions(-D__STDC_FORMAT_MACROS=1)
-	add_definitions(-D__STDC_CONSTANT_MACROS=1)
-# these give "warning: "BX_PLATFORM_RPI" redefined [enabled by default]"
-#	add_definitions(-DBGFX_USE_EGL=1)
-#	add_definitions(-DBX_PLATFORM_RPI=1)
-
-	set(BGFX_AMALGAMATED_SOURCE
-		dependencies/bgfx/src/amalgamated.cpp
-	)
+	set(CMAKE_LIBRARY_PATH /opt/vc/lib)
 
 	set(PLATFORM_SPECIFIC_LIBRARIES
 		dl # fixes: undefined reference to symbol 'dlsym@@GLIBC_2.4'
@@ -76,17 +38,9 @@ if(EXISTS "/opt/vc/include/bcm_host.h")
 #		${OPENGLES_LIBRARIES}
 	)
 
-else(APPLE)
+elseif(APPLE)
 
 	MESSAGE("Building for OSX")
-
-	add_definitions(-DBGFX_CONFIG_RENDERER_OPENGL=1)
-
-	include_directories(dependencies/bx/include/compat/osx) # needed for malloc.h
-
-	set(BGFX_AMALGAMATED_SOURCE
-		dependencies/bgfx/src/amalgamated.mm
-	)
 
 	# Platform dependent libraries
 	set(PLATFORM_SPECIFIC_LIBRARIES
@@ -95,6 +49,11 @@ else(APPLE)
 		"-framework Metal" # needed for _MTLCreateSystemDefaultDevice etc Metal stuff
 		"-framework Foundation" # needed for _NSLog
 	)
+
+elseif(MSVC)
+
+	# JP
+#	set(CMAKE_LIBRARY_PATH /cygdrive/c/libs/SDL2-2.0.3/lib)
 
 endif()
 
@@ -108,22 +67,17 @@ endif()
 
 find_package(OpenGL REQUIRED)
 set(CROSS_PLATFORM_LIBRARIES
-#	${SDL2_LIBRARY}
+	${SDL2_LIBRARY}
 #	${SDL2_LIBRARES}
 #	${OPENGLES_LIBRARIES}
 	${OPENGL_LIBRARIES}
-	SDL2 # fixes: undefined reference to `SDL_Init'
+###	SDL2 # fixes: undefined reference to `SDL_Init'
 #	OpenGL
 )
-
-add_library(bgfx_3rdparty ${BGFX_3RDPARTY_FILES}) # Doesn't seem to be needed?
-add_library(bgfx ${BGFX_AMALGAMATED_SOURCE})
 
 # MAIN
 add_executable(a_retro_ui main.cpp)
 target_link_libraries(a_retro_ui
-	bgfx
-	bgfx_3rdparty
 	${PLATFORM_SPECIFIC_LIBRARIES}
 	${CROSS_PLATFORM_LIBRARIES}
 )

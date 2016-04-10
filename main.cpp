@@ -1,6 +1,6 @@
-#include <SDL2/SDL.h>
+#include <SDL.h>
 //#include <SDL2/SDL_opengl.h>
-#include <SDL2/SDL_opengles2.h>
+#include <SDL_opengles2.h>
 
 //Main loop flag
 bool quit = false;
