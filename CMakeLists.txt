@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 2.8)
 project(a_retro_ui)
 
+LIST(APPEND CMAKE_MODULE_PATH
+	${CMAKE_CURRENT_SOURCE_DIR}/CMake
+)
+
 #--- BASIC SETUP -------------------------------------------------------------------------------------------------------
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wno-attributes")
@@ -28,7 +32,8 @@ if(EXISTS "/opt/vc/include/bcm_host.h")
 
 	MESSAGE(WARNING Building for Raspberry Pi)
 
-	find_package(OpenGL REQUIRED)
+#	find_package(OpenGLES2 REQUIRED)
+	find_package(OpenGLES REQUIRED)
 
 	set(PLATFORM_SPECIFIC_LIBRARIES
 		dl # fixes: undefined reference to symbol 'dlsym@@GLIBC_2.4'
@@ -37,7 +42,7 @@ if(EXISTS "/opt/vc/include/bcm_host.h")
 		/opt/vc/lib/libGLESv2.so
 #		bcm_host
 #		EGL
-		${OPENGLES_LIBRARIES}
+		${OPENGLES_INCLUDE_DIR}
 	)
 
 else(APPLE)
