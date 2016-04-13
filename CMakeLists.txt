@@ -69,7 +69,7 @@ elseif(APPLE)
 elseif(MSVC)
 
 	# JP
-#	set(CMAKE_LIBRARY_PATH /cygdrive/c/libs/SDL2-2.0.3/lib)
+	#set(CMAKE_LIBRARY_PATH c:/libs/SDL2-2.0.4/lib64)
 
 endif()
 

@@ -37,6 +37,8 @@ C:\libs\SDL2-2.0.4
 \ lib64
 ```
 
+NOTE: I cheated! I put SDL2.dll in the project root. Checking it in for now.
+
 Then, generate and build the Makefile with CMake:
 
 ```powershell
