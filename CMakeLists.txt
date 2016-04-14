@@ -119,11 +119,13 @@ set(CROSS_PLATFORM_LIBRARIES
 
 # MAIN
 add_executable(a_retro_ui
-		main.cpp
-		shader.h
-		shader.cpp
-		shader_program.h
-		shader_program.cpp)
+	main.cpp
+	shader.h
+	shader.cpp
+	shader_program.h
+	shader_program.cpp
+	platform.h
+)
 
 target_link_libraries(a_retro_ui
 	${PLATFORM_SPECIFIC_LIBRARIES}

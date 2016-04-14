@@ -1,14 +1,9 @@
 R"(
-#version 150 core
+//#version 100
+//precision mediump float;
 
-smooth in vec4 col;
-
-out vec4 fragColor;
-
-
-
-void main (void)
+void main ()
 {
-    fragColor = col;
+	gl_FragColor = vec4(0.0, 0.0, 0.0, 0.0);
 }
 )"

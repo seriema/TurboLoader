@@ -1,19 +1,9 @@
 R"(
-# version 150 core
+//#version 100
+//precision mediump float;
 
-in vec3 vert;
-in vec3 clr;
-
-smooth out vec4 col;
-
-uniform mat4 vMat;// model -> cam
-uniform mat4 pMat;// cam -> clip
-
-
-
-void main (void)
+void main ()
 {
-    gl_Position = pMat * vMat * vec4(vert, 1.f);
-    col = vec4(clr, 1.f);
+	gl_Position = vec4(0.0, 0.0, 1.0, 1.0);
 }
 )"

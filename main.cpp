@@ -9,15 +9,7 @@
 #endif
 
 
-
-#if defined(__APPLE__)
-	#include <OpenGL/gl3.h>
-#elif defined(_WIN32)
-	#include <GL/gl3.h>
-#else // RPI
-	#include <GLES2/gl2.h>
-#endif
-
+#include "platform.h"
 #include "shader.h"
 
 
@@ -87,9 +79,9 @@ bool init()
 	_SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
 #if defined(__APPLE__) || defined(_WIN32)
-	_SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+	_SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_COMPATIBILITY);
 	_SDL_GL_SetAttribute( SDL_GL_CONTEXT_MAJOR_VERSION, 2 );
-	_SDL_GL_SetAttribute( SDL_GL_CONTEXT_MINOR_VERSION, 0 );
+	_SDL_GL_SetAttribute( SDL_GL_CONTEXT_MINOR_VERSION, 1 );
 #else // RPI
 	_SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
 	_SDL_GL_SetAttribute( SDL_GL_CONTEXT_MAJOR_VERSION, 2 );
@@ -143,6 +135,15 @@ bool init()
 		printf( "Unable to initialize OpenGL!\n" );
 		return false;
 	}
+
+	printf("----------------------------------------------------------------\n");
+	printf("Initialized OpenGL\n");
+	printf("OpenGL Info\n");
+	printf("    Version: %s\n", glGetString(GL_VERSION));
+	printf("     Vendor: %s\n", glGetString(GL_VENDOR));
+	printf("   Renderer: %s\n", glGetString(GL_RENDERER));
+	printf("    Shading: %s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
+	printf("----------------------------------------------------------------\n");
 
 	return true;
 }

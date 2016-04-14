@@ -1,13 +1,7 @@
 #ifndef __shader__
 #define __shader__
 
-#if defined(__APPLE__)
-	#include <OpenGL/gl3.h>
-#elif defined(_WIN32)
-	#include <GL/gl3.h>
-#else // RPI
-	#include <GLES2/gl2.h>
-#endif
+#include "platform.h"
 
 #include <stdexcept>
 #include <string>
@@ -23,13 +17,15 @@ class Shader
 
 	template<typename T> void fail_shader (GLuint shader);// shader fail
 	template<typename T> void fail_program ();// program fail
-	void compile_shader(const std::string & name, GLenum shader_type);
-	void link_program();
+	GLuint compile_shader(const std::string & name, GLenum shader_type);
+	void link_program(GLuint vert_handle, GLuint frag_handle);
 	void link_attributes();
 	void link_uniforms();
 
 	Shader(const std::string & name);
-	
+
+	GLuint vao;
+
 public:
 	GLuint m_program;
 	virtual ~Shader();
