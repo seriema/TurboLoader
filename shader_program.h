@@ -1,13 +1,7 @@
 #ifndef shader_program
 #define shader_program
 
-#if defined(__APPLE__)
-	#include <OpenGL/gl3.h>
-#elif defined(_WIN32)
-	#include <GL/gl3.h>
-#else // RPI
-	#include <GLES2/gl2.h>
-#endif
+#include "platform.h"
 
 #include <stdexcept>
 #include <string>

@@ -26,11 +26,9 @@ std::map<std::string, Shader *> Shader::shader_cache;
 
 Shader::Shader(const std::string & name) : m_name(name)
 {
-	m_program = glCreateProgram();
-
-	compile_shader(name + VERT_SHADER_SUFFIX, GL_VERTEX_SHADER);
-	compile_shader(name + FRAG_SHADER_SUFFIX, GL_FRAGMENT_SHADER);
-	link_program();
+	GLuint v = compile_shader(name + VERT_SHADER_SUFFIX, GL_VERTEX_SHADER);
+	GLuint f = compile_shader(name + FRAG_SHADER_SUFFIX, GL_FRAGMENT_SHADER);
+	link_program(v, f);
 
 	link_uniforms();
 	link_attributes();
@@ -112,7 +110,7 @@ void Shader::fail_program()
 }
 
 
-void Shader::compile_shader(const std::string & name, GLenum shader_type)
+GLuint Shader::compile_shader(const std::string & name, GLenum shader_type)
 {
 	std::cout << "READ SHADER FILE: " << name << std::endl;
 //	std::ifstream file(name);
@@ -144,19 +142,27 @@ void Shader::compile_shader(const std::string & name, GLenum shader_type)
 	if (success != GL_TRUE)
 		fail_shader<ShaderCompileError>(shader_handle);
 
-	glAttachShader(m_program, shader_handle);
-	glDeleteShader(shader_handle);
+	return shader_handle;
 }
 
 
-void Shader::link_program()
+void Shader::link_program(GLuint vert_handle, GLuint frag_handle)
 {
+	m_program = glCreateProgram();
+	glAttachShader(m_program, vert_handle);
+	glAttachShader(m_program, frag_handle);
 	glLinkProgram(m_program);
+	glDeleteShader(vert_handle);
+	glDeleteShader(frag_handle);
+
 	GLint success;
 
 	glGetProgramiv(m_program, GL_LINK_STATUS, &success);
 	if (success != GL_TRUE)
 		fail_program<ProgramLinkError>();
+
+	//glGenVertexArrays(1, &vao);
+	//glBindVertexArray(vao);
 
 	glValidateProgram(m_program);
 	glGetProgramiv(m_program, GL_VALIDATE_STATUS, &success);
