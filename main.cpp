@@ -248,9 +248,9 @@ int main( int argc, char* args[] )
 
 		GLfloat verts[] =
 		{
-			0.0f, 0.5f,
-			-0.5f, -0.5f,
-			0.5f, -0.5f,
+			 0.0f,  0.5f, 0.0f,
+			-0.5f, -0.5f, 0.0f,
+			 0.5f, -0.5f, 0.0f,
 		};
 
 		//GLuint vao;
@@ -265,7 +265,7 @@ int main( int argc, char* args[] )
 
 		glEnableVertexAttribArray( (*shader)["pos"] );
 		glBindBuffer( GL_ARRAY_BUFFER, vbo );
-		glVertexAttribPointer( (*shader)["pos"], 2, GL_FLOAT, GL_FALSE, 2*sizeof(GL_FLOAT), 0 );
+		glVertexAttribPointer( (*shader)["pos"], 3, GL_FLOAT, GL_FALSE, 3*sizeof(GL_FLOAT), 0 );
 
 
 
@@ -320,9 +320,9 @@ int main( int argc, char* args[] )
 	delete shader;
 
 
-	printf("ERRORS >>");
-	printf( SDL_GetError() );
-	printf("<< ERRORS");
+//	printf("ERRORS >>");
+//	printf( SDL_GetError() );
+//	printf("<< ERRORS");
 
 
 
