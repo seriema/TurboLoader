@@ -79,6 +79,7 @@ bool init()
 	_SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
 #if defined(__APPLE__) || defined(_WIN32)
+	//_SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 	_SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_COMPATIBILITY);
 	_SDL_GL_SetAttribute( SDL_GL_CONTEXT_MAJOR_VERSION, 2 );
 	_SDL_GL_SetAttribute( SDL_GL_CONTEXT_MINOR_VERSION, 1 );
@@ -193,7 +194,7 @@ bool initGL()
 
 
 	//Initialize clear color
-	glClearColor( .5f, 0.f, 0.f, 1.f );
+	//glClearColor( .5f, 0.f, 0.f, 1.f );
 
 	//Check for error
 	error = glGetError();
@@ -220,9 +221,6 @@ void update()
 
 void render()
 {
-	//Clear color buffer
-	glClearColor(1.f, 0.f, 1.f, 1.f);
-	glClear(GL_COLOR_BUFFER_BIT);
 }
 
 void close()
@@ -241,18 +239,38 @@ int main( int argc, char* args[] )
 
 	//Start up SDL and create window
 	printf("Initializing...\n");
-	if( !init() )
-	{
-		printf( "Failed to initialize!\n" );
-	}
-	else
+	if( init() )
 	{
 		shader = Shader::create( "debug" );
 		shader->bind();
-		glUseProgram( 0 );
-		delete shader;
 
-		printf("Initialized\n");
+		// Setup tri context
+
+		GLfloat verts[] =
+		{
+			0.0f, 0.5f,
+			-0.5f, -0.5f,
+			0.5f, -0.5f,
+		};
+
+		//GLuint vao;
+		//glGenVertexArrays( 1, &vao );
+		//glBindVertexArray( vao );
+
+		GLuint vbo;
+		glGenBuffers( 1, &vbo );
+		glBindBuffer( GL_ARRAY_BUFFER, vbo );
+		glBufferData( GL_ARRAY_BUFFER, sizeof(verts), verts, GL_STATIC_DRAW );
+
+
+		glEnableVertexAttribArray( (*shader)["pos"] );
+		glBindBuffer( GL_ARRAY_BUFFER, vbo );
+		glVertexAttribPointer( (*shader)["pos"], 2, GL_FLOAT, GL_FALSE, 2*sizeof(GL_FLOAT), 0 );
+
+
+
+		glClearColor( 1.0f, 0.1f, 1.0f, 1.0f );
+
 
 		//Event handler
 		SDL_Event e;
@@ -283,8 +301,12 @@ int main( int argc, char* args[] )
 				}
 			}
 
-			//Render quad
-			render();
+			//render();
+
+			glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
+			shader->bind();
+			glDrawArrays( GL_TRIANGLES, 0, 3 );
+
 
 			//Update screen
 			SDL_GL_SwapWindow( gWindow );
@@ -293,6 +315,16 @@ int main( int argc, char* args[] )
 		//Disable text input
 		SDL_StopTextInput();
 	}
+
+
+	delete shader;
+
+
+	printf("ERRORS >>");
+	printf( SDL_GetError() );
+	printf("<< ERRORS");
+
+
 
 	//Free resources and close SDL
 	close();
