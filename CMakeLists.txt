@@ -46,8 +46,9 @@ endif()
 #--- PLATFORM LIBRARIES SETUP ------------------------------------------------------------------------------------------
 
 
-include_directories(dependencies/bgfx/3rdparty) # needed for remotery/lib/Remotery.h
-include_directories(dependencies/bgfx/3rdparty/khronos) # needed for gl/glext.h
+#include_directories(dependencies/bgfx/3rdparty) # needed for remotery/lib/Remotery.h
+#include_directories(dependencies/bgfx/3rdparty/khronos) # needed for gl/glext.h
+include_directories(dependencies/GLES2) # needed for gl/glext.h
 
 
 #check if we're running on Raspberry Pi
