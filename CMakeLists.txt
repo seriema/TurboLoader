@@ -48,7 +48,6 @@ endif()
 
 #include_directories(dependencies/bgfx/3rdparty) # needed for remotery/lib/Remotery.h
 #include_directories(dependencies/bgfx/3rdparty/khronos) # needed for gl/glext.h
-include_directories(dependencies/GLES2) # needed for gl/glext.h
 
 
 #check if we're running on Raspberry Pi
@@ -65,6 +64,7 @@ if(EXISTS "/opt/vc/include/bcm_host.h")
 			MESSAGE( WARNING "COULDNT FIND OPENGLES" )
 		endif()
 
+	MESSAGE("OpenGL ES libraries: " ${OPENGLES_LIBRARIES})
 	set(PLATFORM_SPECIFIC_LIBRARIES
 		dl # fixes: undefined reference to symbol 'dlsym@@GLIBC_2.4'
 		pthread # fixes: undefined reference to symbol 'sem_post@@GLIBC_2.4'
@@ -75,8 +75,10 @@ if(EXISTS "/opt/vc/include/bcm_host.h")
 #		EGL
 	)
 
+	#MESSAGE("OpenGL ES include dir: " ${OPENGLES_INCLUDE_DIR})
+	include_directories(dependencies) # needed for rpi
 	include_directories(
-		${OPENGLES_INCLUDE_DIR}
+#		${OPENGLES_INCLUDE_DIR} #wait... should Khronos really be needed?
 	)
 
 elseif(APPLE)
