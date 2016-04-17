@@ -27,25 +27,21 @@ if(EXISTS "/opt/vc/include/bcm_host.h")
 
 	MESSAGE(WARNING "Building for Raspberry Pi")
 
-	find_package(OpenGLES REQUIRED)
-
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wno-attributes")
 
-	if ( OPENGLES_FOUND )
-		MESSAGE( WARNING "FOUND OPENGLES" )
-	else()
-		MESSAGE( WARNING "COULDNT FIND OPENGLES" )
-	endif()
-
-	MESSAGE("OpenGL ES libraries: " ${OPENGLES_LIBRARIES})
 	set(PLATFORM_SPECIFIC_LIBRARIES
 		dl # fixes: undefined reference to symbol 'dlsym@@GLIBC_2.4'
 		pthread # fixes: undefined reference to symbol 'sem_post@@GLIBC_2.4'
 		rt # fixes: undefined reference to symbol 'clock_gettime@@GLIBC_2.4'
-		${OPENGLES_LIBRARIES}
 	)
 
-	include_directories(dependencies) # needed for rpi
+	include_directories(
+		dependencies/Glad/include
+	)
+
+	set(PLATFORM_SPECIFIC_SOURCES
+		 dependencies/Glad/src/glad.c
+	)
 
 elseif(APPLE)
 

@@ -113,7 +113,7 @@ bool init()
 	}
 	SDL_GL_MakeCurrent(gWindow, gContext);
 
-#if defined(_WIN32)
+#ifndef __APPLE__
 	gladLoadGLLoader(SDL_GL_GetProcAddress);
 #endif
 

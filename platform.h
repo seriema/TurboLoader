@@ -10,8 +10,7 @@
 	#include <glad/glad.h>
 #else // RPI
 	#include <SDL.h>
-	#include <SDL2/SDL_opengles2.h>
-	#include <GLES2/gl2.h>
+	#include <glad/glad.h>
 #endif
 
 #endif //PLATFORM_H
