@@ -1,13 +1,5 @@
 
 #include <iostream>
-#include <SDL2/SDL.h>
-
-#if defined(__APPLE__) || defined(_WIN32)
-	#include <SDL2/SDL_opengl.h>
-#else // RPI
-	#include <SDL2/SDL_opengles2.h>
-#endif
-
 
 #include "platform.h"
 #include "shader.h"
@@ -120,6 +112,8 @@ bool init()
 		return false;
 	}
 	SDL_GL_MakeCurrent(gWindow, gContext);
+
+	gladLoadGLLoader(SDL_GL_GetProcAddress);
 
 	//Use Vsync
 	if( SDL_GL_SetSwapInterval( 1 ) < 0 )
