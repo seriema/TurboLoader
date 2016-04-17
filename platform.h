@@ -2,10 +2,14 @@
 #define PLATFORM_H
 
 #if defined(__APPLE__)
+	#include <SDL2/SDL_opengl.h>
 	#include <OpenGL/gl3.h>
 #elif defined(_WIN32)
-#	include <GL/gl3.h>
+	#include <SDL.h>
+//	#include <SDL_opengl.h>
+	#include <GLES3/gl3.h>
 #else // RPI
+	#include <SDL2/SDL_opengles2.h>
 	#include <GLES2/gl2.h>
 #endif
 

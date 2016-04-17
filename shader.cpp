@@ -91,9 +91,10 @@ void Shader::fail_shader(GLuint shader)
 {
 	GLsizei len;
 	glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &len);
-	GLchar msg[len];
+	GLchar *msg = new GLchar[len];
 	glGetShaderInfoLog(shader, len, &len, msg);
 	std::cerr << msg << std::endl;
+	delete[] msg;
 	throw T(msg);
 }
 
@@ -103,9 +104,10 @@ void Shader::fail_program()
 {
 	GLsizei len;
 	glGetProgramiv(m_program, GL_INFO_LOG_LENGTH, &len);
-	GLchar msg[len];
+	GLchar *msg = new GLchar[len];
 	glGetProgramInfoLog(m_program, len, &len, msg);
 	std::cerr << msg << std::endl;
+	delete[] msg;
 	throw T(msg);
 }
 
