@@ -71,8 +71,6 @@ elseif(MSVC)
 
 	MESSAGE(WARNING "Building for Windows (Visual Studio)")
 
-	find_package(OpenGL REQUIRED)
-
 	set(CMAKE_DEBUG_POSTFIX "d")
 	add_definitions(-D_CRT_SECURE_NO_DEPRECATE)
 	add_definitions(-D_CRT_NONSTDC_NO_DEPRECATE)
@@ -80,15 +78,8 @@ elseif(MSVC)
 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /MP") #multi-processor compilation
 
 	include_directories(
-#		${OPENGL_INCLUDE_DIR}
+		dependencies/Glad/include
 	)
-
-	include_directories(dependencies)
-
-	set(PLATFORM_SPECIFIC_LIBRARIES
-		${OPENGL_LIBRARIES}
-	)
-
 
 endif()
 
@@ -116,6 +107,7 @@ add_executable(a_retro_ui
 	shader_program.h
 	shader_program.cpp
 	platform.h
+	dependencies/Glad/src/glad.c
 )
 
 target_link_libraries(a_retro_ui

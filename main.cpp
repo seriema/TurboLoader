@@ -113,6 +113,8 @@ bool init()
 	}
 	SDL_GL_MakeCurrent(gWindow, gContext);
 
+	gladLoadGLLoader(SDL_GL_GetProcAddress);
+
 	//Use Vsync
 	if( SDL_GL_SetSwapInterval( 1 ) < 0 )
 	{
