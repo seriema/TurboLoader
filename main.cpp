@@ -113,9 +113,7 @@ bool init()
 	}
 	SDL_GL_MakeCurrent(gWindow, gContext);
 
-#ifndef __APPLE__
 	gladLoadGLLoader(SDL_GL_GetProcAddress);
-#endif
 
 	//Use Vsync
 	if( SDL_GL_SetSwapInterval( 1 ) < 0 )

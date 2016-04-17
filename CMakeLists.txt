@@ -35,24 +35,9 @@ if(EXISTS "/opt/vc/include/bcm_host.h")
 		rt # fixes: undefined reference to symbol 'clock_gettime@@GLIBC_2.4'
 	)
 
-	include_directories(
-		dependencies/Glad/include
-	)
-
-	set(PLATFORM_SPECIFIC_SOURCES
-		 dependencies/Glad/src/glad.c
-	)
-
 elseif(APPLE)
 
 	MESSAGE(WARNING "Building for OSX")
-
-	# SDL2 breaks because both gl.h and gl3.h are included, should be fixed in v2.0.4
-	# http://stackoverflow.com/questions/19072278/sdl2-mac-os-x-and-opengl-how-to-avoid-including-both-gl-h-and-gl3-h
-	add_definitions(-D__gl_h_=1)
-	add_definitions(-DGL_DO_NOT_WARN_IF_MULTI_GL_VERSION_HEADERS_INCLUDED=1)
-
-	find_package(OpenGL REQUIRED)
 
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wno-attributes")
 
@@ -60,7 +45,6 @@ elseif(APPLE)
 	set(PLATFORM_SPECIFIC_LIBRARIES
 		"-framework Cocoa" # needed for _OBJC_CLASS_$_NSOpenGLPixelFormat etc
 		"-framework Foundation" # needed for _NSLog
-		${OPENGL_LIBRARIES}
 	)
 
 elseif(MSVC)
@@ -73,31 +57,27 @@ elseif(MSVC)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP") #multi-processor compilation
 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /MP") #multi-processor compilation
 
-	include_directories(
-		dependencies/Glad/include
-	)
-
-	set(PLATFORM_SPECIFIC_SOURCES
-		dependencies/Glad/src/glad.c
-	)
-
 endif()
 
 
-#--- CROSS-PLATFORM LIBRARIES SETUP ------------------------------------------------------------------------------------
+#--- CROSS-PLATFORM SETUP ----------------------------------------------------------------------------------------------
 
-include_directories(
+set(CROSS_PLATFORM_INCLUDES
 	${SDL2_INCLUDE_DIR}
+	dependencies/Glad/include
 )
-MESSAGE("Cross platform includes: " ${SDL2_INCLUDE_DIR})
 
 set(CROSS_PLATFORM_LIBRARIES
-	#SDL2 # fixes: undefined reference to `SDL_Init'
 	${SDL2_LIBRARY}
 )
 
 
 #--- EXECUTABLE SETUP --------------------------------------------------------------------------------------------------
+
+include_directories(
+	${PLATFORM_SPECIFIC_INCLUDES}
+	${CROSS_PLATFORM_INCLUDES}
+)
 
 # MAIN
 add_executable(a_retro_ui
@@ -107,7 +87,8 @@ add_executable(a_retro_ui
 	shader_program.h
 	shader_program.cpp
 	platform.h
-	${PLATFORM_SPECIFIC_SOURCES}
+
+	dependencies/Glad/src/glad.c # Separate this into an external library.
 )
 
 target_link_libraries(a_retro_ui
@@ -116,5 +97,7 @@ target_link_libraries(a_retro_ui
 )
 
 MESSAGE("CXX Flags: " ${CMAKE_CXX_FLAGS})
+MESSAGE("Platform specific includes: " ${PLATFORM_SPECIFIC_INCLUDES})
+MESSAGE("Cross platform includes: " ${CROSS_PLATFORM_INCLUDES})
 MESSAGE("Platform specific libraries: " ${PLATFORM_SPECIFIC_LIBRARIES})
 MESSAGE("Cross platform libraries: " ${CROSS_PLATFORM_LIBRARIES})
