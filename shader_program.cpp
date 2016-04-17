@@ -25,8 +25,9 @@ void ShaderProgram::fail (GLuint shaderHandle)
 {
 	GLsizei len;
 	glGetShaderiv(shaderHandle, GL_INFO_LOG_LENGTH, &len);
-	GLchar msg[len];
+	GLchar *msg = new GLchar[len];
 	glGetShaderInfoLog(shaderHandle, len, &len, msg);
+	delete msg;
 	throw T(msg);
 }
 
@@ -36,8 +37,9 @@ void ShaderProgram::fail ()
 {
 	GLsizei len;
 	glGetProgramiv(_programHandle, GL_INFO_LOG_LENGTH, &len);
-	GLchar msg[len];
+	GLchar *msg = new GLchar[len];
 	glGetProgramInfoLog(_programHandle, len, &len, msg);
+	delete msg;
 	throw T(msg);
 }
 
