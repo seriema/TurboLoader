@@ -1,6 +1,5 @@
 # a-retro-ui
-A retro UI
-
+[![Build Status](https://travis-ci.com/seriema/a-retro-ui.svg?token=iZ5rGpFVHQ1ypGqzVJrC&branch=add-travis-ci)](https://travis-ci.com/seriema/a-retro-ui)
 
 **On MacOS**
 
