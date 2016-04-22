@@ -1,3 +1,9 @@
+# Custom a-retro-ui
+a_retro_ui
+*.vcxproj
+*.vcxproj.filters
+*.sln
+
 
 # Created by https://www.gitignore.io/api/intellij,visualstudio,visualstudiocode,sublimetext,cmake
 
@@ -333,7 +339,3 @@ CMakeScripts
 Makefile
 cmake_install.cmake
 install_manifest.txt
-
-
-### Custom a-retro-ui
-a_retro_ui
