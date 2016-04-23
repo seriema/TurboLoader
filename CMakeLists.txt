@@ -9,17 +9,6 @@ LIST(APPEND CMAKE_MODULE_PATH
 )
 
 
-#--- PACKAGES SETUP ----------------------------------------------------------------------------------------------------
-
-find_package(SDL2 REQUIRED)
-
-
-#--- SDL2 SETUP --------------------------------------------------------------------------------------------------------
-
-# use SDL2
-add_definitions(-DENTRY_CONFIG_USE_SDL=1)
-
-
 #--- PLATFORM SPECIFIC SETUP -------------------------------------------------------------------------------------------
 
 if(APPLE)
@@ -30,8 +19,8 @@ if(APPLE)
 
 	# Platform dependent libraries
 	set(PLATFORM_SPECIFIC_LIBRARIES
-	"-framework Cocoa" # needed for _OBJC_CLASS_$_NSOpenGLPixelFormat etc
-	"-framework Foundation" # needed for _NSLog
+		"-framework Cocoa" # needed for _OBJC_CLASS_$_NSOpenGLPixelFormat etc
+		"-framework Foundation" # needed for _NSLog
 	)
 
 #check if we're running on Travis OR Raspberry Pi
@@ -57,14 +46,25 @@ elseif(MSVC)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP") #multi-processor compilation
 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /MP") #multi-processor compilation
 
+	# set environmental path so FindSDL2 can find SDL2 on Windows, as we have it in our dependencies
+	set(ENV{SDL2DIR} dependencies/win/SDL2-2.0.4)
+
 endif()
+
+
+#--- PACKAGES SETUP ----------------------------------------------------------------------------------------------------
+
+find_package(SDL2 REQUIRED)
+
+# use SDL2
+add_definitions(-DENTRY_CONFIG_USE_SDL=1)
 
 
 #--- CROSS-PLATFORM SETUP ----------------------------------------------------------------------------------------------
 
 set(CROSS_PLATFORM_INCLUDES
 	${SDL2_INCLUDE_DIR}
-	dependencies/Glad/include
+	dependencies/common/glad/include
 )
 
 set(CROSS_PLATFORM_LIBRARIES
@@ -88,7 +88,7 @@ add_executable(a_retro_ui
 	shader_program.cpp
 	platform.h
 
-	dependencies/Glad/src/glad.c # Separate this into an external library.
+	dependencies/common/glad/src/glad.c # Separate this into an external library.
 )
 
 target_link_libraries(a_retro_ui
