@@ -30,8 +30,8 @@ if(APPLE)
 
 	# Platform dependent libraries
 	set(PLATFORM_SPECIFIC_LIBRARIES
-	"-framework Cocoa" # needed for _OBJC_CLASS_$_NSOpenGLPixelFormat etc
-	"-framework Foundation" # needed for _NSLog
+		"-framework Cocoa" # needed for _OBJC_CLASS_$_NSOpenGLPixelFormat etc
+		"-framework Foundation" # needed for _NSLog
 	)
 
 #check if we're running on Travis OR Raspberry Pi
@@ -64,7 +64,7 @@ endif()
 
 set(CROSS_PLATFORM_INCLUDES
 	${SDL2_INCLUDE_DIR}
-	dependencies/Glad/include
+	dependencies/common/glad/include
 )
 
 set(CROSS_PLATFORM_LIBRARIES
@@ -88,7 +88,7 @@ add_executable(a_retro_ui
 	shader_program.cpp
 	platform.h
 
-	dependencies/Glad/src/glad.c # Separate this into an external library.
+	dependencies/common/glad/src/glad.c # Separate this into an external library.
 )
 
 target_link_libraries(a_retro_ui
