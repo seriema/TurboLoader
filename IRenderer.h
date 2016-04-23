@@ -74,8 +74,12 @@ struct RenderData
 {
 	u32 vbo_handle; // vbo contains attributes such as vert,norm,color, these must then also exist in shader.
 	//glm::mat4 model_transform;
-	float x;
-	float y;
+
+	union
+	{
+		float pos[2];
+		struct { float x, y; };
+	};
 };
 
 struct RenderMaterial
@@ -152,11 +156,7 @@ public:
 		glBindBuffer( GL_ARRAY_BUFFER, vbo_handle );
 		glBufferData( GL_ARRAY_BUFFER, n_vertices*sizeof(GL_FLOAT), vertices, GL_STATIC_DRAW );
 
-		glEnableVertexAttribArray( (*_TEMPshader)["pos"] );
-
-		// TODO remove these?
-//		glBindBuffer( GL_ARRAY_BUFFER, vbo_handle );
-//		glVertexAttribPointer( (*_TEMPshader)["pos"], 3, GL_FLOAT, GL_FALSE, 3*sizeof(GL_FLOAT), 0 );
+		glEnableVertexAttribArray( (*_TEMPshader)["vert"] );
 
 		return vbo_handle;
 	}
@@ -188,15 +188,13 @@ public:
 			// TODO bind shader if not same as current.
 			// TODO get object matrix from _render_data[ data_i ]; and bind to shader.
 
+			_TEMPshader->bind();
 
-
-			_TEMPshader->bind(); // TODO only bind if not same as current.
-			// TODO change uniforms if needed.
+			glUniform2fv( (*_TEMPshader)["model_pos"], 1, _render_data[ data_i ].pos );
 
 			GLuint vbo_handle = _render_data[ data_i ].vbo_handle;
-//			glEnableVertexAttribArray( (*_TEMPshader)["pos"] ); // TODO remove this?
 			glBindBuffer( GL_ARRAY_BUFFER, vbo_handle );
-			glVertexAttribPointer( (*_TEMPshader)["pos"], 3, GL_FLOAT, GL_FALSE, 3*sizeof(GL_FLOAT), 0 );
+			glVertexAttribPointer( (*_TEMPshader)["vert"], 3, GL_FLOAT, GL_FALSE, 3*sizeof(GL_FLOAT), 0 );
 
 			glDrawArrays( GL_TRIANGLES, 0, 3 );
 		}

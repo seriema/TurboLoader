@@ -2,6 +2,7 @@
 #include <iostream>
 #include <vector>
 #include <utility>
+#include <cmath>
 
 #include "platform.h"
 #include "IRenderer.h"
@@ -52,21 +53,24 @@ int main( int argc, char* args[] )
 
 	std::vector< std::pair<RenderKey, RenderData> > objects;
 
+	GLfloat vertices[] =
+	{
+		0.0f,  0.2f, 0.0f,
+		-0.15f, 0.0f, 0.0f,
+		0.15f, 0.0f, 0.0f,
+	};
+	int n_vertices = sizeof(vertices) / sizeof(GL_FLOAT);
+	const GLuint vbo_handle = renderer.add_mesh( vertices, n_vertices );
 
 	// Allocate triangle 1.
 	{
 		RenderKey render_key;
 		RenderData render_data;
 
-		GLfloat vertices[] =
-		{
-				 0.0f,  0.9f, 0.0f,
-				-0.2f,  0.7f, 0.0f,
-				 0.2f,  0.7f, 0.0f,
-		};
-		int n_vertices = sizeof(vertices) / sizeof(GL_FLOAT);
 		render_key.RenderOpaque.material_index = 0;
-		render_data.vbo_handle = renderer.add_mesh( vertices, n_vertices );
+		render_data.vbo_handle = vbo_handle;
+		render_data.x = -0.5f;
+		render_data.y = -0.1f;
 
 		objects.push_back( { render_key, render_data } );
 	}
@@ -76,15 +80,10 @@ int main( int argc, char* args[] )
 		RenderKey render_key;
 		RenderData render_data;
 
-		GLfloat vertices[] =
-			{
-				-0.8f, -0.1f, 0.0f,
-				-0.9f, -0.2f, 0.0f,
-				-0.7f, -0.2f, 0.0f,
-			};
-		int n_vertices = sizeof(vertices) / sizeof(GL_FLOAT);
 		render_key.RenderOpaque.material_index = 0;
-		render_data.vbo_handle = renderer.add_mesh( vertices, n_vertices );
+		render_data.vbo_handle = vbo_handle;
+		render_data.x = 0.3f;
+		render_data.y = 0.6f;
 
 		objects.push_back( { render_key, render_data } );
 	}
@@ -102,9 +101,16 @@ int main( int argc, char* args[] )
 
 	printf("Entering main loop\n");
 	//While application is running
+
+	uint32_t t0 = SDL_GetTicks() - 17;
+
 	while( !quit )
 	{
 //		printf("Looping\n");
+
+		uint32_t t1 = SDL_GetTicks();
+		uint32_t dt = t1 - t0;
+		t0 = t1;
 
 		//Handle events on queue
 		while( SDL_PollEvent( &e ) != 0 )
@@ -123,7 +129,14 @@ int main( int argc, char* args[] )
 			}
 		}
 
-		for ( auto obj : objects )
+		for ( auto& obj : objects )
+		{
+			obj.second.x += 0.0001f * dt;
+			if ( obj.second.x > 1.1f )
+				obj.second.x = -1.1f;
+		}
+
+		for ( auto& obj : objects )
 		{
 			renderer.draw( obj.first, obj.second );
 		}
