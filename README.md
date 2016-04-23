@@ -1,5 +1,6 @@
 # a-retro-ui
 [![Build Status](https://travis-ci.com/seriema/a-retro-ui.svg?token=iZ5rGpFVHQ1ypGqzVJrC&branch=master)](https://travis-ci.com/seriema/a-retro-ui)
+[![Build status](https://ci.appveyor.com/api/projects/status/r80b07tyfr6i5wqp/branch/master?svg=true)](https://ci.appveyor.com/project/seriema/a-retro-ui/branch/master)
 
 
 ## Building the project
