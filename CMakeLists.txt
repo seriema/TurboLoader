@@ -87,6 +87,7 @@ add_executable(a_retro_ui
 	shader_program.h
 	shader_program.cpp
 	platform.h
+	IRenderer.h
 
 	dependencies/common/glad/src/glad.c # Separate this into an external library.
 )
