@@ -1,7 +1,22 @@
 # a-retro-ui
 [![Build Status](https://travis-ci.com/seriema/a-retro-ui.svg?token=iZ5rGpFVHQ1ypGqzVJrC&branch=add-travis-ci)](https://travis-ci.com/seriema/a-retro-ui)
 
-**On MacOS**
+
+## Building the project
+
+
+### On Raspberry Pi
+*Tested on RetroPie +3.7*
+
+```bash
+cmake .
+make
+./a_retro_ui
+```
+
+
+### On OSX
+*Tested on OSX +10.10*
 
 You need [HomeBrew](http://brew.sh/) and then run:
 
@@ -9,39 +24,24 @@ You need [HomeBrew](http://brew.sh/) and then run:
 $ brew install cmake sdl2
 ```
 
-
 Then, generate and build the Makefile with CMake:
 
 ```bash
 cmake .
 make
-chmod +x a_retro_ui
+./a_retro_ui
 ```
 
 
-**On Windows**
+### On Windows
+*Tested on Windows 8.1 with Visual Studio 2015 (Update 2)*
 
-*Note: Currently we only test on Windows 8.1 with Visual Studio 2015 (Update 2).*
+You need to have Visual Studio, and then install [CMake](https://cmake.org/download/). We recommend [CMake 3.5.0](https://cmake.org/files/v3.5/cmake-3.5.2-win32-x86.msi).
 
-You need:
-
-* [SDL2](https://www.libsdl.org/download-2.0.php) - tested with [Visual C++ 32/64-bit v2.0.4](https://www.libsdl.org/release/SDL2-devel-2.0.4-VC.zip)
-
-Put SDL2 anywhere and restructure the `lib/` from `lib/x86` and `lib/64` to `lib` and `lib64` so they can be found. Add the SDL2 root path to a system environment variable called `CMAKE_PREFIX_PATH` (`;` separated list). E.g. I put my external libraries in `C:\libs\SDL2-2.0.4` and my `CMAKE_PREFIX_PATH` system environment variable is set to it. The folder looks like:
-
-```
-C:\libs\SDL2-2.0.4
-\ include
-\ lib
-\ lib64
-```
-
-NOTE: I cheated! I put SDL2.dll in the project root. Checking it in for now.
-
-Then, generate and build the Makefile with CMake:
+Then, generate and build the Visual Studio Solution with CMake:
 
 ```powershell
 cmake .
-make
-chmod +x a_retro_ui
+msbuild .\ALL_BUILD.vcxproj
+.\Debug\a_retro_ui.exe
 ```
