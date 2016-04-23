@@ -22,8 +22,20 @@ add_definitions(-DENTRY_CONFIG_USE_SDL=1)
 
 #--- PLATFORM SPECIFIC SETUP -------------------------------------------------------------------------------------------
 
-#check if we're running on Raspberry Pi
-if(EXISTS "/opt/vc/include/bcm_host.h")
+if(APPLE)
+
+	MESSAGE(WARNING "Building for OSX")
+
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wno-attributes")
+
+	# Platform dependent libraries
+	set(PLATFORM_SPECIFIC_LIBRARIES
+	"-framework Cocoa" # needed for _OBJC_CLASS_$_NSOpenGLPixelFormat etc
+	"-framework Foundation" # needed for _NSLog
+	)
+
+#check if we're running on Travis OR Raspberry Pi
+elseif(UNIX OR EXISTS "/opt/vc/include/bcm_host.h")
 
 	MESSAGE(WARNING "Building for Raspberry Pi")
 
@@ -33,18 +45,6 @@ if(EXISTS "/opt/vc/include/bcm_host.h")
 		dl # fixes: undefined reference to symbol 'dlsym@@GLIBC_2.4'
 		pthread # fixes: undefined reference to symbol 'sem_post@@GLIBC_2.4'
 		rt # fixes: undefined reference to symbol 'clock_gettime@@GLIBC_2.4'
-	)
-
-elseif(APPLE)
-
-	MESSAGE(WARNING "Building for OSX")
-
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wno-attributes")
-
-	# Platform dependent libraries
-	set(PLATFORM_SPECIFIC_LIBRARIES
-		"-framework Cocoa" # needed for _OBJC_CLASS_$_NSOpenGLPixelFormat etc
-		"-framework Foundation" # needed for _NSLog
 	)
 
 elseif(MSVC)
