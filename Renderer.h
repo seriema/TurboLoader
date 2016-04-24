@@ -7,6 +7,7 @@
 
 #include "platform.h"
 #include "shader.h"
+#include "TextureLoader.h"
 
 #define u32 std::uint32_t
 
@@ -96,28 +97,16 @@ bool CompareRenderKey ( RenderKey a, RenderKey b )
 	return a.raw < b.raw;
 }
 
-class IRenderer
-{
-public:
-	virtual ~IRenderer() {}
-
-	virtual u_int32_t add_mesh( const float* vertices, int n_vertices ) = 0;
-	virtual bool del_mesh( u_int32_t vbo_handle ) = 0;
-
-	virtual void draw( const RenderKey& render_key, const RenderData& render_data ) = 0;
-	virtual void render() = 0;
-};
-
 struct RendererSettings
 {
 };
 
-class RendererOpenGL : public IRenderer
+class Renderer_SDL_OpenGL
 {
 public:
-	RendererOpenGL() // TODO RendererSettings settings )
+	Renderer_SDL_OpenGL() // TODO RendererSettings settings )
 		: _render_count( 0 )
-		, _TEMPshader( NULL )
+		, _TEMP_shader( NULL )
 	{
 		glEnable( GL_CULL_FACE );
 		glCullFace( GL_BACK );
@@ -134,17 +123,26 @@ public:
 
 		glClearColor( 1.0f, 0.1f, 1.0f, 1.0f );
 
-		_TEMPshader = Shader::create( "debug" );
 
-		_render_material[ 0 ].shader_handle = _TEMPshader->m_program; // TODO ugly.
+
+		// TODO remove temp debug shader when the time comes.
+		_TEMP_shader = Shader::create( "debug" );
+
+
+		TextureLoader_FreeImage_OpenGL texture_loader;
+		_TEMP_texture_handle = texture_loader.load( "img_test.dds" );
+
+
+
+		_render_material[ 0 ].shader_handle = _TEMP_shader->m_program; // TODO ugly.
 	}
 
-	virtual ~RendererOpenGL() override
+	~Renderer_SDL_OpenGL()
 	{
-		delete _TEMPshader;
+		delete _TEMP_shader;
 	}
 
-	virtual GLuint add_mesh( const GLfloat* vertices, int n_vertices ) override
+	GLuint add_mesh( const GLfloat* vertices, int n_vertices )
 	{
 		GLuint vbo_handle;
 
@@ -156,18 +154,18 @@ public:
 		glBindBuffer( GL_ARRAY_BUFFER, vbo_handle );
 		glBufferData( GL_ARRAY_BUFFER, n_vertices*sizeof(GL_FLOAT), vertices, GL_STATIC_DRAW );
 
-		glEnableVertexAttribArray( (*_TEMPshader)["vert"] );
+		glEnableVertexAttribArray( (*_TEMP_shader)["vert"] );
 
 		return vbo_handle;
 	}
 
-	virtual bool del_mesh( GLuint vbo_handle ) override
+	bool del_mesh( GLuint vbo_handle )
 	{
 		glDeleteBuffers( 1, &vbo_handle );
 		return true; // TODO Make sure delete went ok.
 	}
 
-	virtual void draw( const RenderKey& render_key, const RenderData& render_data ) override
+	void draw( const RenderKey& render_key, const RenderData& render_data )
 	{
 		_render_key[ _render_count ] = render_key;
 		_render_key[ _render_count ].RenderCommon.data_index = _render_count;
@@ -175,7 +173,7 @@ public:
 		++_render_count;
 	}
 
-	virtual void render() override
+	void render()
 	{
 		std::sort( _render_key, _render_key + _render_count, CompareRenderKey );
 
@@ -188,13 +186,22 @@ public:
 			// TODO bind shader if not same as current.
 			// TODO get object matrix from _render_data[ data_i ]; and bind to shader.
 
-			_TEMPshader->bind();
+			_TEMP_shader->bind();
 
-			glUniform2fv( (*_TEMPshader)["model_pos"], 1, _render_data[ data_i ].pos );
+			glUniform2fv( (*_TEMP_shader)["model_pos"], 1, _render_data[ data_i ].pos );
 
 			GLuint vbo_handle = _render_data[ data_i ].vbo_handle;
 			glBindBuffer( GL_ARRAY_BUFFER, vbo_handle );
-			glVertexAttribPointer( (*_TEMPshader)["vert"], 3, GL_FLOAT, GL_FALSE, 3*sizeof(GL_FLOAT), 0 );
+			glVertexAttribPointer( (*_TEMP_shader)["vert"], 3, GL_FLOAT, GL_FALSE, 3*sizeof(GL_FLOAT), 0 );
+
+
+			// TODO bind relevant texture here.
+			// TODO only activate and rebind if neccessary.
+			int texture_i = 0;
+			glActiveTexture( GL_TEXTURE0 + texture_i );
+			glBindTexture( GL_TEXTURE_2D, _TEMP_texture_handle );
+			glUniform1i( (*_TEMP_shader)["texture"], texture_i );
+
 
 			glDrawArrays( GL_TRIANGLES, 0, 3 );
 		}
@@ -210,8 +217,13 @@ private:
 	RenderData      _render_data[ RENDER_INPUT_ARRAY_SIZE ];
 	int             _render_count;
 
-	Shader*         _TEMPshader;
+	Shader*         _TEMP_shader;
+	GLuint          _TEMP_texture_handle;
 };
+
+
+
+
 
 //The window we'll be rendering to
 SDL_Window* gWindow = NULL;

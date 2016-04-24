@@ -5,13 +5,11 @@
 #include <cmath>
 
 #include "platform.h"
-#include "IRenderer.h"
+#include "Renderer.h"
 
 
 //Main loop flag
 bool quit = false;
-
-
 
 
 void handleKeys( unsigned char key, int x, int y )
@@ -31,7 +29,7 @@ int main( int argc, char* args[] )
 	if ( !init_sdl_gl() )
 		return 1;
 
-	RendererOpenGL renderer;
+	Renderer_SDL_OpenGL renderer;
 
 
 	GLenum error = glGetError();
@@ -49,6 +47,9 @@ int main( int argc, char* args[] )
 	printf("   Renderer: %s\n", glGetString(GL_RENDERER));
 	printf("    Shading: %s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
 	printf("----------------------------------------------------------------\n");
+
+
+
 
 
 	std::vector< std::pair<RenderKey, RenderData> > objects;
@@ -88,10 +89,18 @@ int main( int argc, char* args[] )
 		objects.push_back( { render_key, render_data } );
 	}
 
+	// Allocate triangle 3.
+	{
+		RenderKey render_key;
+		RenderData render_data;
 
+		render_key.RenderOpaque.material_index = 0;
+		render_data.vbo_handle = vbo_handle;
+		render_data.x = 0.9f;
+		render_data.y = -0.6f;
 
-
-
+		objects.push_back( { render_key, render_data } );
+	}
 
 	//Event handler
 	SDL_Event e;
