@@ -16,10 +16,13 @@ addons:
    packages:
    - gcc-4.8
    - g++-4.8
-   - libsdl2-dev
+#   - libsdl2-dev # TODO: add it back when it's whitelisted for real: https://github.com/travis-ci/apt-source-whitelist/issues/45
 
 # OSX
 before_install:
+  # TODO: remove this when SDL2 is whitelisted for real: https://github.com/travis-ci/apt-source-whitelist/issues/45
+  - if [ ! -d "$HOME/SDL2/lib" ]; then wget https://www.libsdl.org/release/SDL2-2.0.3.tar.gz -O ~/SDL2.tar.gz && tar -xzvf ~/SDL2.tar.gz -C ~/ && mkdir ~/sdl-build && cd ~/sdl-build && ~/SDL2-2.0.3/configure --prefix=$HOME/SDL2 && make && make install; else echo 'Using cached SDL2 build directory.'; fi
+
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update      ; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install sdl2; fi
   - cmake .
