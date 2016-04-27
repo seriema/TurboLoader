@@ -8,23 +8,33 @@ os:
 - linux
 - osx
 
+env:
+  global:
+  - secure: "qvRpkAmV7PRQHoUfjhykb5lkvMyMFAlNYh/1140ej/iHjDsO9bFpX2qxbfgAe8jaW8VBf4ly+VpjA9ByJHWol6/b+FwURa/yiFgNESxeYDUJz/dJCYyrgORH+t41bCwV8SEYZmpa3NJiDi4GkH8iojEi+dQYhWoN4uwEg81m45c="
+  - CMAKE_PREFIX_PATH=$HOME/SDL2
+
+cache:
+  directories:
+    - $HOME/SDL2
+
 # LINUX
 addons:
   apt:
-   sources:
-   - ubuntu-toolchain-r-test
-   packages:
-   - gcc-4.8
-   - g++-4.8
+    sources:
+    - ubuntu-toolchain-r-test
+    packages:
+    - gcc-4.8
+    - g++-4.8
 #   - libsdl2-dev # TODO: add it back when it's whitelisted for real: https://github.com/travis-ci/apt-source-whitelist/issues/45
 
 # OSX
 before_install:
-  # TODO: remove this when SDL2 is whitelisted for real: https://github.com/travis-ci/apt-source-whitelist/issues/45
-  - if [ ! -d "$HOME/SDL2/lib" ]; then wget https://www.libsdl.org/release/SDL2-2.0.3.tar.gz -O ~/SDL2.tar.gz && tar -xzvf ~/SDL2.tar.gz -C ~/ && mkdir ~/sdl-build && cd ~/sdl-build && ~/SDL2-2.0.3/configure --prefix=$HOME/SDL2 && make && make install; else echo 'Using cached SDL2 build directory.'; fi
+# TODO: remove this when SDL2 is whitelisted for real: https://github.com/travis-ci/apt-source-whitelist/issues/45
+- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then if [ ! -d "$HOME/SDL2/lib" ]; then wget https://www.libsdl.org/release/SDL2-2.0.4.tar.gz -O ~/SDL2.tar.gz && tar -xzvf ~/SDL2.tar.gz -C ~/ && mkdir ~/sdl-build && cd ~/sdl-build && ~/SDL2-2.0.4/configure --prefix=$HOME/SDL2 && make && make install; else echo 'Using cached SDL2 build directory.'; fi; fi
 
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update      ; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install sdl2; fi
-  - cmake .
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update      ; fi
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install sdl2; fi
+
+- cmake .
 
 script: make
