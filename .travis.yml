@@ -10,7 +10,6 @@ os:
 
 env:
   global:
-  - secure: "qvRpkAmV7PRQHoUfjhykb5lkvMyMFAlNYh/1140ej/iHjDsO9bFpX2qxbfgAe8jaW8VBf4ly+VpjA9ByJHWol6/b+FwURa/yiFgNESxeYDUJz/dJCYyrgORH+t41bCwV8SEYZmpa3NJiDi4GkH8iojEi+dQYhWoN4uwEg81m45c="
   - CMAKE_PREFIX_PATH=$HOME/SDL2
 
 cache:
