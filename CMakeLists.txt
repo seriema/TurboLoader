@@ -39,8 +39,9 @@ elseif(MSVC OR CYGWIN)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP") #multi-processor compilation
 	#set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /MP") #multi-processor compilation
 
-	# set environmental path so FindSDL2 can find SDL2 on Windows, as we have it in our dependencies
+	# set environmental path for our cmake/Find*.cmake scripts
 	set(ENV{SDL2DIR} dependencies/win/SDL2-2.0.4)
+	set(ENV{FREEIMAGE_HOME} dependencies/win/FreeImage-3.17.0)
 
 # Check if we're running on Travis OR Raspberry Pi
 elseif(UNIX OR EXISTS "/opt/vc/include/bcm_host.h")
