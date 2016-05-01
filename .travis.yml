@@ -1,17 +1,15 @@
-language: cpp
 sudo: required
-dist: trusty
 
-compiler:
-- gcc
+language: cpp
 
-os:
-- linux
-- osx
+services:
+  - docker
 
 before_install:
-- if [ $TRAVIS_OS_NAME == linux ]; then sudo apt-get update && sudo apt-get install -y libsdl2-dev; fi
-- if [ $TRAVIS_OS_NAME == osx ]; then brew update && brew install sdl2; fi
-- cmake .
+- docker pull carlad/sinatra
+- docker run -d -p 127.0.0.1:80:4567 carlad/sinatra /bin/sh -c "cd /root/sinatra; bundle exec foreman start;"
+- docker ps -a
+- docker run carlad/sinatra /bin/sh -c "cd /root/sinatra; bundle exec rake test"
 
-script: make
+script:
+- bundle exec rake test
