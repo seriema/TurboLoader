@@ -76,8 +76,13 @@ private:
 
 		glGenTextures( 1, &texture_handle );
 		glBindTexture( GL_TEXTURE_2D, texture_handle );
+
+		// http://stackoverflow.com/questions/11042027/glpixelstoreigl-unpack-alignment-1-disadvantages
+		// glPixelStorei( GL_UNPACK_ALIGNMENT, 1 );
+
+		// http://docs.gl/es2/glTexImage2D
 		glTexImage2D(
-			GL_TEXTURE_2D, 0 ,GL_RGBA8,
+			GL_TEXTURE_2D, 0 ,GL_RGBA,
 			w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, imgdata );
 
 		//glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
