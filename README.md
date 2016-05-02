@@ -8,6 +8,14 @@
 ### On Raspberry Pi
 *Tested on RetroPie +3.7*
 
+Install dependencies:
+
+```bash
+$ sudo apt-get install cmake libsdl2-dev libfreeimage-dev
+```
+
+Then, generate and build the Makefile with CMake:
+
 ```bash
 cmake .
 make
@@ -21,7 +29,7 @@ make
 You need [HomeBrew](http://brew.sh/) and then run:
 
 ```bash
-$ brew install cmake sdl2
+$ brew install cmake sdl2 freeimage
 ```
 
 Then, generate and build the Makefile with CMake:
