@@ -18,7 +18,7 @@ if(APPLE)
 
 	set(CMAKE_CXX_COMPILER g++)
 	#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wno-attributes -arch i386 -arch x86_64")
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wno-attributes -arch x86_64")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wno-attributes")
 
 	# Platform dependent libraries
 	set(PLATFORM_SPECIFIC_LIBRARIES
@@ -33,7 +33,7 @@ elseif(UNIX OR EXISTS "/opt/vc/include/bcm_host.h")
 	MESSAGE(WARNING "Building for Raspberry Pi")
 
 	set(CMAKE_CXX_COMPILER g++)
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wno-attributes -m32")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wno-attributes")
 
 	set(PLATFORM_SPECIFIC_LIBRARIES
 		dl # fixes: undefined reference to symbol 'dlsym@@GLIBC_2.4'
