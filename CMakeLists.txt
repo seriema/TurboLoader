@@ -24,10 +24,26 @@ if(APPLE)
 	set(PLATFORM_SPECIFIC_LIBRARIES
 		"-framework Cocoa" # needed for _OBJC_CLASS_$_NSOpenGLPixelFormat etc
 		"-framework Foundation" # needed for _NSLog
-		#"-framework CoreFoundation"
 	)
 
-#check if we're running on Travis OR Raspberry Pi
+# Check if we're using PowerShell/Visual Studio or CLion with Cygwin
+elseif(MSVC OR CYGWIN)
+
+	MESSAGE(WARNING "Building for Windows (Visual Studio)")
+
+	set(CMAKE_DEBUG_POSTFIX "d")
+	add_definitions(-D_CRT_SECURE_NO_DEPRECATE)
+	add_definitions(-D_CRT_NONSTDC_NO_DEPRECATE)
+
+	set(CMAKE_CXX_COMPILER g++)
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP") #multi-processor compilation
+	#set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /MP") #multi-processor compilation
+
+	# set environmental path for our cmake/Find*.cmake scripts
+	set(ENV{SDL2DIR} dependencies/win/SDL2-2.0.4)
+	set(ENV{FREEIMAGE_HOME} dependencies/win/FreeImage-3.17.0)
+
+# Check if we're running on Travis OR Raspberry Pi
 elseif(UNIX OR EXISTS "/opt/vc/include/bcm_host.h")
 
 	MESSAGE(WARNING "Building for Raspberry Pi")
@@ -40,21 +56,6 @@ elseif(UNIX OR EXISTS "/opt/vc/include/bcm_host.h")
 		pthread # fixes: undefined reference to symbol 'sem_post@@GLIBC_2.4'
 		rt # fixes: undefined reference to symbol 'clock_gettime@@GLIBC_2.4'
 	)
-
-elseif(MSVC)
-
-	MESSAGE(WARNING "Building for Windows (Visual Studio)")
-
-	set(CMAKE_DEBUG_POSTFIX "d")
-	add_definitions(-D_CRT_SECURE_NO_DEPRECATE)
-	add_definitions(-D_CRT_NONSTDC_NO_DEPRECATE)
-
-	set(CMAKE_CXX_COMPILER g++)
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP") #multi-processor compilation
-	#set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /MP") #multi-processor compilation
-
-	# set environmental path so FindSDL2 can find SDL2 on Windows, as we have it in our dependencies
-	set(ENV{SDL2DIR} dependencies/win/SDL2-2.0.4)
 
 endif()
 
@@ -112,7 +113,7 @@ add_executable(a_retro_ui
 	#dependencies/common/soil/src/
 
 	dependencies/common/glad/src/glad.c # Separate this into an external library.
-	)
+)
 
 target_link_libraries(a_retro_ui
 	${PLATFORM_SPECIFIC_LIBRARIES}
