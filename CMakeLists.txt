@@ -1,4 +1,6 @@
 cmake_minimum_required(VERSION 2.8.4)
+set(CMAKE_C_COMPILER gcc)
+set(CMAKE_CXX_COMPILER g++)
 project(a_retro_ui)
 
 #--- CMAKE SETUP -------------------------------------------------------------------------------------------------------
@@ -16,7 +18,6 @@ if(APPLE)
 
 	MESSAGE(WARNING "Building for OSX")
 
-	set(CMAKE_CXX_COMPILER g++)
 	#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wno-attributes -arch i386 -arch x86_64")
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wno-attributes")
 
@@ -35,7 +36,6 @@ elseif(MSVC OR CYGWIN)
 	add_definitions(-D_CRT_SECURE_NO_DEPRECATE)
 	add_definitions(-D_CRT_NONSTDC_NO_DEPRECATE)
 
-	set(CMAKE_CXX_COMPILER g++)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP") #multi-processor compilation
 	#set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /MP") #multi-processor compilation
 
@@ -48,7 +48,6 @@ elseif(UNIX OR EXISTS "/opt/vc/include/bcm_host.h")
 
 	MESSAGE(WARNING "Building for Raspberry Pi")
 
-	set(CMAKE_CXX_COMPILER g++)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wno-attributes")
 
 	set(PLATFORM_SPECIFIC_LIBRARIES
@@ -75,7 +74,6 @@ set(CROSS_PLATFORM_INCLUDES
 	${SDL2_INCLUDE_DIR}
 	${FreeImage_INCLUDE_DIRS}
 	dependencies/common/glad/include
-	#dependencies/common/soil/src
 )
 
 set(CROSS_PLATFORM_LIBRARIES
@@ -101,16 +99,6 @@ add_executable(a_retro_ui
 	platform.h
 	Renderer.h
 	TextureLoader.h
-
-	#dependencies/common/soil/src/SOIL.h
-	#dependencies/common/soil/src/SOIL.c
-	#dependencies/common/soil/src/stb_image_aug.h
-	#dependencies/common/soil/src/stb_image_aug.c
-	#dependencies/common/soil/src/image_helper.h
-	#dependencies/common/soil/src/image_helper.c
-	#dependencies/common/soil/src/image_DXT.h
-	#dependencies/common/soil/src/image_DXT.c
-	#dependencies/common/soil/src/
 
 	dependencies/common/glad/src/glad.c # Separate this into an external library.
 )
