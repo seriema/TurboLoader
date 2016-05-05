@@ -19,12 +19,41 @@
 #define A_RETRO_UI_USE_OPENGL 1
 
 
+extern "C"
+{
+#include "lua.h"
+#include "lualib.h"
+#include "lauxlib.h"
+}
+
+static int lua_hello_world( lua_State* L )
+{
+	int argc = lua_gettop( L );
+	int argv = lua_tonumber( L, 1 );
+
+	printf( "Got data from Lua :: %d args :: '%d'\n", argc, argv );
+
+	lua_pushnumber( L, argc );
+	lua_pushnumber( L, argv );
+	return 2; // Number of lua_pushX calls.
+}
+
+
 #if defined(A_RETRO_UI_USE_SDL) && defined(A_RETRO_UI_USE_OPENGL)
 
 int main( int argc, char* args[] )
 {
 	std::cout << "STARTING IN: " << args[ 0 ] << std::endl;
 	std::cout << "Initializing..." << std::endl;
+
+
+	lua_State* L = luaL_newstate();
+	luaL_openlibs( L );
+	lua_register( L, "lua_hello_world", lua_hello_world );
+	luaL_dofile( L, "hello_world.lua" );
+	lua_close( L );
+	L = nullptr;
+
 
 	EnvironmentFactory_SDL_OpenGL environment_factory;
 	std::shared_ptr< IEnvironmentManager > environment_manager = environment_factory.create_environment_manager();
