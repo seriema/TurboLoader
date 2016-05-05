@@ -23,6 +23,7 @@ elseif(MSVC OR CYGWIN)
 	# set environmental path for our cmake/Find*.cmake scripts
 	set(ENV{SDL2DIR} win/SDL2-2.0.4)
 	set(ENV{FREEIMAGE_HOME} win/FreeImage-3.17.0)
+	set(ENV{LUA_DIR} win/LuaJIT-2.0.4/src)
 
 # Check if we're running on Travis OR Raspberry Pi
 elseif(UNIX OR EXISTS "/opt/vc/include/bcm_host.h")
