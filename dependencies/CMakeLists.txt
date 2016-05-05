@@ -41,7 +41,7 @@ endif()
 
 find_package(SDL2 REQUIRED)
 find_package(FreeImage REQUIRED)
-find_package(Lua REQUIRED) #Lua50, Lua51
+find_package(Lua51 REQUIRED) #Lua50, Lua51
 add_definitions(-DENTRY_CONFIG_USE_SDL=1) # use SDL2
 
 
