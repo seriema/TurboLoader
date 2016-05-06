@@ -58,6 +58,8 @@ add_executable(a_retro_ui
 	platform.h
 	Renderer.h
 	TextureLoader.h
+	Input.cpp
+	Input.h
 
 	${DEPENDENCIES_SOURCES}
 )

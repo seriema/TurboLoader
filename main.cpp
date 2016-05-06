@@ -6,19 +6,8 @@
 
 #include "platform.h"
 #include "Renderer.h"
+#include "Input.h"
 
-
-//Main loop flag
-bool quit = false;
-
-
-void handleKeys( unsigned char key, int x, int y )
-{
-	if( key == 'q' )
-	{
-		quit = true;
-	}
-}
 
 int main( int argc, char* args[] )
 {
@@ -102,18 +91,14 @@ int main( int argc, char* args[] )
 		objects.push_back( { render_key, render_data } );
 	}
 
-	//Event handler
-	SDL_Event e;
-
-	//Enable text input
-	SDL_StartTextInput();
-
 	printf("Entering main loop\n");
 	//While application is running
 
 	uint32_t t0 = SDL_GetTicks() - 17;
 
-	while( !quit )
+	Input* input = new Input();
+
+	while( !input->quit_requested() )
 	{
 //		printf("Looping\n");
 
@@ -122,21 +107,7 @@ int main( int argc, char* args[] )
 		t0 = t1;
 
 		//Handle events on queue
-		while( SDL_PollEvent( &e ) != 0 )
-		{
-			//User requests quit
-			if( e.type == SDL_QUIT )
-			{
-				quit = true;
-			}
-				//Handle keypress with current mouse position
-			else if( e.type == SDL_TEXTINPUT )
-			{
-				int x = 0, y = 0;
-				SDL_GetMouseState( &x, &y );
-				handleKeys( e.text.text[ 0 ], x, y );
-			}
-		}
+		input->poll_events();
 
 		for ( auto& obj : objects )
 		{
@@ -159,14 +130,12 @@ int main( int argc, char* args[] )
 		renderer.del_mesh( obj.second.vbo_handle );
 	}
 
-	//Disable text input
-	SDL_StopTextInput();
-
 
 //	printf("ERRORS >>");
 //	printf( SDL_GetError() );
 //	printf("<< ERRORS");
 
+	delete input;
 
 
 	//Free resources and close SDL
