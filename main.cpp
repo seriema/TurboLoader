@@ -1,12 +1,19 @@
 
+#include <memory>
 #include <iostream>
 #include <vector>
 #include <utility>
 #include <cmath>
 
+#include <Hypodermic/ContainerBuilder.h>
+
 #include "platform.h"
+#include "EnvironmentFactory.h"
+#include "EnvironmentManager.h"
 #include "Renderer.h"
 #include "Input.h"
+#include "Application.h"
+#include "Application_Main.h"
 
 extern "C"
 {
@@ -14,6 +21,12 @@ extern "C"
 	#include "lualib.h"
 	#include "lauxlib.h"
 }
+
+#define A_RETRO_UI_USE_SDL 1
+#define A_RETRO_UI_USE_OPENGL 1
+
+
+#if defined(A_RETRO_UI_USE_SDL) && defined(A_RETRO_UI_USE_OPENGL)
 
 static int lua_hello_world( lua_State* L )
 {
@@ -29,7 +42,9 @@ static int lua_hello_world( lua_State* L )
 
 int main( int argc, char* args[] )
 {
-	std::cout << "STARTING IN: " << args[0] << std::endl;
+	std::cout << "STARTING IN: " << args[ 0 ] << std::endl;
+	std::cout << "Initializing..." << std::endl;
+
 
 	lua_State* L = luaL_newstate();
 	luaL_openlibs( L );
@@ -38,133 +53,35 @@ int main( int argc, char* args[] )
 	lua_close( L );
 	L = nullptr;
 
-	//Start up SDL and create window
-	printf("Initializing...\n");
-	if ( !init_sdl_gl() )
+
+	EnvironmentFactory_SDL_OpenGL environment_factory;
+	std::shared_ptr< IEnvironmentManager > environment_manager = environment_factory.create_environment_manager();
+
+	if ( environment_manager == nullptr )
 		return 1;
 
-	Renderer_SDL_OpenGL renderer;
+	Hypodermic::ContainerBuilder builder;
+	builder.registerInstance( environment_manager );
+	//builder.registerType< InputManager_SDL >().as< IInputManager >.singleInstance();
+	builder.registerType< Renderer_SDL_OpenGL >().as< IRenderer >().singleInstance();
+	builder.registerType< Application_Main >().as< IApplication >().singleInstance();
 
+	auto container = builder.build();
+	auto app = container->resolve< IApplication >();
+	app->loop();
 
-	GLenum error = glGetError();
-	if( error != GL_NO_ERROR )
-	{
-		printf( "Unable to initialize OpenGL!\n%d\n", error );
-		return false;
-	}
-
-	printf("----------------------------------------------------------------\n");
-	printf("Initialized OpenGL\n");
-	printf("OpenGL Info\n");
-	printf("    Version: %s\n", glGetString(GL_VERSION));
-	printf("     Vendor: %s\n", glGetString(GL_VENDOR));
-	printf("   Renderer: %s\n", glGetString(GL_RENDERER));
-	printf("    Shading: %s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
-	printf("----------------------------------------------------------------\n");
-
-
-
-
-
-	std::vector< std::pair<RenderKey, RenderData> > objects;
-
-	GLfloat vertices[] =
-	{
-		0.0f,  0.2f, 0.0f,
-		-0.15f, 0.0f, 0.0f,
-		0.15f, 0.0f, 0.0f,
-	};
-	int n_vertices = sizeof(vertices) / sizeof(GL_FLOAT);
-	const GLuint vbo_handle = renderer.add_mesh( vertices, n_vertices );
-
-	// Allocate triangle 1.
-	{
-		RenderKey render_key;
-		RenderData render_data;
-
-		render_key.RenderOpaque.material_index = 0;
-		render_data.vbo_handle = vbo_handle;
-		render_data.x = -0.5f;
-		render_data.y = -0.1f;
-
-		objects.push_back( { render_key, render_data } );
-	}
-
-	// Allocate triangle 2.
-	{
-		RenderKey render_key;
-		RenderData render_data;
-
-		render_key.RenderOpaque.material_index = 0;
-		render_data.vbo_handle = vbo_handle;
-		render_data.x = 0.3f;
-		render_data.y = 0.6f;
-
-		objects.push_back( { render_key, render_data } );
-	}
-
-	// Allocate triangle 3.
-	{
-		RenderKey render_key;
-		RenderData render_data;
-
-		render_key.RenderOpaque.material_index = 0;
-		render_data.vbo_handle = vbo_handle;
-		render_data.x = 0.9f;
-		render_data.y = -0.6f;
-
-		objects.push_back( { render_key, render_data } );
-	}
-
-	printf("Entering main loop\n");
-	//While application is running
-
-	uint32_t t0 = SDL_GetTicks() - 17;
-
-	Input* input = new Input();
-
-	while( !input->quit_requested() )
-	{
-//		printf("Looping\n");
-
-		uint32_t t1 = SDL_GetTicks();
-		uint32_t dt = t1 - t0;
-		t0 = t1;
-
-		//Handle events on queue
-		input->poll_events();
-
-		for ( auto& obj : objects )
-		{
-			obj.second.x += 0.0001f * dt;
-			if ( obj.second.x > 1.1f )
-				obj.second.x = -1.1f;
-		}
-
-		for ( auto& obj : objects )
-		{
-			renderer.draw( obj.first, obj.second );
-		}
-
-		renderer.render();
-		SDL_GL_SwapWindow( gWindow );
-	}
-
-	for ( auto obj : objects )
-	{
-		renderer.del_mesh( obj.second.vbo_handle );
-	}
-
-
-//	printf("ERRORS >>");
-//	printf( SDL_GetError() );
-//	printf("<< ERRORS");
-
-	delete input;
-
-
-	//Free resources and close SDL
-	shutdown_sdl_gl();
+	environment_factory.destroy_environment_manager( environment_manager );
 
 	return 0;
 }
+
+#else
+
+int main( int argc, char* args[] )
+{
+	std::cout << "Wrong environment! Only SDL + OpenGL supported!" << std::endl;
+	return 2;
+}
+
+#endif
+
