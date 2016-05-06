@@ -49,6 +49,7 @@ add_definitions(-DENTRY_CONFIG_USE_SDL=1) # use SDL2
 
 set(DEPENDENCIES_INCLUDES
 	${CMAKE_CURRENT_SOURCE_DIR}/common/glad/include
+	${CMAKE_CURRENT_SOURCE_DIR}/common/Hypodermic
 	${SDL2_INCLUDE_DIR}
 	${FreeImage_INCLUDE_DIRS}
 	${LUA_INCLUDE_DIR}

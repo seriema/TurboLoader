@@ -4,6 +4,8 @@
 #include <cstdint>
 #include <algorithm>
 #include <utility>
+#include <iostream>
+#include <sstream>
 
 #include "platform.h"
 #include "shader.h"
@@ -101,12 +103,25 @@ struct RendererSettings
 {
 };
 
-class Renderer_SDL_OpenGL
+
+class IRenderer
+{
+public:
+	virtual ~IRenderer() {}
+	virtual uint32_t add_mesh( const float *vertices, int n_vertices ) = 0;
+	virtual bool del_mesh( uint32_t mesh_handle ) = 0;
+	virtual void draw( const RenderKey& render_key, const RenderData& render_data ) = 0;
+	virtual void render() = 0;
+	virtual std::string calc_description() = 0;
+};
+
+
+class Renderer_SDL_OpenGL : public IRenderer
 {
 public:
 	Renderer_SDL_OpenGL() // TODO RendererSettings settings )
 		: _render_count( 0 )
-		, _TEMP_shader( NULL )
+		, _TEMP_shader( nullptr )
 	{
 		glEnable( GL_CULL_FACE );
 		glCullFace( GL_BACK );
@@ -137,12 +152,12 @@ public:
 		_render_material[ 0 ].shader_handle = _TEMP_shader->m_program; // TODO ugly.
 	}
 
-	~Renderer_SDL_OpenGL()
+	virtual ~Renderer_SDL_OpenGL() override
 	{
 		delete _TEMP_shader;
 	}
 
-	GLuint add_mesh( const GLfloat* vertices, int n_vertices )
+	GLuint add_mesh( const GLfloat* vertices, int n_vertices ) override
 	{
 		GLuint vbo_handle;
 
@@ -159,13 +174,13 @@ public:
 		return vbo_handle;
 	}
 
-	bool del_mesh( GLuint vbo_handle )
+	bool del_mesh( GLuint vbo_handle ) override
 	{
 		glDeleteBuffers( 1, &vbo_handle );
 		return true; // TODO Make sure delete went ok.
 	}
 
-	void draw( const RenderKey& render_key, const RenderData& render_data )
+	void draw( const RenderKey& render_key, const RenderData& render_data ) override
 	{
 		_render_key[ _render_count ] = render_key;
 		_render_key[ _render_count ].RenderCommon.data_index = _render_count;
@@ -173,7 +188,7 @@ public:
 		++_render_count;
 	}
 
-	void render()
+	void render() override
 	{
 		std::sort( _render_key, _render_key + _render_count, CompareRenderKey );
 
@@ -210,6 +225,18 @@ public:
 
 		_render_count = 0;
 	}
+
+	virtual std::string calc_description() override
+	{
+		std::ostringstream description;
+		description << "OpenGL env" << std::endl;
+		description << "   Version: " << glGetString( GL_VERSION ) << std::endl;
+		description << "    Vendor: " << glGetString( GL_VENDOR ) << std::endl;
+		description << "  Renderer: " << glGetString( GL_RENDERER ) << std::endl;
+		description << "   Shading: " << glGetString( GL_SHADING_LANGUAGE_VERSION ) << std::endl;
+		return description.str();
+	}
+
 private:
 	RenderMaterial  _render_material[ 1 ];
 
@@ -241,26 +268,29 @@ void shutdown_sdl_gl()
 	SDL_Quit();
 }
 
-std::pair< SDL_GLattr, int > GL_ATTRIBUTES[] =
+namespace
 {
-	{ SDL_GL_RED_SIZE,     8 },
-	{ SDL_GL_GREEN_SIZE,   8 },
-	{ SDL_GL_BLUE_SIZE,    8 },
-	{ SDL_GL_ALPHA_SIZE,   8 },
-	{ SDL_GL_DEPTH_SIZE,   8 },
-	{ SDL_GL_DOUBLEBUFFER, 1 },
+	std::pair< SDL_GLattr, int > GL_ATTRIBUTES[] =
+		{
+			{ SDL_GL_RED_SIZE,     8 },
+			{ SDL_GL_GREEN_SIZE,   8 },
+			{ SDL_GL_BLUE_SIZE,    8 },
+			{ SDL_GL_ALPHA_SIZE,   8 },
+			{ SDL_GL_DEPTH_SIZE,   8 },
+			{ SDL_GL_DOUBLEBUFFER, 1 },
 
 #if defined(__APPLE__) || defined(_WIN32)
-	//{ SDL_GL_CONTEXT_PROFILE_MASK,  SDL_GL_CONTEXT_PROFILE_CORE }
-	{ SDL_GL_CONTEXT_PROFILE_MASK,  SDL_GL_CONTEXT_PROFILE_COMPATIBILITY },
-	{ SDL_GL_CONTEXT_MAJOR_VERSION, 2 },
-	{ SDL_GL_CONTEXT_MINOR_VERSION, 1 },
+			//{ SDL_GL_CONTEXT_PROFILE_MASK,  SDL_GL_CONTEXT_PROFILE_CORE }
+			{ SDL_GL_CONTEXT_PROFILE_MASK,  SDL_GL_CONTEXT_PROFILE_COMPATIBILITY },
+			{ SDL_GL_CONTEXT_MAJOR_VERSION, 2 },
+			{ SDL_GL_CONTEXT_MINOR_VERSION, 1 },
 #else // RPI
-	{ SDL_GL_CONTEXT_PROFILE_MASK,  SDL_GL_CONTEXT_PROFILE_ES },
-	{ SDL_GL_CONTEXT_MAJOR_VERSION, 2 },
-	{ SDL_GL_CONTEXT_MINOR_VERSION, 0 },
+		{ SDL_GL_CONTEXT_PROFILE_MASK,  SDL_GL_CONTEXT_PROFILE_ES },
+		{ SDL_GL_CONTEXT_MAJOR_VERSION, 2 },
+		{ SDL_GL_CONTEXT_MINOR_VERSION, 0 },
 #endif
-};
+		};
+}
 
 int init_sdl_gl()
 {

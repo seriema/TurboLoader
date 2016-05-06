@@ -50,6 +50,7 @@ include_directories(
 
 # MAIN
 add_executable(a_retro_ui
+	${DEPENDENCIES_SOURCES}
 	main.cpp
 	shader.h
 	shader.cpp
@@ -58,9 +59,10 @@ add_executable(a_retro_ui
 	platform.h
 	Renderer.h
 	TextureLoader.h
-
-	${DEPENDENCIES_SOURCES}
-)
+	EnvironmentFactory.h
+	EnvironmentManager.h
+	Application_Main.h
+	Application.h)
 
 target_link_libraries(a_retro_ui
 	${DEPENDENCIES_LIBRARIES}

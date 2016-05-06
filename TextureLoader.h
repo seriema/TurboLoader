@@ -21,7 +21,7 @@ public:
 	GLuint load( std::string filepath )
 	{
 		int w, h;
-		GLubyte* imgdata;
+		GLubyte* imgdata = nullptr;
 
 		FIBITMAP* img = load_FreeImage( filepath.c_str(), w, h, imgdata );
 //		GLuint texture_handle = load_OpenGL( imgdata, w, h );
