@@ -8,10 +8,35 @@
 #include "Renderer.h"
 #include "Input.h"
 
+extern "C"
+{
+	#include "lua.h"
+	#include "lualib.h"
+	#include "lauxlib.h"
+}
+
+static int lua_hello_world( lua_State* L )
+{
+	int argc = lua_gettop( L );
+	int argv = lua_tonumber( L, 1 );
+
+	printf( "Got data from Lua :: %d args :: '%d'\n", argc, argv );
+
+	lua_pushnumber( L, argc );
+	lua_pushnumber( L, argv );
+	return 2; // Number of lua_pushX calls.
+}
 
 int main( int argc, char* args[] )
 {
 	std::cout << "STARTING IN: " << args[0] << std::endl;
+
+	lua_State* L = luaL_newstate();
+	luaL_openlibs( L );
+	lua_register( L, "lua_hello_world", lua_hello_world );
+	luaL_dofile( L, "hello_world.lua" );
+	lua_close( L );
+	L = nullptr;
 
 	//Start up SDL and create window
 	printf("Initializing...\n");

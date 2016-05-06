@@ -23,6 +23,7 @@ elseif(MSVC OR CYGWIN)
 	# set environmental path for our cmake/Find*.cmake scripts
 	set(ENV{SDL2DIR} win/SDL2-2.0.4)
 	set(ENV{FREEIMAGE_HOME} win/FreeImage-3.17.0)
+	set(ENV{LUA_DIR} win/LuaJIT-2.0.4/src)
 
 # Check if we're running on Travis OR Raspberry Pi
 elseif(UNIX OR EXISTS "/opt/vc/include/bcm_host.h")
@@ -40,6 +41,7 @@ endif()
 
 find_package(SDL2 REQUIRED)
 find_package(FreeImage REQUIRED)
+find_package(Lua51 REQUIRED) #Lua50, Lua51
 add_definitions(-DENTRY_CONFIG_USE_SDL=1) # use SDL2
 
 
@@ -49,6 +51,8 @@ set(DEPENDENCIES_INCLUDES
 	${CMAKE_CURRENT_SOURCE_DIR}/common/glad/include
 	${SDL2_INCLUDE_DIR}
 	${FreeImage_INCLUDE_DIRS}
+	${LUA_INCLUDE_DIR}
+	${Luaudio_INCLUDE_DIRS}
 	PARENT_SCOPE
 )
 
@@ -61,5 +65,8 @@ set(DEPENDENCIES_LIBRARIES
 	${PLATFORM_SPECIFIC_LIBRARIES}
 	${SDL2_LIBRARY}
 	${FreeImage_LIBRARIES}
+	${LUA_LIBRARIES}
 	PARENT_SCOPE
 )
+
+MESSAGE("Lua version: " ${LUA_VERSION_STRING})
