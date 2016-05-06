@@ -11,13 +11,9 @@
 #include "EnvironmentFactory.h"
 #include "EnvironmentManager.h"
 #include "Renderer.h"
+#include "Input.h"
 #include "Application.h"
 #include "Application_Main.h"
-
-
-#define A_RETRO_UI_USE_SDL 1
-#define A_RETRO_UI_USE_OPENGL 1
-
 
 extern "C"
 {
@@ -25,6 +21,9 @@ extern "C"
 #include "lualib.h"
 #include "lauxlib.h"
 }
+
+#define A_RETRO_UI_USE_SDL 1
+#define A_RETRO_UI_USE_OPENGL 1
 
 static int lua_hello_world( lua_State* L )
 {
@@ -38,6 +37,7 @@ static int lua_hello_world( lua_State* L )
 	return 2; // Number of lua_pushX calls.
 }
 
+#if defined(A_RETRO_UI_USE_SDL) && defined(A_RETRO_UI_USE_OPENGL)
 
 #if defined(A_RETRO_UI_USE_SDL) && defined(A_RETRO_UI_USE_OPENGL)
 
