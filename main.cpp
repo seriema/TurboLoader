@@ -56,9 +56,13 @@ int main( int argc, char* args[] )
 
 	GLfloat vertices[] =
 	{
-		0.0f,  0.2f, 0.0f,
-		-0.15f, 0.0f, 0.0f,
-		0.15f, 0.0f, 0.0f,
+		-0.5f,  0.5f,  0.0f,
+		-0.5f, -0.5f,  0.0f,
+		 0.5f,  0.5f,  0.0f,
+
+		-0.5f, -0.5f,  0.0f,
+		 0.5f, -0.5f,  0.0f,
+		 0.5f,  0.5f,  0.0f,
 	};
 	int n_vertices = sizeof(vertices) / sizeof(GL_FLOAT);
 	const GLuint vbo_handle = renderer.add_mesh( vertices, n_vertices );

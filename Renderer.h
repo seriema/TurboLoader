@@ -73,7 +73,7 @@ union RenderKey
 
 struct RenderData
 {
-	u32 vbo_handle; // vbo contains attributes such as vert,norm,color, these must then also exist in shader.
+	u32 vbo_handle; // vbo contains attributes such as vert, norm, color, these must then also exist in shader.
 	//glm::mat4 model_transform;
 
 	union
@@ -104,7 +104,7 @@ struct RendererSettings
 class Renderer_SDL_OpenGL
 {
 public:
-	Renderer_SDL_OpenGL() // TODO RendererSettings settings )
+	Renderer_SDL_OpenGL() // TODO RendererSettings settings
 		: _render_count( 0 )
 		, _TEMP_shader( NULL )
 	{
@@ -196,14 +196,15 @@ public:
 
 
 			// TODO bind relevant texture here.
-			// TODO only activate and rebind if neccessary.
+			// TODO only activate and rebind if necessary.
 			int texture_i = 0;
 			glActiveTexture( GL_TEXTURE0 + texture_i );
 			glBindTexture( GL_TEXTURE_2D, _TEMP_texture_handle );
 			glUniform1i( (*_TEMP_shader)["texture"], texture_i );
 
 
-			glDrawArrays( GL_TRIANGLES, 0, 3 );
+			auto numTriangles = 6;
+			glDrawArrays( GL_TRIANGLES, 0, numTriangles );
 		}
 
 		//glFlush();

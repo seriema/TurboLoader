@@ -23,13 +23,11 @@ public:
 		int w, h;
 		GLubyte* imgdata;
 
-		FIBITMAP* img = load_FreeImage( filepath.c_str(), w, h, imgdata );
-//		GLuint texture_handle = load_OpenGL( imgdata, w, h );
-		GLuint texture_handle = load_OpenGL( FreeImage_GetBits( img ), w, h );
-		unload_FreeImage( img );
-
-
-
+		FIBITMAP* bgra = load_FreeImage( filepath.c_str(), w, h, imgdata );
+		GLubyte* rgba = convert_bgra_to_rgba( w, h, bgra );
+		GLuint texture_handle = load_OpenGL( w, h, rgba );
+		unload_FreeImage( bgra );
+		delete [] rgba;
 
 		return texture_handle;
 	}
@@ -45,8 +43,8 @@ private:
 	{
 		// BEWARE! FreeImage loads in BGR format!
 
-		FREE_IMAGE_FORMAT formato = FreeImage_GetFileType( filepath, 0 );
-		FIBITMAP* img = FreeImage_Load( formato, filepath );
+		FREE_IMAGE_FORMAT format = FreeImage_GetFileType( filepath, 0 );
+		FIBITMAP* img = FreeImage_Load( format, filepath );
 
 		{
 			FIBITMAP* temp = img;
@@ -60,7 +58,7 @@ private:
 		printf( "Texture file: %s\n", filepath );
 		printf( "Texture size: %d x %d\n", w, h );
 
-		//imgdata = FreeImage_GetBits( img ); // TODO if img size isnt power of 2 then use FreeImage_ConvertToRawBits!
+		//imgdata = FreeImage_GetBits( img ); // TODO if img size isn't power of 2 then use FreeImage_ConvertToRawBits!
 		return img;
 	}
 
@@ -70,7 +68,24 @@ private:
 		return true; // TODO return false if img doesn't exist.
 	}
 
-	GLuint load_OpenGL( GLubyte* imgdata, int w, int h )
+	GLubyte* convert_bgra_to_rgba( int w, int h, FIBITMAP* imgdata )
+	{
+		// https://www.opengl.org/discussion_boards/showthread.php/163929-image-loading?p=1158293#post1158293
+		BYTE* fib = FreeImage_GetBits( imgdata );
+		GLubyte* texture = new GLubyte[4*w*h];
+		auto square = w * h;
+
+		for(int j = 0; j < square; j++){
+			texture[j*4+0]= fib[j*4+2];
+			texture[j*4+1]= fib[j*4+1];
+			texture[j*4+2]= fib[j*4+0];
+			texture[j*4+3]= fib[j*4+3];
+		}
+
+		return texture;
+	}
+
+	GLuint load_OpenGL( int w, int h, GLubyte *imgdata )
 	{
 		GLuint texture_handle;
 
