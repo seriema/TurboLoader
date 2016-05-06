@@ -3,14 +3,20 @@
 #include "Input.h"
 
 Input::Input()
+	: _quit( false )
+	, _num_controllers( 0 )
+	, _controller( NULL )
 {
 	init_controller();
 }
 
 Input::~Input()
 {
-	//Close game controller
-	SDL_JoystickClose( _controller );
+	if( _controller != NULL )
+	{
+		//Close game controller
+		SDL_JoystickClose( _controller );
+	}
 }
 
 void Input::init_controller()
