@@ -49,9 +49,7 @@ include_directories(
 	${DEPENDENCIES_INCLUDES}
 )
 
-# MAIN
-add_executable(a_retro_ui
-	src/main.cpp
+set(SOURCE_FILES
 	src/shader.h
 	src/shader.cpp
 	src/shader_program.h
@@ -65,7 +63,21 @@ add_executable(a_retro_ui
 	${DEPENDENCIES_SOURCES}
 )
 
+# MAIN
+add_executable(a_retro_ui
+	src/main.cpp
+	${SOURCE_FILES}
+)
 target_link_libraries(a_retro_ui
+	${DEPENDENCIES_LIBRARIES}
+)
+
+# TEST
+add_executable(a_retro_test
+	src/test.cpp
+	${SOURCE_FILES}
+)
+target_link_libraries(a_retro_test
 	${DEPENDENCIES_LIBRARIES}
 )
 

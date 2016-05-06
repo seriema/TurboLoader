@@ -323,6 +323,15 @@ int init_sdl_gl()
 		printf( "Warning: Unable to set VSync! SDL Error: %s\n", SDL_GetError() );
 	}
 
+	printf("----------------------------------------------------------------\n");
+	printf("Initialized OpenGL\n");
+	printf("OpenGL Info\n");
+	printf("    Version: %s\n", glGetString(GL_VERSION));
+	printf("     Vendor: %s\n", glGetString(GL_VENDOR));
+	printf("   Renderer: %s\n", glGetString(GL_RENDERER));
+	printf("    Shading: %s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
+	printf("----------------------------------------------------------------\n");
+
 	return true;
 }
 

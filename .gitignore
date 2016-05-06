@@ -1,5 +1,6 @@
 # Custom a-retro-ui
 a_retro_ui
+a_retro_test
 *.vcxproj
 *.vcxproj.filters
 *.sln
