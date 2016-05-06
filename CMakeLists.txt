@@ -59,10 +59,13 @@ add_executable(a_retro_ui
 	platform.h
 	Renderer.h
 	TextureLoader.h
+	Input.cpp
+	Input.h
 	EnvironmentFactory.h
 	EnvironmentManager.h
 	Application_Main.h
-	Application.h)
+	Application.h
+)
 
 target_link_libraries(a_retro_ui
 	${DEPENDENCIES_LIBRARIES}
