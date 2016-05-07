@@ -5,4 +5,4 @@
 echo "** Building project **"
 
 cmake .
-msbuild .\ALL_BUILD.vcxproj
+msbuild .\a_retro_ui.sln
