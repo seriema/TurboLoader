@@ -17,9 +17,9 @@
 
 extern "C"
 {
-#include "lua.h"
-#include "lualib.h"
-#include "lauxlib.h"
+	#include "lua.h"
+	#include "lualib.h"
+	#include "lauxlib.h"
 }
 
 #define A_RETRO_UI_USE_SDL 1
@@ -37,7 +37,6 @@ static int lua_hello_world( lua_State* L )
 	return 2; // Number of lua_pushX calls.
 }
 
-#if defined(A_RETRO_UI_USE_SDL) && defined(A_RETRO_UI_USE_OPENGL)
 
 #if defined(A_RETRO_UI_USE_SDL) && defined(A_RETRO_UI_USE_OPENGL)
 
