@@ -27,4 +27,4 @@ before_install:
 - if [ $TRAVIS_OS_NAME == osx ]; then brew install sdl2 freeimage lua51; fi
 
 
-script: ./build.sh
+script: ./scripts/build.sh
