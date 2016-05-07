@@ -1,3 +1,6 @@
+// VS requires this stdio.h for printf: https://msdn.microsoft.com/en-us/library/bb531344.aspx
+#include <stdio.h>
+
 #include <SDL_events.h>
 
 #include "Input.h"
