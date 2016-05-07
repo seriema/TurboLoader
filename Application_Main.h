@@ -7,7 +7,7 @@
 #include "Application.h"
 #include "EnvironmentManager.h"
 #include "Renderer.h"
-
+#include "Input.h"
 
 class Application_Main : public IApplication
 {
@@ -37,11 +37,11 @@ public:
 	void init_scene()
 	{
 		GLfloat vertices[] =
-			{
-				0.0f,  0.2f, 0.0f,
-				-0.15f, 0.0f, 0.0f,
-				0.15f, 0.0f, 0.0f,
-			};
+		{
+			0.0f,  0.2f, 0.0f,
+			-0.15f, 0.0f, 0.0f,
+			0.15f, 0.0f, 0.0f,
+		};
 		int n_vertices = sizeof(vertices) / sizeof(GL_FLOAT);
 		const GLuint vbo_handle = _renderer->add_mesh( vertices, n_vertices );
 
@@ -88,54 +88,31 @@ public:
 
 	virtual void loop() override
 	{
-		SDL_Event e;
-		SDL_StartTextInput();
-
 		printf("Entering main loop\n");
 
 		uint32_t t0 = SDL_GetTicks() - 17;
-		bool is_looping = true;
+		_input = new Input();
 
-		while( is_looping )
+		while( !_input->quit_requested() )
 		{
 			uint32_t t1 = SDL_GetTicks();
 			_dt = t1 - t0;
 			t0 = t1;
-
-			while( SDL_PollEvent( &e ) != 0 )
-			{
-				//User requests quit
-				if( e.type == SDL_QUIT )
-				{
-					is_looping = false;
-				}
-				//Handle keypress with current mouse position
-				else if( e.type == SDL_TEXTINPUT )
-				{
-					int x = 0, y = 0;
-					SDL_GetMouseState( &x, &y );
-
-					if ( e.text.text[ 0 ] == 'q' )
-					{
-						is_looping = false;
-					}
-				}
-			}
-
 			tick();
 		}
+
+		delete _input;
 
 		for ( auto obj : _objects )
 		{
 			_renderer->del_mesh( obj.second.vbo_handle );
 		}
-
-		//Disable text input
-		SDL_StopTextInput();
 	}
 
 	virtual void tick() override
 	{
+		_input->poll_events();
+
 		for ( auto& obj : _objects )
 		{
 			obj.second.x += 0.0001f * _dt;
@@ -162,6 +139,7 @@ private:
 	std::shared_ptr< IRenderer >                     _renderer;
 
 	std::vector< std::pair<RenderKey, RenderData> >  _objects;
+	Input*                                           _input;
 
 	uint32_t _dt;
 };
