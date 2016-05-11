@@ -5,13 +5,10 @@
 #include <utility>
 #include <cmath>
 
-#include <Hypodermic/ContainerBuilder.h>
-
 #include "platform.h"
 #include "EnvironmentFactory.h"
 #include "EnvironmentManager.h"
 #include "Renderer.h"
-#include "Input.h"
 #include "Application.h"
 #include "Application_Main.h"
 
@@ -60,14 +57,10 @@ int main( int argc, char* args[] )
 	if ( environment_manager == nullptr )
 		return 1;
 
-	Hypodermic::ContainerBuilder builder;
-	builder.registerInstance( environment_manager );
-	//builder.registerType< InputManager_SDL >().as< IInputManager >.singleInstance();
-	builder.registerType< Renderer_SDL_OpenGL >().as< IRenderer >().singleInstance();
-	builder.registerType< Application_Main >().as< IApplication >().singleInstance();
+	//IInputManager* input_manager = new InputManager_SDL();
+	std::shared_ptr< IRenderer > renderer = std::make_shared< Renderer_SDL_OpenGL >();
+	std::shared_ptr< IApplication > app = std::make_shared< Application_Main >( environment_manager, renderer );
 
-	auto container = builder.build();
-	auto app = container->resolve< IApplication >();
 	app->loop();
 
 	environment_factory.destroy_environment_manager( environment_manager );
