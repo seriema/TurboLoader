@@ -11,20 +11,42 @@ os:
 
 before_install:
 # --- RetroPie like environment ------------------------------------------------
-# Setup the same gcc/g++ version
-# http://askubuntu.com/a/26518
-- if [ $TRAVIS_OS_NAME == linux ]; then sudo apt-get install -y gcc-4.7; fi
-- if [ $TRAVIS_OS_NAME == linux ]; then sudo apt-get install -y g++-4.7; fi
-- if [ $TRAVIS_OS_NAME == linux ]; then sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.7 10; fi
-- if [ $TRAVIS_OS_NAME == linux ]; then sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.7 10; fi
-# Install project dependencies
-- if [ $TRAVIS_OS_NAME == linux ]; then sudo apt-get update; fi
-- if [ $TRAVIS_OS_NAME == linux ]; then sudo apt-get install -y libsdl2-dev libfreeimage-dev lua5.1-dev; fi
+- |-
+  if [ $TRAVIS_OS_NAME == linux ]; then
+    # Enable graphics with xvfb
+    # https://docs.travis-ci.com/user/gui-and-headless-browsers/#Using-xvfb-to-Run-Tests-That-Require-a-GUI
+    export DISPLAY=:99.0
+    sh -e /etc/init.d/xvfb start
+    sleep 3 # give xvfb some time to start
+
+    # Install project dependencies
+    sudo apt-get update
+    sudo apt-get install -y libsdl2-dev libfreeimage-dev lua5.1-dev
+
+    # Downgrade to the same gcc/g++ version as RetroPie 3.6
+    # http://askubuntu.com/a/26518
+    sudo apt-get install -y gcc-4.7
+    sudo apt-get install -y g++-4.7
+    sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.7 10
+    sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.7 10
+  fi
 
 # --- OSX environment ----------------------------------------------------------
-# Install project dependencies
-- if [ $TRAVIS_OS_NAME == osx ]; then brew update; fi
-- if [ $TRAVIS_OS_NAME == osx ]; then brew install sdl2 freeimage lua51; fi
+- |-
+  if [ $TRAVIS_OS_NAME == osx ]; then
+    # Install project dependencies
+    brew update
+    brew install sdl2 freeimage lua51
+  fi
 
 
-script: ./scripts/build.sh
+script:
+- ./scripts/build.sh
+
+- if [ $TRAVIS_OS_NAME == osx ]; then ./scripts/test.sh; fi
+# running the renderer in Travis only works for OSX at the moment, because the Travis Linux environment uses OpenGL ES 3 which makes our shaders fail with:
+# 0:7(14): error: no precision specified this scope for type `vec2'
+# 0:8(14): error: no precision specified this scope for type `vec3'
+# terminate called after throwing an instance of 'Shader::ShaderCompileError'
+#  what():  jw
+# ./test.sh: line 7: 12471 Aborted                 (core dumped) ./a_retro_test
