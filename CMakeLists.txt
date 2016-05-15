@@ -51,16 +51,17 @@ include_directories(
 
 # MAIN
 add_executable(a_retro_ui
-	src/main.cpp
-	src/shader.h
-	src/shader.cpp
-	src/shader_program.h
-	src/shader_program.cpp
-	src/platform.h
-	src/Renderer.h
-	src/TextureLoader.h
-	src/Input.cpp
-	src/Input.h
+#	src/main.cpp
+#	src/shader.h
+#	src/shader.cpp
+#	src/shader_program.h
+#	src/shader_program.cpp
+#	src/platform.h
+#	src/Renderer.h
+#	src/TextureLoader.h
+#	src/Input.cpp
+#	src/Input.h
+	msdfgen-test.cpp
 
 	${DEPENDENCIES_SOURCES}
 )

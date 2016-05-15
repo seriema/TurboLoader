@@ -11,7 +11,7 @@
 Install dependencies:
 
 ```bash
-$ sudo apt-get install cmake libsdl2-dev libfreeimage-dev lua5.1-dev
+$ sudo apt-get install cmake libsdl2-dev libfreeimage-dev libfreetype6-dev lua5.1-dev
 ```
 
 Then, generate and build the Makefile with CMake:
@@ -29,7 +29,7 @@ make
 You need [HomeBrew](http://brew.sh/) and then run:
 
 ```bash
-$ brew install cmake sdl2 freeimage lua51
+$ brew install cmake sdl2 freeimage freetype lua51
 ```
 
 Then, generate and build the Makefile with CMake:
