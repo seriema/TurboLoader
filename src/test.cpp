@@ -1,9 +1,7 @@
-
 #include <iostream>
 
-#include "platform.h"
-#include "Renderer.h"
-#include "Input.h"
+#include "msdfgen.h"
+#include "msdfgen-ext.h"
 
 extern "C"
 {
@@ -11,6 +9,10 @@ extern "C"
 	#include "lualib.h"
 	#include "lauxlib.h"
 }
+
+#include "platform.h"
+#include "Renderer.h"
+#include "Input.h"
 
 static int lua_hello_world( lua_State* L )
 {
@@ -24,6 +26,31 @@ static int lua_hello_world( lua_State* L )
 	return 2; // Number of lua_pushX calls.
 }
 
+static void msdfgen_hello_world()
+{
+	msdfgen::FreetypeHandle* ft = msdfgen::initializeFreetype();
+	if ( ft )
+	{
+		msdfgen::FontHandle* font = loadFont( ft, "OpenSans.ttf" );
+		if ( font )
+		{
+			msdfgen::Shape shape;
+			if ( loadGlyph( shape, font, 'A' ))
+			{
+				shape.normalize();
+				// max. angle
+				edgeColoringSimple( shape, 3.0 );
+				// image width, height
+				msdfgen::Bitmap<msdfgen::FloatRGB> msdf( 32, 32 );
+				// range, scale, translation
+				generateMSDF( msdf, shape, 4.0, 1.0, msdfgen::Vector2( 4.0, 4.0 ));
+			}
+			destroyFont( font );
+		}
+		deinitializeFreetype( ft );
+	}
+}
+
 int main( int argc, char* args[] )
 {
 	//Smoke test Lua.
@@ -33,7 +60,6 @@ int main( int argc, char* args[] )
 	lua_register( L, "lua_hello_world", lua_hello_world );
 	luaL_dofile( L, "hello_world.lua" );
 	lua_close( L );
-	L = nullptr;
 
 
 	// --- STARTUP ------------------------------
@@ -66,6 +92,10 @@ int main( int argc, char* args[] )
 	renderer.render();
 	SDL_GL_SwapWindow( gWindow );
 
+	//Test run msdf font.
+	printf( "¿¿ Test run msdfgen ??\n" );
+	msdfgen_hello_world();
+
 
 	// --- SHUTDOWN -----------------------------
 
@@ -76,7 +106,6 @@ int main( int argc, char* args[] )
 	//Shutdown renderer.
 	printf( "¿¿ Shutdown renderer ??\n" );
 	shutdown_sdl_gl();
-
 
 	// --- EXIT ---------------------------------
 
