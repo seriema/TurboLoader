@@ -53,3 +53,19 @@ cmake .
 msbuild .\ALL_BUILD.vcxproj
 .\Debug\a_retro_ui.exe
 ```
+
+### Remotely debugging this project
+
+Remotely debugging your raspberry pi from the comfort of your localhost is as easy as running:
+
+## On your raspberry pi
+
+gdbserver 0.0.0.0:6969 ./a-retro-ui
+
+## On your localhost
+
+$ gdb
+gdb> target remote yourhost:6969
+
+And that's it! Unfortunately at the time of writing this, fancy editors such as [CLion still lack 
+the remote debugging feature](https://youtrack.jetbrains.com/issue/CPP-744) .
