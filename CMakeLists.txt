@@ -6,6 +6,7 @@ project(a_retro_ui)
 #--- CMAKE SETUP -------------------------------------------------------------------------------------------------------
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}")
+set_directory_properties(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES "CMakeCache.txt")  # "make clean"
 
 
 #--- PLATFORM SPECIFIC SETUP -------------------------------------------------------------------------------------------
@@ -42,7 +43,7 @@ endif()
 #--- MAIN EXECUTABLE SETUP ---------------------------------------------------------------------------------------------
 
 # Add project dependencies
-add_subdirectory("dependencies")
+add_subdirectory("lib")
 
 include_directories(
 	${DEPENDENCIES_INCLUDES}
@@ -50,16 +51,16 @@ include_directories(
 
 # MAIN
 add_executable(a_retro_ui
-	main.cpp
-	shader.h
-	shader.cpp
-	shader_program.h
-	shader_program.cpp
-	platform.h
-	Renderer.h
-	TextureLoader.h
-	Input.cpp
-	Input.h
+	src/main.cpp
+	src/shader.h
+	src/shader.cpp
+	src/shader_program.h
+	src/shader_program.cpp
+	src/platform.h
+	src/Renderer.h
+	src/TextureLoader.h
+	src/Input.cpp
+	src/Input.h
 
 	${DEPENDENCIES_SOURCES}
 )
