@@ -8,37 +8,17 @@
 ### On Raspberry Pi
 *Tested on RetroPie +3.7*
 
-Install dependencies:
+Install dependencies with [setup.sh](scripts/setup.sh).
 
-```bash
-$ sudo apt-get install cmake libsdl2-dev libfreeimage-dev lua5.1-dev
-```
-
-Then, generate and build the Makefile with CMake:
-
-```bash
-cmake .
-make
-./a_retro_ui
-```
+Then, generate and build with [build.sh](scripts/build.sh).
 
 
 ### On OSX
 *Tested on OSX +10.10*
 
-You need [HomeBrew](http://brew.sh/) and then run:
+You need [HomeBrew](http://brew.sh/) and then run [setup.sh](scripts/setup.sh).
 
-```bash
-$ brew install cmake sdl2 freeimage lua51
-```
-
-Then, generate and build the Makefile with CMake:
-
-```bash
-cmake .
-make
-./a_retro_ui
-```
+Then, generate and build with [build.sh](scripts/build.sh).
 
 
 ### On Windows
@@ -46,10 +26,4 @@ make
 
 You need to have Visual Studio, and then install [CMake](https://cmake.org/download/). We recommend [CMake 3.5.0](https://cmake.org/files/v3.5/cmake-3.5.2-win32-x86.msi).
 
-Then, generate and build the Visual Studio Solution with CMake:
-
-```powershell
-cmake .
-msbuild .\ALL_BUILD.vcxproj
-.\Debug\a_retro_ui.exe
-```
+Then, generate and build with [build.ps1](scripts/build.ps1).
