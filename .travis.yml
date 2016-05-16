@@ -50,3 +50,8 @@ script:
 # terminate called after throwing an instance of 'Shader::ShaderCompileError'
 #  what():  jw
 # ./test.sh: line 7: 12471 Aborted                 (core dumped) ./a_retro_test
+#
+notifications:
+  slack:
+    secure: ojfqQEe/j+p+ZZk/F4RgzTRRTDJ0EjospQH/P999Pidq1nGhgMZfDwDQf5etxo0u+7JMPkkwt+YtHooZ2DaI443szIe/RGRTKwD/iB9quMm79psMRvrtFxCrgxF1FZbaw/XFdNQDkxGXDgY3dcVxRnrmhTWdmfdYirJuN2gAj+grhA3kKLYzakZB7OD4/Mbh//DnSR1RjtnoMXjCCLuFXRS2PKKO2e9PRZPECYzczHSnnP204XJRRc9f3b45DJ42kLV3Gnzdt+5qNVMZmuPWH+VnsLm1RXzQ7WX48UlKbfWGcicsbd96lD+QNVznEXhzLlgTADgeHBzPWhPx89vXK1SzCTWUXKTp8fglnY52H3aQQjGY3vUQBNMN7lMlJ3GE50BzvjU32qJ3YArZRqtaXXKdKWtLnfXPdLK7SMQpXWv8epr9kJWOVMTIEfqEZAiGU9na+OKkg6LpVkMDc9dxt6uyEyzrlKGTvF/35Dk7VGTthVe3r0ukPdrOjiFNr6iUYgDXYaUHN2oZDTPT93IUD26/2gaDKG1d4mcmEwIRdGU1obp1rAMgVUKHv90ZCv2wv71gut0ShY97UW6o9oGXTdQxMGb5X/evAET8yyxcVKVcIGDvVNuj2YvuOsgkQISHWgqLR5DzCJ+dnaJJqnGkA+Im46tHhliPYOBQsEM7sLY=
+  email: false
