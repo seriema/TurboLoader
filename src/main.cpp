@@ -1,3 +1,5 @@
+
+#include <memory>
 #include <iostream>
 #include <vector>
 #include <utility>
@@ -6,16 +8,25 @@
 #include "msdfgen.h"
 #include "msdfgen-ext.h"
 
+#include "platform.h"
+#include "EnvironmentFactory.h"
+#include "EnvironmentManager.h"
+#include "Renderer.h"
+#include "Application.h"
+#include "Application_Main.h"
+
 extern "C"
 {
-	#include "lua.h"
-	#include "lualib.h"
-	#include "lauxlib.h"
+#include "lua.h"
+#include "lualib.h"
+#include "lauxlib.h"
 }
 
-#include "platform.h"
-#include "Renderer.h"
-#include "Input.h"
+#define A_RETRO_UI_USE_SDL 1
+#define A_RETRO_UI_USE_OPENGL 1
+
+
+#if defined(A_RETRO_UI_USE_SDL) && defined(A_RETRO_UI_USE_OPENGL)
 
 static int lua_hello_world( lua_State* L )
 {
@@ -56,7 +67,9 @@ static void msdfgen_hello_world()
 
 int main( int argc, char* args[] )
 {
-	std::cout << "STARTING IN: " << args[0] << std::endl;
+	std::cout << "STARTING IN: " << args[ 0 ] << std::endl;
+	std::cout << "Initializing..." << std::endl;
+
 
 	lua_State* L = luaL_newstate();
 	luaL_openlibs( L );
@@ -68,124 +81,29 @@ int main( int argc, char* args[] )
 	// Just make sure it runs.
 	msdfgen_hello_world();
 
-	//Start up SDL and create window
-	printf("Initializing...\n");
-	if ( !init_sdl_gl() )
+	EnvironmentFactory_SDL_OpenGL environment_factory;
+	std::shared_ptr< IEnvironmentManager > environment_manager = environment_factory.create_environment_manager();
+
+	if ( environment_manager == nullptr )
 		return 1;
 
-	Renderer_SDL_OpenGL renderer;
+	//IInputManager* input_manager = new InputManager_SDL();
+	std::shared_ptr< IRenderer > renderer = std::make_shared< Renderer_SDL_OpenGL >();
+	std::shared_ptr< IApplication > app = std::make_shared< Application_Main >( environment_manager, renderer );
 
+	app->loop();
 
-	GLenum error = glGetError();
-	if( error != GL_NO_ERROR )
-	{
-		printf( "Unable to initialize OpenGL!\n%d\n", error );
-		return false;
-	}
-
-
-
-
-
-	std::vector< std::pair<RenderKey, RenderData> > objects;
-
-	GLfloat vertices[] =
-	{
-		0.0f,  0.2f, 0.0f,
-		-0.15f, 0.0f, 0.0f,
-		0.15f, 0.0f, 0.0f,
-	};
-	int n_vertices = sizeof(vertices) / sizeof(GL_FLOAT);
-	const GLuint vbo_handle = renderer.add_mesh( vertices, n_vertices );
-
-	// Allocate triangle 1.
-	{
-		RenderKey render_key;
-		RenderData render_data;
-
-		render_key.RenderOpaque.material_index = 0;
-		render_data.vbo_handle = vbo_handle;
-		render_data.x = -0.5f;
-		render_data.y = -0.1f;
-
-		objects.push_back( { render_key, render_data } );
-	}
-
-	// Allocate triangle 2.
-	{
-		RenderKey render_key;
-		RenderData render_data;
-
-		render_key.RenderOpaque.material_index = 0;
-		render_data.vbo_handle = vbo_handle;
-		render_data.x = 0.3f;
-		render_data.y = 0.6f;
-
-		objects.push_back( { render_key, render_data } );
-	}
-
-	// Allocate triangle 3.
-	{
-		RenderKey render_key;
-		RenderData render_data;
-
-		render_key.RenderOpaque.material_index = 0;
-		render_data.vbo_handle = vbo_handle;
-		render_data.x = 0.9f;
-		render_data.y = -0.6f;
-
-		objects.push_back( { render_key, render_data } );
-	}
-
-	printf("Entering main loop\n");
-	//While application is running
-
-	uint32_t t0 = SDL_GetTicks() - 17;
-
-	Input* input = new Input();
-
-	while( !input->quit_requested() )
-	{
-//		printf("Looping\n");
-
-		uint32_t t1 = SDL_GetTicks();
-		uint32_t dt = t1 - t0;
-		t0 = t1;
-
-		//Handle events on queue
-		input->poll_events();
-
-		for ( auto& obj : objects )
-		{
-			obj.second.x += 0.0001f * dt;
-			if ( obj.second.x > 1.1f )
-				obj.second.x = -1.1f;
-		}
-
-		for ( auto& obj : objects )
-		{
-			renderer.draw( obj.first, obj.second );
-		}
-
-		renderer.render();
-		SDL_GL_SwapWindow( gWindow );
-	}
-
-	for ( auto obj : objects )
-	{
-		renderer.del_mesh( obj.second.vbo_handle );
-	}
-
-
-//	printf("ERRORS >>");
-//	printf( SDL_GetError() );
-//	printf("<< ERRORS");
-
-	delete input;
-
-
-	//Free resources and close SDL
-	shutdown_sdl_gl();
+	environment_factory.destroy_environment_manager( environment_manager );
 
 	return 0;
 }
+
+#else
+
+int main( int argc, char* args[] )
+{
+	std::cout << "Wrong environment! Only SDL + OpenGL supported!" << std::endl;
+	return 2;
+}
+
+#endif

@@ -68,7 +68,7 @@ bool Input::quit_requested()
 
 void Input::handle_keys( SDL_KeyboardEvent event )
 {
-	if ( event.keysym.sym == SDLK_ESCAPE )
+	if ( event.keysym.sym == SDLK_q )
 	{
 		_quit = true;
 	}

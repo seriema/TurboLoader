@@ -50,17 +50,20 @@ include_directories(
 )
 
 set(SOURCE_FILES
+	${DEPENDENCIES_SOURCES}
 	src/shader.h
 	src/shader.cpp
 	src/shader_program.h
 	src/shader_program.cpp
 	src/platform.h
-	src/Renderer.h
-	src/TextureLoader.h
+	src/EnvironmentManager.h
+	src/EnvironmentFactory.h
+	src/Application.h
+	src/Application_Main.h
 	src/Input.cpp
 	src/Input.h
-
-	${DEPENDENCIES_SOURCES}
+	src/Renderer.h
+	src/TextureLoader.h
 )
 
 # MAIN
