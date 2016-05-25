@@ -17,7 +17,9 @@ extern "C"
 #include "Input.h"
 #include "Application_Main.h"
 #include "Resource_BitmapCollection.h"
+#include "Resource_ShaderCollection.h"
 #include "Graphics_TextureManager_OpenGL.h"
+#include "Graphics_ShaderManager_OpenGL.h"
 
 static int lua_hello_world( lua_State* L )
 {
@@ -77,8 +79,10 @@ int main( int argc, char* args[] )
 
 	printf( "¿¿ Startup renderer ??\n" );
 	RetroResource::BitmapCollection bitmaps;
+	RetroResource::ShaderCollection shaders;
 	auto texture_manager = new RetroGraphics::TextureManager_OpenGL( bitmaps );
-	RetroGraphics::IRenderer * renderer = new RetroGraphics::Renderer_SDL_OpenGL( &bitmaps, texture_manager );
+	auto shader_manager = new RetroGraphics::ShaderManager_OpenGL( shaders );
+	RetroGraphics::IRenderer * renderer = new RetroGraphics::Renderer_SDL_OpenGL( &bitmaps, &shaders, texture_manager, shader_manager );
 	GLenum error = glGetError();
 	if( error != GL_NO_ERROR )
 	{

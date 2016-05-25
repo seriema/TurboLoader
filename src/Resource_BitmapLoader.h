@@ -26,7 +26,7 @@ namespace RetroResource
 		u32 load( const char ** names, const char ** paths, Handle * handles, const u32 size = 1 )
 		{
 			u32 size0 = _bitmaps.handle.size();
-			u32 size1 = _bitmaps.handle.size();
+			u32 size1 = size0;
 
 			_bitmaps.handle.reserve( size );
 			_bitmaps.name.reserve( size );
@@ -103,7 +103,7 @@ namespace RetroResource
 				--i_last;
 
 				_handle_manager.destroy( handle );
-				FreeImage_Unload( 0 );//bitmap );
+				FreeImage_Unload( bitmap );
 			}
 		}
 

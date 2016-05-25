@@ -9,9 +9,12 @@
 
 #include "platform.h"
 #include "Resource_BitmapCollection.h"
+#include "Resource_ShaderCollection.h"
 #include "Resource_BitmapLoader.h"
+#include "Resource_ShaderLoader.h"
 #include "EnvironmentFactory.h"
 #include "Graphics_TextureManager_OpenGL.h"
+#include "Graphics_ShaderManager_OpenGL.h"
 #include "Graphics_Renderer_SDL_OpenGL.h"
 #include "Application_Main.h"
 
@@ -65,9 +68,11 @@ int main( int argc, char* args[] )
 
 	RetroResource::HandleManager handle_manager;
 	RetroResource::BitmapCollection bitmaps;
+	RetroResource::ShaderCollection shaders;
 	std::vector< RetroResource::Handle > bitmap_handles;
+	std::vector< RetroResource::Handle > shader_handles;
 
-	// Load base resources.
+	// Load base bitmap resources.
 	{
 
 		RetroResource::BitmapLoader bitmap_loader( handle_manager, bitmaps );
@@ -80,11 +85,25 @@ int main( int argc, char* args[] )
 		u32 bitmap_handles_size = bitmap_loader.load( names.data(), paths.data(), bitmap_handles.data(), size );
 	}
 
+	// Load base shader resources.
+	{
+		RetroResource::ShaderLoader shader_loader( handle_manager, shaders );
+
+		std::vector< const char * > names = { "debug" };
+		std::vector< const char * > paths = { "./res/debug" };
+		u32 size = names.size();
+		//shader_handles.reserve( size );
+		shader_handles.resize( size );
+		u32 shader_handles_size = shader_loader.load( names.data(), paths.data(), shader_handles.data(), size );
+	}
+
 	// Setup renderering env.
 
 	auto texture_manager = new RetroGraphics::TextureManager_OpenGL( bitmaps );
+	auto shader_manager = new RetroGraphics::ShaderManager_OpenGL( shaders );
 	texture_manager->load( bitmap_handles.data(), bitmap_handles.size() );
-	RetroGraphics::IRenderer * renderer = new RetroGraphics::Renderer_SDL_OpenGL( &bitmaps, texture_manager );
+	shader_manager->load( shader_handles.data(), shader_handles.size() );
+	RetroGraphics::IRenderer * renderer = new RetroGraphics::Renderer_SDL_OpenGL( &bitmaps, &shaders, texture_manager, shader_manager );
 
 	// Run app.
 
@@ -104,7 +123,9 @@ int main( int argc, char* args[] )
 	// Unload base resources.
 	{
 		RetroResource::BitmapLoader bitmap_loader( handle_manager, bitmaps );
+		RetroResource::ShaderLoader shader_loader( handle_manager, shaders );
 		bitmap_loader.unload( bitmap_handles.data(), bitmap_handles.size() );
+		shader_loader.unload( shader_handles.data(), shader_handles.size() );
 	}
 
 	// Destroy env.

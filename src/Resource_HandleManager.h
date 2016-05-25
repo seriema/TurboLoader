@@ -6,7 +6,7 @@
 
 #include "platform.h"
 #include "Resource_Aux.h"
-#include "Resource_handle.h"
+#include "Resource_Handle.h"
 
 namespace RetroResource
 {
@@ -43,9 +43,9 @@ namespace RetroResource
 			return Handle { idx + (_generation[ idx ] << Aux::INDEX_BITS) };
 		}
 
-		void destroy( Handle r )
+		void destroy( Handle h )
 		{
-			const unsigned idx = r.index();
+			const unsigned idx = h.index();
 			++_generation[ idx ];
 			_free_indices.push_back( idx );
 		}

@@ -81,11 +81,11 @@ namespace RetroGraphics
 			for ( int j = 0; j <  size; ++j )
 			{
 				RetroResource::Handle handle = handles[ j ];
-				glDeleteTextures( 1, &_handles[ handle.id ] );
+				glDeleteTextures( 1, &_handles.at( handle.id ) );
 			}
 		}
 
-		void bind( const RetroResource::Handle handle )
+		void bind( const RetroResource::Handle handle ) const
 		{
 			u32 texture_handle = _handles.at( handle.id );
 			glBindTexture( GL_TEXTURE_2D, texture_handle );

@@ -1,10 +1,23 @@
-#include "Graphics_Renderer_SDL_OpenGL.h"
+#include <algorithm>
+#include <utility>
+#include <iostream>
+#include <sstream>
 
-RetroGraphics::Renderer_SDL_OpenGL::Renderer_SDL_OpenGL( RetroResource::BitmapCollection * bitmaps, TextureManager_OpenGL * texture_manager ) // TODO RendererSettings settings )
+#include "Graphics_Renderer_SDL_OpenGL.h"
+#include "Graphics_TextureManager_OpenGL.h"
+#include "Graphics_ShaderManager_OpenGL.h"
+
+
+RetroGraphics::Renderer_SDL_OpenGL::Renderer_SDL_OpenGL(
+		RetroResource::BitmapCollection * bitmaps,
+		RetroResource::ShaderCollection * shaders,
+		TextureManager_OpenGL * texture_manager,
+		ShaderManager_OpenGL * shader_manager ) // TODO RendererSettings settings )
 	: _bitmaps( bitmaps )
+	, _shaders( shaders )
 	, _texture_manager( texture_manager )
+	, _shader_manager( shader_manager )
 	, _render_count( 0 )
-	, _TEMP_shader( nullptr )
 {
 	glEnable( GL_CULL_FACE );
 	glCullFace( GL_BACK );
@@ -20,15 +33,10 @@ RetroGraphics::Renderer_SDL_OpenGL::Renderer_SDL_OpenGL( RetroResource::BitmapCo
 	glDepthMask( GL_TRUE );
 
 	glClearColor( 1.0f, 0.1f, 1.0f, 1.0f );
-
-	// TODO remove temp debug shader when the time comes.
-	_TEMP_shader = Shader::create( "debug" );
-	_render_material[ 0 ].shader_handle = _TEMP_shader->m_program; // TODO ugly.
 }
 
 RetroGraphics::Renderer_SDL_OpenGL::~Renderer_SDL_OpenGL()
 {
-	delete _TEMP_shader;
 }
 
 std::string RetroGraphics::Renderer_SDL_OpenGL::calc_description() const
@@ -54,7 +62,12 @@ GLuint RetroGraphics::Renderer_SDL_OpenGL::add_mesh( const GLfloat* vertices, in
 	glBindBuffer( GL_ARRAY_BUFFER, vbo_handle );
 	glBufferData( GL_ARRAY_BUFFER, n_vertices*sizeof(GL_FLOAT), vertices, GL_STATIC_DRAW );
 
-	glEnableVertexAttribArray( (*_TEMP_shader)["vert"] );
+	// TODO Fix this temp hard coded shader use.
+	u32 shader_i = _shaders->name_index.at( "debug" );
+	RetroResource::Handle shader_handle = _shaders->handle[ shader_i ];
+	_shader_manager->bind( shader_handle );
+	u32 prog_handle = _shader_manager->program( shader_handle );
+	glEnableVertexAttribArray( glGetAttribLocation( prog_handle, "vert" ) );
 
 	return vbo_handle;
 }
@@ -86,24 +99,27 @@ void RetroGraphics::Renderer_SDL_OpenGL::render()
 		// TODO bind shader if not same as current.
 		// TODO get object matrix from _render_data[ data_i ]; and bind to shader.
 
-		_TEMP_shader->bind();
+		// TODO Fix this temp hard coded shader use.
+		u32 shader_i = _shaders->name_index.at( "debug" );
+		RetroResource::Handle shader_handle = _shaders->handle[ shader_i ];
+		_shader_manager->bind( shader_handle );
+		u32 prog_handle = _shader_manager->program( shader_handle );
 
-		glUniform2fv( (*_TEMP_shader)["model_pos"], 1, _render_data[ data_i ].pos );
+		glUniform2fv( glGetUniformLocation( prog_handle, "model_pos" ), 1, _render_data[ data_i ].pos );
 
 		GLuint vbo_handle = _render_data[ data_i ].vbo_handle;
 		glBindBuffer( GL_ARRAY_BUFFER, vbo_handle );
-		glVertexAttribPointer( (*_TEMP_shader)["vert"], 3, GL_FLOAT, GL_FALSE, 3*sizeof(GL_FLOAT), 0 );
-
+		glVertexAttribPointer( glGetAttribLocation( prog_handle, "vert" ), 3, GL_FLOAT, GL_FALSE, 3*sizeof(GL_FLOAT), 0 );
 
 		// TODO bind relevant texture here.
 		// TODO only activate and rebind if neccessary.
 		int texture_i = 0;
 		glActiveTexture( GL_TEXTURE0 + texture_i );
-		glUniform1i( (*_TEMP_shader)["texture"], texture_i );
+		glUniform1i( glGetUniformLocation( prog_handle, "texture" ), texture_i );
 
 		u32 bitmap_i = _bitmaps->name_index.at( "img_test_a" );
-		RetroResource::Handle handle = _bitmaps->handle[ bitmap_i ];
-		_texture_manager->bind( handle );
+		RetroResource::Handle bitmap_handle = _bitmaps->handle[ bitmap_i ];
+		_texture_manager->bind( bitmap_handle );
 
 
 
