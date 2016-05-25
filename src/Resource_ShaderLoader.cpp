@@ -1,9 +1,4 @@
-#include <stdexcept>
-#include <string>
-#include <vector>
-
-#include <iostream>
-#include <sstream>
+#include <cstring>
 #include <iostream>
 #include <fstream>
 
@@ -116,8 +111,8 @@ void RetroResource::ShaderLoader::unload( Handle * handles, const u32 size )
 		_shaders.handle[ i ] = _shaders.handle[ i_last ]; _shaders.handle.pop_back();
 		_shaders.name[ i ] = _shaders.name[ i_last ]; _shaders.name.pop_back();
 		_shaders.path[ i ] = _shaders.path[ i_last ]; _shaders.path.pop_back();
-		_shaders.vert[ i ] = _shaders.vert[ i_last ]; _shaders.vert.pop_back();
-		_shaders.frag[ i ] = _shaders.frag[ i_last ]; _shaders.frag.pop_back();
+		delete[] _shaders.vert[ i ]; _shaders.vert[ i ] = _shaders.vert[ i_last ]; _shaders.vert.pop_back();
+		delete[] _shaders.frag[ i ]; _shaders.frag[ i ] = _shaders.frag[ i_last ]; _shaders.frag.pop_back();
 
 		--i_last;
 
