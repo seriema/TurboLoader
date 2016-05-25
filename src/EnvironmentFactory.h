@@ -11,8 +11,8 @@ class IEnvironmentFactory
 {
 public:
 	virtual ~IEnvironmentFactory() {}
-	virtual std::shared_ptr< IEnvironmentManager > create_environment_manager() = 0;
-	virtual void destroy_environment_manager( std::shared_ptr< IEnvironmentManager > environment_manager ) = 0;
+	virtual IEnvironmentManager * create_environment_manager() = 0;
+	virtual void destroy_environment_manager( IEnvironmentManager * environment_manager ) = 0;
 };
 
 
@@ -49,7 +49,7 @@ public:
 
 	//virtual ~EnvironmentFactory_SDL_OpenGL() override {}
 
-	virtual std::shared_ptr< IEnvironmentManager > create_environment_manager() override
+	virtual IEnvironmentManager * create_environment_manager() override
 	{
 		if( SDL_Init( SDL_INIT_VIDEO ) < 0 )
 		{
@@ -110,11 +110,11 @@ public:
 			printf( "Warning: Unable to set VSync! SDL Error: %s\n", SDL_GetError() );
 		}
 
-		auto environment_manager = std::make_shared< EnvironmentManager_SDL_OpenGL >( window, context );
+		auto environment_manager = new EnvironmentManager_SDL_OpenGL( window, context );
 		return environment_manager;
 	}
 
-	virtual void destroy_environment_manager( std::shared_ptr< IEnvironmentManager > environment_manager ) override
+	virtual void destroy_environment_manager( IEnvironmentManager * environment_manager ) override
 	{
 // TODO		delete environment_manager;
 		SDL_Quit();

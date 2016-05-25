@@ -1,18 +1,23 @@
 #include <iostream>
 
-#include "msdfgen.h"
-#include "msdfgen-ext.h"
+#include <msdfgen.h>
+#include <msdfgen-ext.h>
 
 extern "C"
 {
-	#include "lua.h"
-	#include "lualib.h"
-	#include "lauxlib.h"
+    #include "lua.h"
+    #include "lualib.h"
+    #include "lauxlib.h"
 }
 
 #include "platform.h"
-#include "Renderer.h"
+#include "EnvironmentFactory.h"
+#include "Graphics_Renderer.h"
+#include "Graphics_Renderer_SDL_OpenGL.h"
 #include "Input.h"
+#include "Application_Main.h"
+#include "Resource_BitmapCollection.h"
+#include "Graphics_TextureManager_OpenGL.h"
 
 static int lua_hello_world( lua_State* L )
 {
@@ -64,24 +69,34 @@ int main( int argc, char* args[] )
 
 	// --- STARTUP ------------------------------
 
-	//Startup renderer.
-	printf( "¿¿ Startup renderer ??\n" );
-	if ( !init_sdl_gl() )
+	printf( "¿¿ Startup environment ??\n" );
+	EnvironmentFactory_SDL_OpenGL environment_factory;
+	IEnvironmentManager * environment_manager = environment_factory.create_environment_manager();
+	if ( environment_manager == nullptr )
 		return 1;
-	Renderer_SDL_OpenGL renderer;
+
+	printf( "¿¿ Startup renderer ??\n" );
+	RetroResource::BitmapCollection bitmaps;
+	auto texture_manager = new RetroGraphics::TextureManager_OpenGL( bitmaps );
+	RetroGraphics::IRenderer * renderer = new RetroGraphics::Renderer_SDL_OpenGL( &bitmaps, texture_manager );
 	GLenum error = glGetError();
 	if( error != GL_NO_ERROR )
 	{
 		printf( "Unable to initialize OpenGL!\n%d\n", error );
-		return false;
+		return 2;
 	}
 
-	//Startup input.
 	printf( "¿¿ Startup input ??\n" );
-	Input* input = new Input();
+	Input * input = new Input();
 
+	printf( "¿¿ Startup app ??\n" );
+	IApplication * app = new Application_Main( environment_manager, renderer, input );
 
 	// --- TEST ---------------------------------
+
+	//Test run msdf font.
+	printf( "¿¿ Test run msdfgen ??\n" );
+	msdfgen_hello_world();
 
 	//Test run input.
 	printf( "¿¿ Test run input ??\n" );
@@ -89,23 +104,26 @@ int main( int argc, char* args[] )
 
 	//Test run renderer.
 	printf( "¿¿ Test run renderer ??\n" );
-	renderer.render();
-	SDL_GL_SwapWindow( gWindow );
+	renderer->render();
 
-	//Test run msdf font.
-	printf( "¿¿ Test run msdfgen ??\n" );
-	msdfgen_hello_world();
-
+	printf( "¿¿ Test run app ??\n" );
+	app->tick();
 
 	// --- SHUTDOWN -----------------------------
+
+	printf( "¿¿ Shutdown app ??\n" );
+	delete app;
 
 	//Shutdown input.
 	printf( "¿¿ Shutdown input ??\n" );
 	delete input;
 
-	//Shutdown renderer.
 	printf( "¿¿ Shutdown renderer ??\n" );
-	shutdown_sdl_gl();
+	delete renderer;
+
+	//Shutdown renderer.
+	printf( "¿¿ Shutdown environment ??\n" );
+	environment_factory.destroy_environment_manager( environment_manager );
 
 	// --- EXIT ---------------------------------
 

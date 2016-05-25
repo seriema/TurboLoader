@@ -6,17 +6,23 @@
 
 #include "Application.h"
 #include "EnvironmentManager.h"
-#include "Renderer.h"
+#include "Graphics_Renderer.h"
 #include "Input.h"
 
 class Application_Main : public IApplication
 {
+	IEnvironmentManager      * _environment_manager;
+	RetroGraphics::IRenderer * _renderer;
+	Input                    * _input;
+
+	u32                        _dt;
+	std::vector< std::pair<RetroGraphics::RenderKey, RetroGraphics::RenderData> > _objects;
+
 public:
-	Application_Main(
-			const std::shared_ptr< IEnvironmentManager >& environment_manager,
-			const std::shared_ptr< IRenderer >& renderer )
-			: _environment_manager( environment_manager )
-			, _renderer( renderer )
+	Application_Main( IEnvironmentManager * environment_manager, RetroGraphics::IRenderer * renderer, Input * input )
+		: _environment_manager( environment_manager )
+		, _renderer( renderer )
+		, _input( input )
 	{
 		GLenum error = glGetError();
 		if( error != GL_NO_ERROR )
@@ -25,7 +31,7 @@ public:
 		}
 		else
 		{
-			std::cout << renderer->calc_description() << std::endl;
+			std::cout << _renderer->calc_description() << std::endl;
 			init_scene();
 		}
 	}
@@ -47,8 +53,8 @@ public:
 
 		// Allocate triangle 1.
 		{
-			RenderKey render_key;
-			RenderData render_data;
+			RetroGraphics::RenderKey render_key;
+			RetroGraphics::RenderData render_data;
 
 			render_key.RenderOpaque.material_index = 0;
 			render_data.vbo_handle = vbo_handle;
@@ -60,8 +66,8 @@ public:
 
 		// Allocate triangle 2.
 		{
-			RenderKey render_key;
-			RenderData render_data;
+			RetroGraphics::RenderKey render_key;
+			RetroGraphics::RenderData render_data;
 
 			render_key.RenderOpaque.material_index = 0;
 			render_data.vbo_handle = vbo_handle;
@@ -73,8 +79,8 @@ public:
 
 		// Allocate triangle 3.
 		{
-			RenderKey render_key;
-			RenderData render_data;
+			RetroGraphics::RenderKey render_key;
+			RetroGraphics::RenderData render_data;
 
 			render_key.RenderOpaque.material_index = 0;
 			render_data.vbo_handle = vbo_handle;
@@ -91,7 +97,6 @@ public:
 		printf("Entering main loop\n");
 
 		uint32_t t0 = SDL_GetTicks() - 17;
-		_input = new Input();
 
 		while( !_input->quit_requested() )
 		{
@@ -100,8 +105,6 @@ public:
 			t0 = t1;
 			tick();
 		}
-
-		delete _input;
 
 		for ( auto obj : _objects )
 		{
@@ -133,15 +136,6 @@ public:
 	{
 		return true;
 	}
-
-private:
-	std::shared_ptr< IEnvironmentManager >           _environment_manager;
-	std::shared_ptr< IRenderer >                     _renderer;
-
-	std::vector< std::pair<RenderKey, RenderData> >  _objects;
-	Input*                                           _input;
-
-	uint32_t _dt;
 };
 
 #endif //A_RETRO_UI_APPLICATION_MAIN_H

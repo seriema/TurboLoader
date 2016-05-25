@@ -1,4 +1,3 @@
-
 #include <memory>
 #include <iostream>
 #include <vector>
@@ -9,36 +8,17 @@
 #include "msdfgen-ext.h"
 
 #include "platform.h"
+#include "Resource_BitmapCollection.h"
+#include "Resource_BitmapLoader.h"
 #include "EnvironmentFactory.h"
-#include "EnvironmentManager.h"
-#include "Renderer.h"
-#include "Application.h"
+#include "Graphics_TextureManager_OpenGL.h"
+#include "Graphics_Renderer_SDL_OpenGL.h"
 #include "Application_Main.h"
-
-extern "C"
-{
-#include "lua.h"
-#include "lualib.h"
-#include "lauxlib.h"
-}
 
 #define A_RETRO_UI_USE_SDL 1
 #define A_RETRO_UI_USE_OPENGL 1
 
-
 #if defined(A_RETRO_UI_USE_SDL) && defined(A_RETRO_UI_USE_OPENGL)
-
-static int lua_hello_world( lua_State* L )
-{
-	int argc = lua_gettop( L );
-	int argv = lua_tointeger( L, 1 );
-
-	printf( "Got data from Lua :: %d args :: '%d'\n", argc, argv );
-
-	lua_pushnumber( L, argc );
-	lua_pushnumber( L, argv );
-	return 2; // Number of lua_pushX calls.
-}
 
 static void msdfgen_hello_world()
 {
@@ -70,28 +50,64 @@ int main( int argc, char* args[] )
 	std::cout << "STARTING IN: " << args[ 0 ] << std::endl;
 	std::cout << "Initializing..." << std::endl;
 
-
-	lua_State* L = luaL_newstate();
-	luaL_openlibs( L );
-	lua_register( L, "lua_hello_world", lua_hello_world );
-	luaL_dofile( L, "hello_world.lua" );
-	lua_close( L );
-	L = nullptr;
-
 	// Just make sure it runs.
 	msdfgen_hello_world();
 
+	// Setup env.
+
 	EnvironmentFactory_SDL_OpenGL environment_factory;
-	std::shared_ptr< IEnvironmentManager > environment_manager = environment_factory.create_environment_manager();
+	IEnvironmentManager * environment_manager = environment_factory.create_environment_manager();
 
 	if ( environment_manager == nullptr )
 		return 1;
 
+	// Setup data structures.
+
+	RetroResource::HandleManager handle_manager;
+	RetroResource::BitmapCollection bitmaps;
+	std::vector< RetroResource::Handle > bitmap_handles;
+
+	// Load base resources.
+	{
+
+		RetroResource::BitmapLoader bitmap_loader( handle_manager, bitmaps );
+
+		std::vector< const char * > names = { "img_test_a", "img_test_b" };
+		std::vector< const char * > paths = { "./res/img_test.bmp", "./res/img_test.dds" };
+		u32 size = names.size();
+		//bitmap_handles.reserve( size );
+		bitmap_handles.resize( size );
+		u32 bitmap_handles_size = bitmap_loader.load( names.data(), paths.data(), bitmap_handles.data(), size );
+	}
+
+	// Setup renderering env.
+
+	auto texture_manager = new RetroGraphics::TextureManager_OpenGL( bitmaps );
+	texture_manager->load( bitmap_handles.data(), bitmap_handles.size() );
+	RetroGraphics::IRenderer * renderer = new RetroGraphics::Renderer_SDL_OpenGL( &bitmaps, texture_manager );
+
+	// Run app.
+
 	//IInputManager* input_manager = new InputManager_SDL();
-	std::shared_ptr< IRenderer > renderer = std::make_shared< Renderer_SDL_OpenGL >();
-	std::shared_ptr< IApplication > app = std::make_shared< Application_Main >( environment_manager, renderer );
+	Input * input = new Input();
+	IApplication* app = new Application_Main( environment_manager, renderer, input );
 
 	app->loop();
+
+	texture_manager->unload( bitmap_handles.data(), bitmap_handles.size() );
+
+	delete app;
+	delete input;
+	delete renderer;
+	delete texture_manager;
+
+	// Unload base resources.
+	{
+		RetroResource::BitmapLoader bitmap_loader( handle_manager, bitmaps );
+		bitmap_loader.unload( bitmap_handles.data(), bitmap_handles.size() );
+	}
+
+	// Destroy env.
 
 	environment_factory.destroy_environment_manager( environment_manager );
 

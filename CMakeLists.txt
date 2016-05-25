@@ -51,20 +51,28 @@ include_directories(
 
 set(SOURCE_FILES
 	${DEPENDENCIES_SOURCES}
+	src/platform.h
+	src/Resource_Aux.h
+	src/Resource_Handle.h
+	src/Resource_HandleManager.h
+	src/Resource_BitmapCollection.h
+	src/Resource_BitmapLoader.h
 	src/shader.h
 	src/shader.cpp
 	src/shader_program.h
 	src/shader_program.cpp
-	src/platform.h
 	src/EnvironmentManager.h
 	src/EnvironmentFactory.h
 	src/Application.h
 	src/Application_Main.h
 	src/Input.cpp
 	src/Input.h
-	src/Renderer.h
-	src/TextureLoader.h
-)
+	src/Graphics_Renderer.h
+	src/Graphics_Renderer_SDL_OpenGL.h
+	src/Graphics_Renderer_SDL_OpenGL.cpp
+	src/Graphics_TextureManager.h
+	src/Graphics_TextureManager_OpenGL.h
+	)
 
 # MAIN
 add_executable(a_retro_ui
