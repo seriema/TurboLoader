@@ -56,11 +56,10 @@ set(SOURCE_FILES
 	src/Resource_Handle.h
 	src/Resource_HandleManager.h
 	src/Resource_BitmapCollection.h
+	src/Resource_ShaderCollection.h
 	src/Resource_BitmapLoader.h
-	src/shader.h
-	src/shader.cpp
-	src/shader_program.h
-	src/shader_program.cpp
+	src/Resource_ShaderLoader.h
+	src/Resource_ShaderLoader.cpp
 	src/EnvironmentManager.h
 	src/EnvironmentFactory.h
 	src/Application.h
@@ -72,7 +71,8 @@ set(SOURCE_FILES
 	src/Graphics_Renderer_SDL_OpenGL.cpp
 	src/Graphics_TextureManager.h
 	src/Graphics_TextureManager_OpenGL.h
-	)
+	src/Graphics_ShaderManager.h
+	src/Graphics_ShaderManager_OpenGL.h)
 
 # MAIN
 add_executable(a_retro_ui
