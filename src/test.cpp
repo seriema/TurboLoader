@@ -21,6 +21,9 @@ extern "C"
 #include "Graphics_TextureManager_OpenGL.h"
 #include "Graphics_ShaderManager_OpenGL.h"
 #include "Gui_Renderer.h"
+#include "Resource_HandleManager.h"
+#include "Resource_BitmapLoader.h"
+#include "Resource_ShaderLoader.h"
 
 static int lua_hello_world( lua_State* L )
 {
@@ -79,10 +82,40 @@ int main( int argc, char* args[] )
 		return 1;
 
 	printf( "¿¿ Startup renderer ??\n" );
+	RetroResource::HandleManager handle_manager;
 	RetroResource::BitmapCollection bitmaps;
 	RetroResource::ShaderCollection shaders;
+	std::vector< RetroResource::Handle > bitmap_handles;
+	std::vector< RetroResource::Handle > shader_handles;
+
+// Load base bitmap resources.
+	{
+		RetroResource::BitmapLoader bitmap_loader( handle_manager, bitmaps );
+
+		std::vector< const char * > names = { "img_test_a", "img_test_b", "jp", "jb" };
+		std::vector< const char * > paths = { "./res/img_test.bmp", "./res/img_test.dds", "./res/jp.png", "./res/jb.png" };
+		u32 size = names.size();
+		//bitmap_handles.reserve( size );
+		bitmap_handles.resize( size );
+		u32 bitmap_handles_size = bitmap_loader.load( names.data(), paths.data(), bitmap_handles.data(), size );
+	}
+
+	// Load base shader resources.
+	{
+		RetroResource::ShaderLoader shader_loader( handle_manager, shaders );
+
+		std::vector< const char * > names = { "debug" };
+		std::vector< const char * > paths = { "./res/debug" };
+		u32 size = names.size();
+		//shader_handles.reserve( size );
+		shader_handles.resize( size );
+		u32 shader_handles_size = shader_loader.load( names.data(), paths.data(), shader_handles.data(), size );
+	}
+
 	auto texture_manager = new RetroGraphics::TextureManager_OpenGL( bitmaps );
 	auto shader_manager = new RetroGraphics::ShaderManager_OpenGL( shaders );
+	texture_manager->load( bitmap_handles.data(), bitmap_handles.size() );
+	shader_manager->load( shader_handles.data(), shader_handles.size() );
 	RetroGraphics::IRenderer * renderer = new RetroGraphics::Renderer_SDL_OpenGL( &bitmaps, &shaders, texture_manager, shader_manager );
 	RetroGui::Renderer * gui_renderer = new RetroGui::Renderer( *renderer );
 	GLenum error = glGetError();
@@ -120,12 +153,22 @@ int main( int argc, char* args[] )
 	printf( "¿¿ Shutdown app ??\n" );
 	delete app;
 
-	//Shutdown input.
 	printf( "¿¿ Shutdown input ??\n" );
 	delete input;
 
+	printf( "¿¿ Shutdown gui renderer ??\n" );
+	delete gui_renderer;
+
 	printf( "¿¿ Shutdown renderer ??\n" );
 	delete renderer;
+
+	// Unload base resources.
+	{
+		RetroResource::BitmapLoader bitmap_loader( handle_manager, bitmaps );
+		RetroResource::ShaderLoader shader_loader( handle_manager, shaders );
+		bitmap_loader.unload( bitmap_handles.data(), bitmap_handles.size() );
+		shader_loader.unload( shader_handles.data(), shader_handles.size() );
+	}
 
 	//Shutdown renderer.
 	printf( "¿¿ Shutdown environment ??\n" );

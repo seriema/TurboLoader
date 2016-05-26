@@ -75,7 +75,6 @@ int main( int argc, char* args[] )
 
 	// Load base bitmap resources.
 	{
-
 		RetroResource::BitmapLoader bitmap_loader( handle_manager, bitmaps );
 
 		std::vector< const char * > names = { "img_test_a", "img_test_b", "jp", "jb" };
@@ -115,7 +114,6 @@ int main( int argc, char* args[] )
 	}
 
 	RetroGraphics::IRenderer * renderer = new RetroGraphics::Renderer_SDL_OpenGL( &bitmaps, &shaders, texture_manager, shader_manager );
-
 	RetroGui::Renderer * gui_renderer = new RetroGui::Renderer( *renderer );
 
 	// Run app.
@@ -130,6 +128,7 @@ int main( int argc, char* args[] )
 
 	delete app;
 	delete input;
+	delete gui_renderer;
 	delete renderer;
 	delete texture_manager;
 
