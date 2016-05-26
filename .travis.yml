@@ -10,7 +10,9 @@ os:
 - osx
 
 before_install:
-# --- RetroPie like environment ------------------------------------------------
+- ./scripts/setup.sh
+
+# Hack around to get a RetroPie like environment
 - |-
   if [ $TRAVIS_OS_NAME == linux ]; then
     # Enable graphics with xvfb
@@ -30,15 +32,6 @@ before_install:
     sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.7 10
     sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.7 10
   fi
-
-# --- OSX environment ----------------------------------------------------------
-- |-
-  if [ $TRAVIS_OS_NAME == osx ]; then
-    # Install project dependencies
-    brew update
-    brew install sdl2 freeimage lua51
-  fi
-
 
 script:
 - ./scripts/build.sh
