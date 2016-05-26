@@ -20,6 +20,7 @@ extern "C"
 #include "Resource_ShaderCollection.h"
 #include "Graphics_TextureManager_OpenGL.h"
 #include "Graphics_ShaderManager_OpenGL.h"
+#include "Gui_Renderer.h"
 
 static int lua_hello_world( lua_State* L )
 {
@@ -83,6 +84,7 @@ int main( int argc, char* args[] )
 	auto texture_manager = new RetroGraphics::TextureManager_OpenGL( bitmaps );
 	auto shader_manager = new RetroGraphics::ShaderManager_OpenGL( shaders );
 	RetroGraphics::IRenderer * renderer = new RetroGraphics::Renderer_SDL_OpenGL( &bitmaps, &shaders, texture_manager, shader_manager );
+	RetroGui::Renderer * gui_renderer = new RetroGui::Renderer( *renderer );
 	GLenum error = glGetError();
 	if( error != GL_NO_ERROR )
 	{
@@ -94,7 +96,7 @@ int main( int argc, char* args[] )
 	Input * input = new Input();
 
 	printf( "¿¿ Startup app ??\n" );
-	IApplication * app = new Application_Main( environment_manager, renderer, input );
+	IApplication * app = new Application_Main( environment_manager, renderer, gui_renderer, input, bitmaps, shaders );
 
 	// --- TEST ---------------------------------
 

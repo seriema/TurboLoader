@@ -62,13 +62,6 @@ GLuint RetroGraphics::Renderer_SDL_OpenGL::add_mesh( const GLfloat* vertices, in
 	glBindBuffer( GL_ARRAY_BUFFER, vbo_handle );
 	glBufferData( GL_ARRAY_BUFFER, n_vertices*sizeof(GL_FLOAT), vertices, GL_STATIC_DRAW );
 
-	// TODO Fix this temp hard coded shader use.
-	u32 shader_i = _shaders->name_index.at( "debug" );
-	RetroResource::Handle shader_handle = _shaders->handle[ shader_i ];
-	_shader_manager->bind( shader_handle );
-	u32 prog_handle = _shader_manager->program( shader_handle );
-	glEnableVertexAttribArray( glGetAttribLocation( prog_handle, "vert" ) );
-
 	return vbo_handle;
 }
 
@@ -98,16 +91,16 @@ void RetroGraphics::Renderer_SDL_OpenGL::render()
 		// TODO get shader from _render_key[ i ].material_index.
 		// TODO bind shader if not same as current.
 		// TODO get object matrix from _render_data[ data_i ]; and bind to shader.
+		// TODO Fix this temp hard coded shader prog use.
 
-		// TODO Fix this temp hard coded shader use.
-		u32 shader_i = _shaders->name_index.at( "debug" );
-		RetroResource::Handle shader_handle = _shaders->handle[ shader_i ];
+		RetroResource::Handle shader_handle = _render_data[ data_i ].shader;
 		_shader_manager->bind( shader_handle );
 		u32 prog_handle = _shader_manager->program( shader_handle );
 
-		glUniform2fv( glGetUniformLocation( prog_handle, "model_pos" ), 1, _render_data[ data_i ].pos );
+		glUniform2fv( glGetUniformLocation( prog_handle, "model_pos" ), 1, _render_data[ data_i ].pos.v );
 
-		GLuint vbo_handle = _render_data[ data_i ].vbo_handle;
+		GLuint vbo_handle = _render_data[ data_i ].vbo;
+		int n_verts = 6;//sizeof(vertices) / sizeof(GL_FLOAT);
 		glBindBuffer( GL_ARRAY_BUFFER, vbo_handle );
 		glVertexAttribPointer( glGetAttribLocation( prog_handle, "vert" ), 3, GL_FLOAT, GL_FALSE, 3*sizeof(GL_FLOAT), 0 );
 
@@ -117,13 +110,10 @@ void RetroGraphics::Renderer_SDL_OpenGL::render()
 		glActiveTexture( GL_TEXTURE0 + texture_i );
 		glUniform1i( glGetUniformLocation( prog_handle, "texture" ), texture_i );
 
-		u32 bitmap_i = _bitmaps->name_index.at( "img_test_a" );
-		RetroResource::Handle bitmap_handle = _bitmaps->handle[ bitmap_i ];
+		RetroResource::Handle bitmap_handle = _render_data[ data_i ].bitmap;
 		_texture_manager->bind( bitmap_handle );
 
-
-
-		glDrawArrays( GL_TRIANGLES, 0, 3 );
+		glDrawArrays( GL_TRIANGLES, 0, n_verts );
 	}
 
 	//glFlush();

@@ -125,7 +125,6 @@ namespace RetroResource
 			return true; // TODO return false or error if loading fails.
 
 			//imgdata = FreeImage_GetBits( img ); // TODO if img size isnt power of 2 then use FreeImage_ConvertToRawBits!
-
 		}
 	};
 }

@@ -61,8 +61,8 @@ namespace RetroGraphics
 				// glPixelStorei( GL_UNPACK_ALIGNMENT, 1 );
 
 				// http://docs.gl/es2/glTexImage2D
-				glTexImage2D( GL_TEXTURE_2D, 0 ,GL_RGBA, size.first, size.second, 0,
-					GL_RGBA, GL_UNSIGNED_BYTE, FreeImage_GetBits(static_cast<FIBITMAP*>(bitmap)) );
+				void * bits = get_bits( size.first, size.second, static_cast<FIBITMAP*>(bitmap) );
+				glTexImage2D( GL_TEXTURE_2D, 0 ,GL_RGBA, size.first, size.second, 0, GL_RGBA, GL_UNSIGNED_BYTE, bits );
 				//glGenerateMipmap( GL_TEXTURE_2D );
 
 				// TODO make sure handle isnt already in _handles.
@@ -89,6 +89,22 @@ namespace RetroGraphics
 		{
 			u32 texture_handle = _handles.at( handle.id );
 			glBindTexture( GL_TEXTURE_2D, texture_handle );
+		}
+
+	private:
+		void * get_bits( int w, int h, FIBITMAP * bitmap )
+		{
+			// https://www.opengl.org/discussion_boards/showthread.php/163929-image-loading?p=1158293#post1158293
+			BYTE * bgra = FreeImage_GetBits( bitmap );
+			GLubyte * rgba = new GLubyte[ 4 * w * h ];
+			for( int j = 0, jSize = w * h; j < jSize; ++j )
+			{
+				rgba[ j * 4 + 0 ] = bgra[ j * 4 + 2 ];
+				rgba[ j * 4 + 1 ] = bgra[ j * 4 + 1 ];
+				rgba[ j * 4 + 2 ] = bgra[ j * 4 + 0 ];
+				rgba[ j * 4 + 3 ] = bgra[ j * 4 + 3 ];
+			}
+			return rgba;
 		}
 	};
 }

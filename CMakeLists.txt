@@ -72,7 +72,8 @@ set(SOURCE_FILES
 	src/Graphics_TextureManager.h
 	src/Graphics_TextureManager_OpenGL.h
 	src/Graphics_ShaderManager.h
-	src/Graphics_ShaderManager_OpenGL.h)
+	src/Graphics_ShaderManager_OpenGL.h
+	src/Gui_Renderer.h)
 
 # MAIN
 add_executable(a_retro_ui

@@ -16,6 +16,7 @@
 #include "Graphics_TextureManager_OpenGL.h"
 #include "Graphics_ShaderManager_OpenGL.h"
 #include "Graphics_Renderer_SDL_OpenGL.h"
+#include "Gui_Renderer.h"
 #include "Application_Main.h"
 
 #define A_RETRO_UI_USE_SDL 1
@@ -77,8 +78,8 @@ int main( int argc, char* args[] )
 
 		RetroResource::BitmapLoader bitmap_loader( handle_manager, bitmaps );
 
-		std::vector< const char * > names = { "img_test_a", "img_test_b" };
-		std::vector< const char * > paths = { "./res/img_test.bmp", "./res/img_test.dds" };
+		std::vector< const char * > names = { "img_test_a", "img_test_b", "jp", "jb" };
+		std::vector< const char * > paths = { "./res/img_test.bmp", "./res/img_test.dds", "./res/jp.png", "./res/jb.png" };
 		u32 size = names.size();
 		//bitmap_handles.reserve( size );
 		bitmap_handles.resize( size );
@@ -103,13 +104,25 @@ int main( int argc, char* args[] )
 	auto shader_manager = new RetroGraphics::ShaderManager_OpenGL( shaders );
 	texture_manager->load( bitmap_handles.data(), bitmap_handles.size() );
 	shader_manager->load( shader_handles.data(), shader_handles.size() );
+
+	// TODO temp shader poop fix.
+	{
+		u32 shader_i = shaders.name_index.at( "debug" );
+		RetroResource::Handle shader_handle = shaders.handle[ shader_i ];
+		shader_manager->bind( shader_handle );
+		u32 prog_handle = shader_manager->program( shader_handle );
+		glEnableVertexAttribArray( glGetAttribLocation( prog_handle, "vert" ) );
+	}
+
 	RetroGraphics::IRenderer * renderer = new RetroGraphics::Renderer_SDL_OpenGL( &bitmaps, &shaders, texture_manager, shader_manager );
+
+	RetroGui::Renderer * gui_renderer = new RetroGui::Renderer( *renderer );
 
 	// Run app.
 
 	//IInputManager* input_manager = new InputManager_SDL();
 	Input * input = new Input();
-	IApplication* app = new Application_Main( environment_manager, renderer, input );
+	IApplication* app = new Application_Main( environment_manager, renderer, gui_renderer, input, bitmaps, shaders );
 
 	app->loop();
 

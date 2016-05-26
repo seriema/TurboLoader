@@ -2,6 +2,7 @@
 #define A_RETRO_UI_RENDERER_H
 
 #include "platform.h"
+#include "Resource_Handle.h"
 
 #define RENDER_INPUT_BITS_DATA_INDEX 13
 #define RENDER_INPUT_BITS_DEPTH 8
@@ -83,14 +84,11 @@ namespace RetroGraphics
 
 	struct RenderData
 	{
-		u32 vbo_handle; // vbo contains attributes such as vert,norm,color, these must then also exist in shader.
+		u32 vbo; // vbo contains attributes such as vert,norm,color, these must then also exist in shader.
+		RetroResource::Handle shader;
+		RetroResource::Handle bitmap;
+		vec2 pos;
 		//glm::mat4 model_transform;
-
-		union
-		{
-			float pos[2];
-			struct { float x, y; };
-		};
 	};
 
 	namespace Aux

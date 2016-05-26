@@ -7,22 +7,33 @@
 #include "Application.h"
 #include "EnvironmentManager.h"
 #include "Graphics_Renderer.h"
+#include "Gui_Renderer.h"
 #include "Input.h"
+#include "Resource_BitmapCollection.h"
+#include "Resource_ShaderCollection.h"
 
 class Application_Main : public IApplication
 {
 	IEnvironmentManager      * _environment_manager;
 	RetroGraphics::IRenderer * _renderer;
+	RetroGui::Renderer       * _gui_renderer;
 	Input                    * _input;
+	RetroResource::BitmapCollection & _bitmaps;
+	RetroResource::ShaderCollection & _shaders;
 
 	u32                        _dt;
 	std::vector< std::pair<RetroGraphics::RenderKey, RetroGraphics::RenderData> > _objects;
 
 public:
-	Application_Main( IEnvironmentManager * environment_manager, RetroGraphics::IRenderer * renderer, Input * input )
+	Application_Main( IEnvironmentManager * environment_manager, RetroGraphics::IRenderer * renderer,
+			RetroGui::Renderer * gui_renderer, Input * input,
+			RetroResource::BitmapCollection & bitmaps, RetroResource::ShaderCollection & shaders )
 		: _environment_manager( environment_manager )
 		, _renderer( renderer )
+		, _gui_renderer( gui_renderer )
 		, _input( input )
+		, _bitmaps( bitmaps )
+		, _shaders( shaders )
 	{
 		GLenum error = glGetError();
 		if( error != GL_NO_ERROR )
@@ -43,13 +54,21 @@ public:
 	void init_scene()
 	{
 		GLfloat vertices[] =
-				{
-						0.0f,  0.2f, 0.0f,
-						-0.15f, 0.0f, 0.0f,
-						0.15f, 0.0f, 0.0f,
-				};
+		{
+			0.0f, 1.0f, 0.0f,
+			0.0f, 0.0f, 0.0f,
+			1.0f, 1.0f, 0.0f,
+
+			1.0f, 1.0f, 0.0f,
+			0.0f, 0.0f, 0.0f,
+			1.0f, 0.0f, 0.0f,
+		};
 		int n_vertices = sizeof(vertices) / sizeof(GL_FLOAT);
 		const GLuint vbo_handle = _renderer->add_mesh( vertices, n_vertices );
+
+		RetroResource::Handle bitmap_handle_jp = _bitmaps.handle[ _bitmaps.name_index[ "jp" ] ];
+		RetroResource::Handle bitmap_handle_jb = _bitmaps.handle[ _bitmaps.name_index[ "jb" ] ];
+		RetroResource::Handle shader_handle = _shaders.handle[ _shaders.name_index[ "debug" ] ];
 
 		// Allocate triangle 1.
 		{
@@ -57,9 +76,11 @@ public:
 			RetroGraphics::RenderData render_data;
 
 			render_key.RenderOpaque.material_index = 0;
-			render_data.vbo_handle = vbo_handle;
-			render_data.x = -0.5f;
-			render_data.y = -0.1f;
+			render_data.vbo = vbo_handle;
+			render_data.bitmap = bitmap_handle_jp;
+			render_data.shader = shader_handle;
+			render_data.pos.x = -0.5f;
+			render_data.pos.y = -0.1f;
 
 			_objects.push_back( { render_key, render_data } );
 		}
@@ -70,9 +91,11 @@ public:
 			RetroGraphics::RenderData render_data;
 
 			render_key.RenderOpaque.material_index = 0;
-			render_data.vbo_handle = vbo_handle;
-			render_data.x = 0.3f;
-			render_data.y = 0.6f;
+			render_data.vbo = vbo_handle;
+			render_data.bitmap = bitmap_handle_jp;
+			render_data.shader = shader_handle;
+			render_data.pos.x = 0.3f;
+			render_data.pos.y = 0.6f;
 
 			_objects.push_back( { render_key, render_data } );
 		}
@@ -83,13 +106,14 @@ public:
 			RetroGraphics::RenderData render_data;
 
 			render_key.RenderOpaque.material_index = 0;
-			render_data.vbo_handle = vbo_handle;
-			render_data.x = 0.9f;
-			render_data.y = -0.6f;
+			render_data.vbo = vbo_handle;
+			render_data.bitmap = bitmap_handle_jb;
+			render_data.shader = shader_handle;
+			render_data.pos.x = 0.9f;
+			render_data.pos.y = -0.6f;
 
 			_objects.push_back( { render_key, render_data } );
 		}
-
 	}
 
 	virtual void loop() override
@@ -108,7 +132,7 @@ public:
 
 		for ( auto obj : _objects )
 		{
-			_renderer->del_mesh( obj.second.vbo_handle );
+			_renderer->del_mesh( obj.second.vbo );
 		}
 	}
 
@@ -118,14 +142,27 @@ public:
 
 		for ( auto& obj : _objects )
 		{
-			obj.second.x += 0.0001f * _dt;
-			if ( obj.second.x > 1.1f )
-				obj.second.x = -1.1f;
+			obj.second.pos.x += 0.0001f * _dt;
+			if ( obj.second.pos.x > 1.1f )
+				obj.second.pos.x = -1.1f;
 		}
 
 		for ( auto& obj : _objects )
 		{
 			_renderer->draw( obj.first, obj.second );
+		}
+
+		// TODO Proof of concept immediate gui draw example.
+		{
+			RetroResource::Handle bitmap_handle_jp = _bitmaps.handle[ _bitmaps.name_index[ "jp" ] ];
+			RetroResource::Handle bitmap_handle_jb = _bitmaps.handle[ _bitmaps.name_index[ "jb" ] ];
+			RetroResource::Handle shader_handle = _shaders.handle[ _shaders.name_index[ "debug" ] ];
+
+			vec2 pos_jp = { -0.6f, 0.1f };
+			vec2 pos_jb = { 0.1f, -0.35f };
+			vec2 size = { 1.0f, 1.0f }; // TODO Not used yet.
+			_gui_renderer->draw_rect( bitmap_handle_jp, shader_handle, pos_jp, size );
+			_gui_renderer->draw_rect( bitmap_handle_jb, shader_handle, pos_jb, size );
 		}
 
 		_renderer->render();

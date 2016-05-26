@@ -11,29 +11,17 @@ namespace
 
 	inline bool read_file( const std::string path, char *& data )
 	{
-
 		std::ifstream file( path );
 
 		if ( !file.is_open() )
 		{
-			std::cout << "File not found or could not be opened." << std::endl;
+			std::cout << "File not found or could not be opened: '" << path << "'." << std::endl;
 			return false;
 		}
 
 		std::string str((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
-		//data = str.c_str();
-
-
-
 		data = new char[ str.length() + 1 ];
 		std::strcpy( data, str.c_str() );
-
-
-		printf("*********************************\n");
-		std::cout << data << std::endl;
-		printf("\n*********************************\n");
-
-
 		return true;
 	}
 }
