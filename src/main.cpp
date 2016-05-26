@@ -88,14 +88,14 @@ int main( int argc, char* args[] )
 	auto texture_manager = new RetroGraphics::TextureManager_OpenGL( bitmaps );
 	auto shader_manager = new RetroGraphics::ShaderManager_OpenGL( shaders );
 	{
-		auto & package = packages.handle_lookup[ base_package_handle.id ];
+		auto & package = packages.handle_lookup.at( base_package_handle.id );
 		texture_manager->load( package.bitmaps.data(), package.bitmaps.size() );
 		shader_manager->load( package.shaders.data(), package.shaders.size() );
 	}
 
 	// TODO temp shader poop fix.
 	{
-		u32 shader_i = shaders.name_index[ "debug" ];
+		u32 shader_i = shaders.name_index.at( "debug" );
 		RetroResource::Handle shader_handle = shaders.handle[ shader_i ];
 		shader_manager->bind( shader_handle );
 		u32 prog_handle = shader_manager->program( shader_handle );
@@ -114,7 +114,7 @@ int main( int argc, char* args[] )
 	app->loop();
 
 	{
-		auto & package = packages.handle_lookup[ base_package_handle.id ];
+		auto & package = packages.handle_lookup.at( base_package_handle.id );
 		texture_manager->unload( package.bitmaps.data(), package.bitmaps.size() );
 		shader_manager->unload( package.shaders.data(), package.shaders.size() );
 	}

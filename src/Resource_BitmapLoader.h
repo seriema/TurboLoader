@@ -79,7 +79,7 @@ namespace RetroResource
 			for ( int j = 0; j < size; ++j )
 			{
 				Handle handle = handles[ j ];
-				u32 i = _bitmaps.handle_index[ handle.id ];
+				u32 i = _bitmaps.handle_index.at( handle.id );
 
 				std::string & name = _bitmaps.name[ i ];
 				FIBITMAP * bitmap = static_cast< FIBITMAP* >( _bitmaps.resource[ i ] );

@@ -43,7 +43,7 @@ namespace RetroGraphics
 			for ( int j = 0; j <  size; ++j )
 			{
 				RetroResource::Handle handle = handles[ j ];
-				u32 i = _bitmaps.handle_index[ handle.id ];
+				u32 i = _bitmaps.handle_index.at( handle.id );
 				std::pair<u32,u32> size = _bitmaps.size[ i ];
 				void * bitmap = _bitmaps.resource[ i ];
 

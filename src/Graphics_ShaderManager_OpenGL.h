@@ -35,7 +35,7 @@ namespace RetroGraphics
 			for ( int j = 0; j < size; ++j )
 			{
 				RetroResource::Handle handle = handles[ j ];
-				u32 i = _shaders.handle_index[ handle.id ];
+				u32 i = _shaders.handle_index.at( handle.id );
 				const char * vert = _shaders.vert[ i ];
 				const char * frag = _shaders.frag[ i ];
 

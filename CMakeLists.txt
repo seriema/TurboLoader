@@ -57,9 +57,13 @@ set(SOURCE_FILES
 	src/Resource_HandleManager.h
 	src/Resource_BitmapCollection.h
 	src/Resource_ShaderCollection.h
+	src/Resource_PackageCollection.h
 	src/Resource_BitmapLoader.h
 	src/Resource_ShaderLoader.h
 	src/Resource_ShaderLoader.cpp
+	src/Resource_PackageLoader.h
+	src/Resource_PackageLoader_Lua.h
+	src/Resource_PackageLoader_Lua.cpp
 	src/EnvironmentManager.h
 	src/EnvironmentFactory.h
 	src/Application.h
@@ -73,7 +77,8 @@ set(SOURCE_FILES
 	src/Graphics_TextureManager_OpenGL.h
 	src/Graphics_ShaderManager.h
 	src/Graphics_ShaderManager_OpenGL.h
-	src/Gui_Renderer.h src/Resource_PackageLoader.h src/Resource_PackageCollection.h src/Resource_PackageLoader_Lua.cpp src/Resource_PackageLoader_Lua.h)
+	src/Gui_Renderer.h
+)
 
 # MAIN
 add_executable(a_retro_ui

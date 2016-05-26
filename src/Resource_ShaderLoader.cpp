@@ -83,7 +83,7 @@ void RetroResource::ShaderLoader::unload( const Handle * handles, const u32 size
 	for ( int j = 0; j < size; ++j )
 	{
 		Handle handle = handles[ j ];
-		u32 i = _shaders.handle_index[ handle.id ];
+		u32 i = _shaders.handle_index.at( handle.id );
 
 		std::string & name = _shaders.name[ i ];
 //		const char * vert = static_cast< const char * >( _shaders.vert[ i ] );
