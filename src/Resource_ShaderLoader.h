@@ -15,8 +15,8 @@ namespace RetroResource
 
 	public:
 		ShaderLoader( HandleManager & handle_manager, ShaderCollection & shaders );
-		u32 load( const char ** names, const char ** paths, Handle * handles, const u32 size = 1 );
-		void unload( Handle * handles, const u32 size = 1 );
+		u32 load( const std::string * names, const std::string * paths, Handle * handles, const u32 size = 1 );
+		void unload( const Handle * handles, const u32 size = 1 );
 	};
 }
 

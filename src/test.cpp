@@ -92,8 +92,8 @@ int main( int argc, char* args[] )
 	{
 		RetroResource::BitmapLoader bitmap_loader( handle_manager, bitmaps );
 
-		std::vector< const char * > names = { "img_test_a", "img_test_b", "jp", "jb" };
-		std::vector< const char * > paths = { "./res/img_test.bmp", "./res/img_test.dds", "./res/jp.png", "./res/jb.png" };
+		std::vector< const std::string > names = { "img_test_a", "img_test_b", "jp", "jb" };
+		std::vector< const std::string > paths = { "./res/img_test.bmp", "./res/img_test.dds", "./res/jp.png", "./res/jb.png" };
 		u32 size = names.size();
 		//bitmap_handles.reserve( size );
 		bitmap_handles.resize( size );
@@ -104,8 +104,8 @@ int main( int argc, char* args[] )
 	{
 		RetroResource::ShaderLoader shader_loader( handle_manager, shaders );
 
-		std::vector< const char * > names = { "debug" };
-		std::vector< const char * > paths = { "./res/debug" };
+		std::vector< const std::string > names = { "debug" };
+		std::vector< const std::string > paths = { "./res/debug" };
 		u32 size = names.size();
 		//shader_handles.reserve( size );
 		shader_handles.resize( size );

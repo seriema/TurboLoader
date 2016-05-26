@@ -73,7 +73,7 @@ set(SOURCE_FILES
 	src/Graphics_TextureManager_OpenGL.h
 	src/Graphics_ShaderManager.h
 	src/Graphics_ShaderManager_OpenGL.h
-	src/Gui_Renderer.h)
+	src/Gui_Renderer.h src/Resource_PackageLoader.h src/Resource_PackageCollection.h src/Resource_PackageLoader_Lua.cpp src/Resource_PackageLoader_Lua.h)
 
 # MAIN
 add_executable(a_retro_ui

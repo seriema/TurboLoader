@@ -31,7 +31,7 @@ RetroResource::ShaderLoader::ShaderLoader( HandleManager & handle_manager, Shade
 	, _shaders( shaders )
 {}
 
-u32 RetroResource::ShaderLoader::load( const char ** names, const char ** paths, Handle * handles, const u32 size )
+u32 RetroResource::ShaderLoader::load( const std::string * names, const std::string * paths, Handle * handles, const u32 size )
 {
 	u32 size0 = _shaders.handle.size();
 	u32 size1 = size0;
@@ -44,8 +44,8 @@ u32 RetroResource::ShaderLoader::load( const char ** names, const char ** paths,
 
 	for ( int i = 0; i < size; ++i )
 	{
-		const char * name = names[ i ];
-		const char * path = paths[ i ];
+		const std::string & name = names[ i ];
+		const std::string & path = paths[ i ];
 		char * vert;
 		char * frag;
 
@@ -69,12 +69,14 @@ u32 RetroResource::ShaderLoader::load( const char ** names, const char ** paths,
 		handles[ size1 - size0 ] = handle;
 
 		++size1;
+
+		std::cout << "[shader loader] loaded: (" << handle.id << ") '" << path << ".vert' & '" << path << ".frag'" << std::endl;
 	}
 
 	return size1 - size0;
 }
 
-void RetroResource::ShaderLoader::unload( Handle * handles, const u32 size )
+void RetroResource::ShaderLoader::unload( const Handle * handles, const u32 size )
 {
 	u32 i_last = _shaders.handle.size();
 
@@ -83,12 +85,12 @@ void RetroResource::ShaderLoader::unload( Handle * handles, const u32 size )
 		Handle handle = handles[ j ];
 		u32 i = _shaders.handle_index[ handle.id ];
 
-		const char * name = _shaders.name[ i ];
+		std::string & name = _shaders.name[ i ];
 //		const char * vert = static_cast< const char * >( _shaders.vert[ i ] );
 //		const char * frag = static_cast< const char * >( _shaders.frag[ i ] );
 
 		Handle handle_last = _shaders.handle[ i_last ];
-		const char * name_last = _shaders.name[ i_last ];
+		std::string & name_last = _shaders.name[ i_last ];
 
 		_shaders.handle_index[ handle_last.id ] = i;
 		_shaders.name_index[ name_last ] = i;

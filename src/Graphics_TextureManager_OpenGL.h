@@ -70,9 +70,9 @@ namespace RetroGraphics
 
 				GLenum err = glGetError();
 				if( err != GL_NO_ERROR )
-					printf( "Load texture error: %d\n", err );
+					std::cout << "[texture manager opengl] gl error loading '" << _bitmaps.name[ i ] << "': " << err << std::endl;
 				else
-					printf( "Load texture success!\n" );
+					std::cout << "[texture manager opengl] loaded: (" << handle.id << ") '" << _bitmaps.name[ i ] << "' :: gl handle '" << texture_handle << "'" << std::endl;
 			}
 		}
 

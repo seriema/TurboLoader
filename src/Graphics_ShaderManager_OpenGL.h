@@ -55,6 +55,8 @@ namespace RetroGraphics
 				glDeleteShader( frag_handle );
 
 				_handles.insert( { handle.id, prog_handle } );
+
+				std::cout << "[shader manager opengl] loaded: (" << handle.id << ") '" << _shaders.name[ i ] << "' " << "gl handle '" << prog_handle << "'" << std::endl;
 			}
 		}
 
@@ -94,8 +96,8 @@ namespace RetroGraphics
 				glGetShaderiv( shader_handle, GL_INFO_LOG_LENGTH, &len );
 				GLchar msg[len];
 				glGetShaderInfoLog( shader_handle, len, &len, msg );
-				std::cout << "**** SHADER ERR '" << shader_type << "'" << std::endl;
-				std::cout <<  msg << std::endl;
+				std::cout << "[shader manager opengl[ shader error '" << shader_type << "':" << std::endl;
+				std::cout << "    " << msg << std::endl;
 				return false;
 			}
 
@@ -124,8 +126,8 @@ namespace RetroGraphics
 				glGetProgramiv( prog_handle, GL_INFO_LOG_LENGTH, &len );
 				GLchar msg[len];
 				glGetProgramInfoLog( prog_handle, len, &len, msg );
-				std::cout << "**** PROGRAM ERR" << std::endl;
-				std::cout <<  msg << std::endl;
+				std::cout << "[shader manager opengl] program error:" << std::endl;
+				std::cout << "    " << msg << std::endl;
 				return false;
 			}
 

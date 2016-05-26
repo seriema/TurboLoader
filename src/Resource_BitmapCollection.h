@@ -14,12 +14,12 @@ namespace RetroResource
 
 	struct BitmapCollection
 	{
-		unordered_map< u32, u32 >          handle_index;
-		unordered_map< const char *, u32 > name_index;
+		unordered_map< u32, u32 >    handle_index;
+		unordered_map< string, u32 > name_index;
 
 		vector< Handle >        handle;
-		vector< const char * >  name;
-		vector< const char * >  path;
+		vector< string >        name;
+		vector< string >        path;
 		vector< pair<u32,u32> > size;
 		vector< void * >        resource;
 	};

@@ -14,14 +14,14 @@ namespace RetroResource
 
 	struct ShaderCollection
 	{
-		unordered_map< u32, u32 >          handle_index;
-		unordered_map< const char *, u32 > name_index;
+		unordered_map< u32, u32 >    handle_index;
+		unordered_map< string, u32 > name_index;
 
-		vector< Handle >        handle;
-		vector< const char * >  name;
-		vector< const char * >  path;
-		vector< const char * >  vert;
-		vector< const char * >  frag;
+		vector< Handle >       handle;
+		vector< string >       name;
+		vector< string >       path;
+		vector< const char * > vert;
+		vector< const char * > frag;
 	};
 }
 

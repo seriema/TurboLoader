@@ -23,7 +23,7 @@ namespace RetroResource
 			, _bitmaps( bitmaps )
 		{}
 
-		u32 load( const char ** names, const char ** paths, Handle * handles, const u32 size = 1 )
+		u32 load( const std::string * names, const std::string * paths, Handle * handles, const u32 size = 1 )
 		{
 			u32 size0 = _bitmaps.handle.size();
 			u32 size1 = size0;
@@ -36,21 +36,18 @@ namespace RetroResource
 
 			for ( int i = 0; i < size; ++i )
 			{
-				const char * name = names[ i ];
-				const char * path = paths[ i ];
+				const std::string & name = names[ i ].c_str();
+				const std::string & path = paths[ i ].c_str();
 
 				FIBITMAP * bitmap = nullptr;
 				u32 w, h;
 
 				// TODO Assert path is valid, otherwise handle error.
 
-				load_FreeImage( path, bitmap, w, h );
+				load_FreeImage( path.c_str(), bitmap, w, h );
 				// TODO Make sure no errors occured.
 
 				// TODO FreeImage loads in BGR format, convert to RGB.
-
-				printf( "Texture file: %s\n", path );
-				printf( "Texture size: %d x %d\n", w, h );
 
 				Handle handle = _handle_manager.create();
 
@@ -68,6 +65,8 @@ namespace RetroResource
 				handles[ size1 - size0 ] = handle;
 
 				++size1;
+
+				std::cout << "[bitmap loader] loaded: (" << handle.id << ") " << w << "x" << h << " '" << path << "'" << std::endl;
 			}
 
 			return size1 - size0;
@@ -82,11 +81,11 @@ namespace RetroResource
 				Handle handle = handles[ j ];
 				u32 i = _bitmaps.handle_index[ handle.id ];
 
-				const char * name = _bitmaps.name[ i ];
+				std::string & name = _bitmaps.name[ i ];
 				FIBITMAP * bitmap = static_cast< FIBITMAP* >( _bitmaps.resource[ i ] );
 
 				Handle handle_last = _bitmaps.handle[ i_last ];
-				const char * name_last = _bitmaps.name[ i_last ];
+				std::string & name_last = _bitmaps.name[ i_last ];
 
 				_bitmaps.handle_index[ handle_last.id ] = i;
 				_bitmaps.name_index[ name_last ] = i;

@@ -63,9 +63,9 @@ public:
 		int n_vertices = sizeof(vertices) / sizeof(GL_FLOAT);
 		const GLuint vbo_handle = _renderer->add_mesh( vertices, n_vertices );
 
-		RetroResource::Handle bitmap_handle_jp = _bitmaps.handle[ _bitmaps.name_index[ "jp" ] ];
-		RetroResource::Handle bitmap_handle_jb = _bitmaps.handle[ _bitmaps.name_index[ "jb" ] ];
-		RetroResource::Handle shader_handle = _shaders.handle[ _shaders.name_index[ "debug" ] ];
+		RetroResource::Handle bitmap_handle_jp = _bitmaps.handle[ _bitmaps.name_index.at( "jp" ) ];
+		RetroResource::Handle bitmap_handle_jb = _bitmaps.handle[ _bitmaps.name_index.at( "jb" ) ];
+		RetroResource::Handle shader_handle = _shaders.handle[ _shaders.name_index.at( "debug" ) ];
 
 		// Allocate triangle 1.
 		{

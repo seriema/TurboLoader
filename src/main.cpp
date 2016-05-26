@@ -10,8 +10,11 @@
 #include "platform.h"
 #include "Resource_BitmapCollection.h"
 #include "Resource_ShaderCollection.h"
+#include "Resource_PackageCollection.h"
 #include "Resource_BitmapLoader.h"
 #include "Resource_ShaderLoader.h"
+#include "Resource_PackageLoader.h"
+#include "Resource_PackageLoader_Lua.h"
 #include "EnvironmentFactory.h"
 #include "Graphics_TextureManager_OpenGL.h"
 #include "Graphics_ShaderManager_OpenGL.h"
@@ -70,43 +73,29 @@ int main( int argc, char* args[] )
 	RetroResource::HandleManager handle_manager;
 	RetroResource::BitmapCollection bitmaps;
 	RetroResource::ShaderCollection shaders;
-	std::vector< RetroResource::Handle > bitmap_handles;
-	std::vector< RetroResource::Handle > shader_handles;
+	RetroResource::PackageCollection packages;
+	RetroResource::Handle base_package_handle;
 
-	// Load base bitmap resources.
+	// Load base resources.
 	{
 		RetroResource::BitmapLoader bitmap_loader( handle_manager, bitmaps );
-
-		std::vector< const char * > names = { "img_test_a", "img_test_b", "jp", "jb" };
-		std::vector< const char * > paths = { "./res/img_test.bmp", "./res/img_test.dds", "./res/jp.png", "./res/jb.png" };
-		u32 size = names.size();
-		//bitmap_handles.reserve( size );
-		bitmap_handles.resize( size );
-		u32 bitmap_handles_size = bitmap_loader.load( names.data(), paths.data(), bitmap_handles.data(), size );
-	}
-
-	// Load base shader resources.
-	{
 		RetroResource::ShaderLoader shader_loader( handle_manager, shaders );
-
-		std::vector< const char * > names = { "debug" };
-		std::vector< const char * > paths = { "./res/debug" };
-		u32 size = names.size();
-		//shader_handles.reserve( size );
-		shader_handles.resize( size );
-		u32 shader_handles_size = shader_loader.load( names.data(), paths.data(), shader_handles.data(), size );
+		RetroResource::PackageLoader_Lua package_loader( handle_manager, packages, bitmaps, shaders );//, material_loader );
+		package_loader.load( "./src/hello_world", base_package_handle );
 	}
 
 	// Setup renderering env.
-
 	auto texture_manager = new RetroGraphics::TextureManager_OpenGL( bitmaps );
 	auto shader_manager = new RetroGraphics::ShaderManager_OpenGL( shaders );
-	texture_manager->load( bitmap_handles.data(), bitmap_handles.size() );
-	shader_manager->load( shader_handles.data(), shader_handles.size() );
+	{
+		auto & package = packages.handle_lookup[ base_package_handle.id ];
+		texture_manager->load( package.bitmaps.data(), package.bitmaps.size() );
+		shader_manager->load( package.shaders.data(), package.shaders.size() );
+	}
 
 	// TODO temp shader poop fix.
 	{
-		u32 shader_i = shaders.name_index.at( "debug" );
+		u32 shader_i = shaders.name_index[ "debug" ];
 		RetroResource::Handle shader_handle = shaders.handle[ shader_i ];
 		shader_manager->bind( shader_handle );
 		u32 prog_handle = shader_manager->program( shader_handle );
@@ -124,7 +113,11 @@ int main( int argc, char* args[] )
 
 	app->loop();
 
-	texture_manager->unload( bitmap_handles.data(), bitmap_handles.size() );
+	{
+		auto & package = packages.handle_lookup[ base_package_handle.id ];
+		texture_manager->unload( package.bitmaps.data(), package.bitmaps.size() );
+		shader_manager->unload( package.shaders.data(), package.shaders.size() );
+	}
 
 	delete app;
 	delete input;
@@ -134,10 +127,11 @@ int main( int argc, char* args[] )
 
 	// Unload base resources.
 	{
+
 		RetroResource::BitmapLoader bitmap_loader( handle_manager, bitmaps );
 		RetroResource::ShaderLoader shader_loader( handle_manager, shaders );
-		bitmap_loader.unload( bitmap_handles.data(), bitmap_handles.size() );
-		shader_loader.unload( shader_handles.data(), shader_handles.size() );
+		RetroResource::PackageLoader_Lua package_loader( handle_manager, packages, bitmaps, shaders );//, material_loader );
+		package_loader.unload( &base_package_handle );
 	}
 
 	// Destroy env.
