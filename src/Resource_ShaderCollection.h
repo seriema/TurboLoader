@@ -17,11 +17,11 @@ namespace RetroResource
 		unordered_map< u32, u32 >    handle_index;
 		unordered_map< string, u32 > name_index;
 
-		vector< Handle >       handle;
-		vector< string >       name;
-		vector< string >       path;
-		vector< const char * > vert;
-		vector< const char * > frag;
+		vector< Handle > handle;
+		vector< string > name;
+		vector< string > path;
+		vector< char * > vert;
+		vector< char * > frag;
 	};
 }
 

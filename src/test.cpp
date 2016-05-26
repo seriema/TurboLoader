@@ -104,8 +104,8 @@ int main( int argc, char* args[] )
 	{
 		RetroResource::ShaderLoader shader_loader( handle_manager, shaders );
 
-		std::vector< const std::string > names = { "debug" };
-		std::vector< const std::string > paths = { "./res/debug" };
+		std::vector< std::string > names = { "debug" };
+		std::vector< std::string > paths = { "./res/debug" };
 		u32 size = names.size();
 		//shader_handles.reserve( size );
 		shader_handles.resize( size );
