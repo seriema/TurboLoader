@@ -19,13 +19,13 @@ namespace
 
 	struct PackageData
 	{
-		u32                              bitmap_size;
-		std::vector< const std::string > bitmap_names;
-		std::vector< const std::string > bitmap_paths;
+		u32                        bitmap_size;
+		std::vector< std::string > bitmap_names;
+		std::vector< std::string > bitmap_paths;
 
-		u32                              shader_size;
-		std::vector< const std::string > shader_names;
-		std::vector< const std::string > shader_paths;
+		u32                        shader_size;
+		std::vector< std::string > shader_names;
+		std::vector< std::string > shader_paths;
 	};
 
 	bool is_argc( int expected_argc, int argc )
