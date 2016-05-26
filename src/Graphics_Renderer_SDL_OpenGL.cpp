@@ -21,7 +21,7 @@ RetroGraphics::Renderer_SDL_OpenGL::Renderer_SDL_OpenGL(
 {
 	glEnable( GL_CULL_FACE );
 	glCullFace( GL_BACK );
-	glFrontFace( GL_CCW );
+	glFrontFace( GL_CW );
 
 	// fragment blending
 	glEnable( GL_BLEND );
@@ -100,7 +100,7 @@ void RetroGraphics::Renderer_SDL_OpenGL::render()
 		glUniform2fv( glGetUniformLocation( prog_handle, "model_pos" ), 1, _render_data[ data_i ].pos.v );
 
 		GLuint vbo_handle = _render_data[ data_i ].vbo;
-		int n_verts = 6;//sizeof(vertices) / sizeof(GL_FLOAT);
+		int n_verts = 4;//sizeof(vertices) / sizeof(GL_FLOAT);
 		glBindBuffer( GL_ARRAY_BUFFER, vbo_handle );
 		glVertexAttribPointer( glGetAttribLocation( prog_handle, "vert" ), 3, GL_FLOAT, GL_FALSE, 3*sizeof(GL_FLOAT), 0 );
 
@@ -113,7 +113,7 @@ void RetroGraphics::Renderer_SDL_OpenGL::render()
 		RetroResource::Handle bitmap_handle = _render_data[ data_i ].bitmap;
 		_texture_manager->bind( bitmap_handle );
 
-		glDrawArrays( GL_TRIANGLES, 0, n_verts );
+		glDrawArrays( GL_TRIANGLE_STRIP, 0, n_verts );
 	}
 
 	//glFlush();

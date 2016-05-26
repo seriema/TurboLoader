@@ -13,15 +13,23 @@ namespace RetroGui
 	{
 		RetroGraphics::IRenderer & _renderer;
 
-		const float RECT[ 18 ] =
-		{
-				0.0f, 1.0f, 0.0f,
-				0.0f, 0.0f, 0.0f,
-				1.0f, 1.0f, 0.0f,
+//		const float RECT[ 18 ] =
+//		{
+//				0.0f, 1.0f, 0.0f,
+//				0.0f, 0.0f, 0.0f,
+//				1.0f, 1.0f, 0.0f,
+//
+//				1.0f, 1.0f, 0.0f,
+//				0.0f, 0.0f, 0.0f,
+//				1.0f, 0.0f, 0.0f,
+//		};
 
-				1.0f, 1.0f, 0.0f,
+		const float RECT[ 4 * 3 ] =
+		{
 				0.0f, 0.0f, 0.0f,
+				0.0f, 1.0f, 0.0f,
 				1.0f, 0.0f, 0.0f,
+				1.0f, 1.0f, 0.0f,
 		};
 
 		const u32 RECT_N = sizeof(RECT) / sizeof(float);

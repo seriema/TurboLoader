@@ -55,13 +55,10 @@ public:
 	{
 		GLfloat vertices[] =
 		{
+			0.0f, 0.0f, 0.0f,
 			0.0f, 1.0f, 0.0f,
-			0.0f, 0.0f, 0.0f,
-			1.0f, 1.0f, 0.0f,
-
-			1.0f, 1.0f, 0.0f,
-			0.0f, 0.0f, 0.0f,
 			1.0f, 0.0f, 0.0f,
+			1.0f, 1.0f, 0.0f,
 		};
 		int n_vertices = sizeof(vertices) / sizeof(GL_FLOAT);
 		const GLuint vbo_handle = _renderer->add_mesh( vertices, n_vertices );
