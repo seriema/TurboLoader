@@ -18,7 +18,7 @@ extern "C"
 static int lua_hello_world( lua_State* L )
 {
 	int argc = lua_gettop( L );
-	int argv = lua_tonumber( L, 1 );
+	int argv = lua_tointeger( L, 1 );
 
 	printf( "Got data from Lua :: %d args :: '%d'\n", argc, argv );
 
