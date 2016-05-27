@@ -56,6 +56,15 @@ namespace RetroGraphics
 
 				_handles.insert( { handle.id, prog_handle } );
 
+
+
+				// TODO Temp shader poop fix!
+
+				glUseProgram( prog_handle );
+				glEnableVertexAttribArray( glGetAttribLocation( prog_handle, "vert" ) );
+
+
+
 				std::cout << "[shader manager opengl] loaded: (" << handle.id << ") '" << _shaders.name[ i ] << "' " << "gl handle '" << prog_handle << "'" << std::endl;
 			}
 		}

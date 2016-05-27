@@ -45,7 +45,7 @@ namespace RetroGui
 
 		virtual ~Renderer() {}
 
-		void draw_rect( RetroResource::Handle bitmap, RetroResource::Handle shader, vec2 pos, vec2 size )
+		void draw_bitmap( RetroResource::Handle bitmap, RetroResource::Handle shader, vec2 pos, vec2 size )
 		{
 			// TODO Replace bitmap and shader with a single material.
 

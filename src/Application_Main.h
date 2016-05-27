@@ -151,15 +151,20 @@ public:
 
 		// TODO Proof of concept immediate gui draw example.
 		{
-			RetroResource::Handle bitmap_handle_jp = _bitmaps.handle[ _bitmaps.name_index[ "jp" ] ];
-			RetroResource::Handle bitmap_handle_jb = _bitmaps.handle[ _bitmaps.name_index[ "jb" ] ];
-			RetroResource::Handle shader_handle = _shaders.handle[ _shaders.name_index[ "debug" ] ];
+			vec2 size = { 1.0f, 1.0f }; // TODO Not used yet.
 
 			vec2 pos_jp = { -0.6f, 0.1f };
 			vec2 pos_jb = { 0.1f, -0.35f };
-			vec2 size = { 1.0f, 1.0f }; // TODO Not used yet.
-			_gui_renderer->draw_rect( bitmap_handle_jp, shader_handle, pos_jp, size );
-			_gui_renderer->draw_rect( bitmap_handle_jb, shader_handle, pos_jb, size );
+			RetroResource::Handle bitmap_handle_jp = _bitmaps.handle[ _bitmaps.name_index[ "jp" ] ];
+			RetroResource::Handle bitmap_handle_jb = _bitmaps.handle[ _bitmaps.name_index[ "jb" ] ];
+			RetroResource::Handle shader_handle_debug = _shaders.handle[ _shaders.name_index[ "debug" ] ];
+			_gui_renderer->draw_bitmap( bitmap_handle_jp, shader_handle_debug, pos_jp, size );
+			_gui_renderer->draw_bitmap( bitmap_handle_jb, shader_handle_debug, pos_jb, size );
+
+			vec2 pos_msdf = { 0.0f, 0.0f };
+			RetroResource::Handle bitmap_handle_msdf = _bitmaps.handle[ _bitmaps.name_index[ "msdf" ] ];
+			RetroResource::Handle shader_handle_msdf = _shaders.handle[ _shaders.name_index[ "msdf" ] ];
+			_gui_renderer->draw_bitmap( bitmap_handle_msdf, shader_handle_msdf, pos_msdf, size );
 		}
 
 		_renderer->render();

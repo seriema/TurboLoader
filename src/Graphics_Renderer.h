@@ -111,7 +111,6 @@ namespace RetroGraphics
 		virtual bool del_mesh( uint32_t mesh_handle ) = 0;
 		virtual void draw( const RenderKey& render_key, const RenderData& render_data ) = 0;
 		virtual void render() = 0;
-
 	};
 }
 

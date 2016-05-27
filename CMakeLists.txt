@@ -80,6 +80,15 @@ set(SOURCE_FILES
 	src/Gui_Renderer.h
 )
 
+# FONT TEST
+add_executable(a_retro_font
+	src/msdfgen-test.cpp
+	${DEPENDENCIES_SOURCES}
+)
+target_link_libraries(a_retro_font
+	${DEPENDENCIES_LIBRARIES}
+)
+
 # MAIN
 add_executable(a_retro_ui
 	src/main.cpp

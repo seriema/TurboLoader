@@ -11,8 +11,6 @@
 #include "Resource_BitmapCollection.h"
 #include "Resource_ShaderCollection.h"
 #include "Resource_PackageCollection.h"
-#include "Resource_BitmapLoader.h"
-#include "Resource_ShaderLoader.h"
 #include "Resource_PackageLoader.h"
 #include "Resource_PackageLoader_Lua.h"
 #include "EnvironmentFactory.h"
@@ -78,8 +76,6 @@ int main( int argc, char* args[] )
 
 	// Load base resources.
 	{
-		RetroResource::BitmapLoader bitmap_loader( handle_manager, bitmaps );
-		RetroResource::ShaderLoader shader_loader( handle_manager, shaders );
 		RetroResource::PackageLoader_Lua package_loader( handle_manager, packages, bitmaps, shaders );//, material_loader );
 		package_loader.load( "./src/hello_world", base_package_handle );
 	}
@@ -91,15 +87,6 @@ int main( int argc, char* args[] )
 		auto & package = packages.handle_lookup.at( base_package_handle.id );
 		texture_manager->load( package.bitmaps.data(), package.bitmaps.size() );
 		shader_manager->load( package.shaders.data(), package.shaders.size() );
-	}
-
-	// TODO temp shader poop fix.
-	{
-		u32 shader_i = shaders.name_index.at( "debug" );
-		RetroResource::Handle shader_handle = shaders.handle[ shader_i ];
-		shader_manager->bind( shader_handle );
-		u32 prog_handle = shader_manager->program( shader_handle );
-		glEnableVertexAttribArray( glGetAttribLocation( prog_handle, "vert" ) );
 	}
 
 	RetroGraphics::IRenderer * renderer = new RetroGraphics::Renderer_SDL_OpenGL( &bitmaps, &shaders, texture_manager, shader_manager );
