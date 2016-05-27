@@ -21,10 +21,6 @@ before_install:
     sh -e /etc/init.d/xvfb start
     sleep 3 # give xvfb some time to start
 
-    # Install project dependencies
-    sudo apt-get update
-    sudo apt-get install -y libsdl2-dev libfreeimage-dev lua5.1-dev
-
     # Downgrade to the same gcc/g++ version as RetroPie 3.6
     # http://askubuntu.com/a/26518
     sudo apt-get install -y gcc-4.7
