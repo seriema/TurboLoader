@@ -2,6 +2,7 @@
 #include <iostream>
 #include <fstream>
 #include "shader_program.h"
+#include <string>
 
 
 ShaderProgram::ShaderProgram ()
@@ -16,8 +17,10 @@ ShaderProgram::~ShaderProgram ()
 }
 
 
-ShaderProgram::operator GLuint () {
-	return _programHandle; }
+ShaderProgram::operator GLuint () const
+{
+	return _programHandle;
+}
 
 
 template<typename T>
@@ -33,7 +36,7 @@ void ShaderProgram::fail (GLuint shaderHandle)
 
 
 template<typename T>
-void ShaderProgram::fail ()
+void ShaderProgram::fail () const
 {
 	GLsizei len;
 	glGetProgramiv(_programHandle, GL_INFO_LOG_LENGTH, &len);
@@ -44,7 +47,7 @@ void ShaderProgram::fail ()
 }
 
 
-void ShaderProgram::compile (const char* filename, GLenum shaderType)
+void ShaderProgram::compile (const char* filename, GLenum shaderType) const
 {
 	std::ifstream file(filename);
 
@@ -52,7 +55,7 @@ void ShaderProgram::compile (const char* filename, GLenum shaderType)
 		throw FileOpenError("File not found or could not be opened.");
 
 	std::string str;
-	getline(file, str, (char) EOF);
+	getline(file, str, static_cast<char>(EOF));
 	file.close();
 	const GLchar * src = str.c_str();
 

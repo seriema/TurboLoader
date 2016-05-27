@@ -4,8 +4,6 @@
 #include "platform.h"
 
 #include <stdexcept>
-#include <string>
-#include <vector>
 
 struct ShaderError : public std::logic_error {
 	ShaderError (const std::string& msg) : std::logic_error(msg) {}; };
@@ -33,15 +31,16 @@ class ShaderProgram
 protected:
 	GLuint _programHandle;
 
-	template<typename T> void fail (GLuint shaderHandle);// shader fail
-	template<typename T> void fail ();// program fail
+	template<typename T>
+	static void fail (GLuint shaderHandle);// shader fail
+	template<typename T> void fail () const;// program fail
 
 public:
 	ShaderProgram ();
 	virtual ~ShaderProgram ();
-	operator GLuint ();
+	operator GLuint () const;
 
-	void compile (const char *filename, GLenum shaderType);
+	void compile (const char *filename, GLenum shaderType) const;
 	GLuint link ();
 };
 

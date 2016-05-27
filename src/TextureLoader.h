@@ -41,7 +41,7 @@ public:
 	}
 
 private:
-	FIBITMAP* load_FreeImage( const char* filepath, int& w, int& h, GLubyte* imgdata )
+	static FIBITMAP* load_FreeImage( const char* filepath, int& w, int& h, GLubyte* imgdata )
 	{
 		// BEWARE! FreeImage loads in BGR format!
 
@@ -64,13 +64,13 @@ private:
 		return img;
 	}
 
-	bool unload_FreeImage( FIBITMAP* img )
+	static bool unload_FreeImage( FIBITMAP* img )
 	{
 		FreeImage_Unload( img );
 		return true; // TODO return false if img doesn't exist.
 	}
 
-	GLuint load_OpenGL( GLubyte* imgdata, int w, int h )
+	static GLuint load_OpenGL( GLubyte* imgdata, int w, int h )
 	{
 		GLuint texture_handle;
 

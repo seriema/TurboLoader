@@ -33,7 +33,6 @@ int main( int argc, char* args[] )
 	lua_register( L, "lua_hello_world", lua_hello_world );
 	luaL_dofile( L, "hello_world.lua" );
 	lua_close( L );
-	L = nullptr;
 
 
 	// --- STARTUP ------------------------------

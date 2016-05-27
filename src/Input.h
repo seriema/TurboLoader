@@ -11,7 +11,7 @@ public:
 
 	void poll_events();
 	// Returns true if the application should quit.
-	bool quit_requested();
+	bool quit_requested() const;
 
 private:
 	bool _quit;

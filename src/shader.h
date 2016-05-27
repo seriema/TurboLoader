@@ -4,7 +4,6 @@
 #include "platform.h"
 
 #include <stdexcept>
-#include <string>
 #include <map>
 
 
@@ -15,9 +14,10 @@ class Shader
 	const std::string m_name;
 	std::map<std::string, GLuint> locations;
 
-	template<typename T> void fail_shader (GLuint shader);// shader fail
-	template<typename T> void fail_program ();// program fail
-	GLuint compile_shader(const std::string & name, GLenum shader_type);
+	template<typename T>
+	static void fail_shader (GLuint shader);// shader fail
+	template<typename T> void fail_program () const;// program fail
+	GLuint compile_shader(const std::string & name, GLenum shader_type) const;
 	void link_program(GLuint vert_handle, GLuint frag_handle);
 	void link_attributes();
 	void link_uniforms();
@@ -35,7 +35,8 @@ public:
 	void bind() const {
 		glUseProgram(m_program); }
 
-	void unbind() const {
+	static void unbind()
+	{
 		glUseProgram(0); }
 
 	GLuint operator[](const char * param_name) {

@@ -92,7 +92,7 @@ struct RenderMaterial
 	// glm::vec4 color;
 };
 
-bool CompareRenderKey ( RenderKey a, RenderKey b )
+inline bool CompareRenderKey ( RenderKey a, RenderKey b )
 {
 	return a.raw < b.raw;
 }
@@ -142,7 +142,7 @@ public:
 		delete _TEMP_shader;
 	}
 
-	GLuint add_mesh( const GLfloat* vertices, int n_vertices )
+	GLuint add_mesh( const GLfloat* vertices, int n_vertices ) const
 	{
 		GLuint vbo_handle;
 
@@ -159,7 +159,7 @@ public:
 		return vbo_handle;
 	}
 
-	bool del_mesh( GLuint vbo_handle )
+	static bool del_mesh( GLuint vbo_handle )
 	{
 		glDeleteBuffers( 1, &vbo_handle );
 		return true; // TODO Make sure delete went ok.
@@ -231,7 +231,7 @@ SDL_Window* gWindow = NULL;
 //OpenGL context
 SDL_GLContext gContext;
 
-void shutdown_sdl_gl()
+inline void shutdown_sdl_gl()
 {
 	//Destroy window
 	SDL_DestroyWindow( gWindow );
@@ -262,7 +262,7 @@ std::pair< SDL_GLattr, int > GL_ATTRIBUTES[] =
 #endif
 };
 
-int init_sdl_gl()
+inline int init_sdl_gl()
 {
 	if( SDL_Init( SDL_INIT_VIDEO | SDL_INIT_JOYSTICK ) < 0 )
 	{

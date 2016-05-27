@@ -8,14 +8,14 @@
 Input::Input()
 	: _quit( false )
 	, _num_controllers( 0 )
-	, _controller( NULL )
+	, _controller( NULL ) // We use NULL because SDL uses it.
 {
 	init_controller();
 }
 
 Input::~Input()
 {
-	if( _controller != NULL )
+	if( _controller != NULL ) // We use NULL because SDL uses it.
 	{
 		//Close game controller
 		SDL_JoystickClose( _controller );
@@ -31,7 +31,7 @@ void Input::init_controller()
 		//Load joystick
 		// Note: We currently only support one controller!
 		_controller = SDL_JoystickOpen( 0 );
-		if ( _controller == NULL )
+		if ( _controller == NULL ) // We use NULL because SDL uses it.
 		{
 			printf( "Warning: Unable to open game controller! SDL Error: %s\n", SDL_GetError() );
 		}
@@ -61,7 +61,7 @@ void Input::poll_events()
 	}
 }
 
-bool Input::quit_requested()
+bool Input::quit_requested() const
 {
 	return _quit;
 }

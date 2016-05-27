@@ -100,7 +100,7 @@ void Shader::fail_shader(GLuint shader)
 
 
 template<typename T>
-void Shader::fail_program()
+void Shader::fail_program() const
 {
 	GLsizei len;
 	glGetProgramiv(m_program, GL_INFO_LOG_LENGTH, &len);
@@ -112,7 +112,7 @@ void Shader::fail_program()
 }
 
 
-GLuint Shader::compile_shader(const std::string & name, GLenum shader_type)
+GLuint Shader::compile_shader(const std::string & name, GLenum shader_type) const
 {
 	std::cout << "READ SHADER FILE: " << name << std::endl;
 //	std::ifstream file(name);
