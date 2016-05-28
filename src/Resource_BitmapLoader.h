@@ -74,7 +74,7 @@ namespace RetroResource
 
 		void unload( Handle * handles, const u32 size = 1 )
 		{
-			u32 i_last = _bitmaps.handle.size();
+			u32 i_last = _bitmaps.handle.size() - 1;
 
 			for ( int j = 0; j < size; ++j )
 			{

@@ -78,7 +78,7 @@ u32 RetroResource::ShaderLoader::load( const std::string * names, const std::str
 
 void RetroResource::ShaderLoader::unload( const Handle * handles, const u32 size )
 {
-	u32 i_last = _shaders.handle.size();
+	u32 i_last = _shaders.handle.size() - 1;
 
 	for ( int j = 0; j < size; ++j )
 	{
