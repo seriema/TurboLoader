@@ -4,8 +4,8 @@
 #include <utility>
 #include <cmath>
 
-#include "msdfgen.h"
-#include "msdfgen-ext.h"
+#include <msdfgen.h>
+#include <msdfgen-ext.h>
 
 #include "platform.h"
 #include "Resource_BitmapCollection.h"
@@ -124,10 +124,10 @@ int main( int argc, char* args[] )
 	delete gui_renderer;
 	delete renderer;
 	delete texture_manager;
+	delete shader_manager;
 
 	// Unload base resources.
 	{
-
 		RetroResource::BitmapLoader bitmap_loader( handle_manager, bitmaps );
 		RetroResource::ShaderLoader shader_loader( handle_manager, shaders );
 		RetroResource::PackageLoader_Lua package_loader( handle_manager, packages, bitmaps, shaders );//, material_loader );
