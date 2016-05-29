@@ -81,25 +81,22 @@ int main( int argc, char* args[] )
 	if ( environment_manager == nullptr )
 		return 1;
 
-	printf( "¿¿ Startup renderer ??\n" );
+	printf( "¿¿ Load resources ??\n" );
 	RetroResource::HandleManager handle_manager;
 	RetroResource::BitmapCollection bitmaps;
 	RetroResource::ShaderCollection shaders;
 	std::vector< RetroResource::Handle > bitmap_handles;
 	std::vector< RetroResource::Handle > shader_handles;
-
-// Load base bitmap resources.
+	// Load base bitmap resources.
 	{
 		RetroResource::BitmapLoader bitmap_loader( handle_manager, bitmaps );
 
 		std::vector< std::string > names = { "img_test_a", "img_test_b", "jp", "jb" };
 		std::vector< std::string > paths = { "./res/img_test.bmp", "./res/img_test.dds", "./res/jp.png", "./res/jb.png" };
 		u32 size = names.size();
-		//bitmap_handles.reserve( size );
 		bitmap_handles.resize( size );
 		u32 bitmap_handles_size = bitmap_loader.load( names.data(), paths.data(), bitmap_handles.data(), size );
 	}
-
 	// Load base shader resources.
 	{
 		RetroResource::ShaderLoader shader_loader( handle_manager, shaders );
@@ -111,11 +108,12 @@ int main( int argc, char* args[] )
 		shader_handles.resize( size );
 		u32 shader_handles_size = shader_loader.load( names.data(), paths.data(), shader_handles.data(), size );
 	}
-
 	auto texture_manager = new RetroGraphics::TextureManager_OpenGL( bitmaps );
 	auto shader_manager = new RetroGraphics::ShaderManager_OpenGL( shaders );
 	texture_manager->load( bitmap_handles.data(), bitmap_handles.size() );
 	shader_manager->load( shader_handles.data(), shader_handles.size() );
+
+	printf( "¿¿ Startup renderer ??\n" );
 	RetroGraphics::IRenderer * renderer = new RetroGraphics::Renderer_SDL_OpenGL( &bitmaps, &shaders, texture_manager, shader_manager );
 	RetroGui::Renderer * gui_renderer = new RetroGui::Renderer( *renderer );
 	GLenum error = glGetError();
@@ -162,6 +160,11 @@ int main( int argc, char* args[] )
 	printf( "¿¿ Shutdown renderer ??\n" );
 	delete renderer;
 
+	printf( "¿¿ Unload resources ??\n" );
+	texture_manager->unload( bitmap_handles.data(), bitmap_handles.size() );
+	shader_manager->unload( shader_handles.data(), shader_handles.size() );
+	delete texture_manager;
+	delete shader_manager;
 	// Unload base resources.
 	{
 		RetroResource::BitmapLoader bitmap_loader( handle_manager, bitmaps );
@@ -170,7 +173,6 @@ int main( int argc, char* args[] )
 		shader_loader.unload( shader_handles.data(), shader_handles.size() );
 	}
 
-	//Shutdown renderer.
 	printf( "¿¿ Shutdown environment ??\n" );
 	environment_factory.destroy_environment_manager( environment_manager );
 
