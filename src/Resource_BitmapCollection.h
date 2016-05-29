@@ -21,7 +21,11 @@ namespace RetroResource
 		vector< string >        name;
 		vector< string >        path;
 		vector< pair<u32,u32> > size;
+
+		// TODO resource and resource_raw is a temp fix for storing freeimage internal format separate from raw bits.
+
 		vector< void * >        resource;
+		vector< void * >        resource_raw;
 	};
 }
 

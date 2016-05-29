@@ -8,6 +8,7 @@
 #include <msdfgen-ext.h>
 
 #include "platform.h"
+#include "Resource_FontCollection.h"
 #include "Resource_BitmapCollection.h"
 #include "Resource_ShaderCollection.h"
 #include "Resource_PackageCollection.h"
@@ -69,6 +70,7 @@ int main( int argc, char* args[] )
 	// Setup data structures.
 
 	RetroResource::HandleManager handle_manager;
+	RetroResource::FontCollection fonts;
 	RetroResource::BitmapCollection bitmaps;
 	RetroResource::ShaderCollection shaders;
 	RetroResource::PackageCollection packages;
@@ -76,7 +78,7 @@ int main( int argc, char* args[] )
 
 	// Load base resources.
 	{
-		RetroResource::PackageLoader_Lua package_loader( handle_manager, packages, bitmaps, shaders );//, material_loader );
+		RetroResource::PackageLoader_Lua package_loader( handle_manager, packages, fonts, bitmaps, shaders );//, material_loader );
 		package_loader.load( "./src/hello_world", base_package_handle );
 	}
 
@@ -85,6 +87,10 @@ int main( int argc, char* args[] )
 	auto shader_manager = new RetroGraphics::ShaderManager_OpenGL( shaders );
 	{
 		auto & package = packages.handle_lookup.at( base_package_handle.id );
+
+		// TODO load font textures via handles package.fonts.data() ...
+
+		texture_manager->load( package.fonts.data(), package.fonts.size() );
 		texture_manager->load( package.bitmaps.data(), package.bitmaps.size() );
 		shader_manager->load( package.shaders.data(), package.shaders.size() );
 	}
@@ -115,9 +121,7 @@ int main( int argc, char* args[] )
 
 	// Unload base resources.
 	{
-		RetroResource::BitmapLoader bitmap_loader( handle_manager, bitmaps );
-		RetroResource::ShaderLoader shader_loader( handle_manager, shaders );
-		RetroResource::PackageLoader_Lua package_loader( handle_manager, packages, bitmaps, shaders );//, material_loader );
+		RetroResource::PackageLoader_Lua package_loader( handle_manager, packages, fonts, bitmaps, shaders );//, material_loader );
 		package_loader.unload( &base_package_handle );
 	}
 

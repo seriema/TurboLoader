@@ -3,7 +3,6 @@
 
 #include "platform.h"
 #include "Resource_HandleManager.h"
-#include "Resource_PackageCollection.h"
 
 namespace RetroResource
 {

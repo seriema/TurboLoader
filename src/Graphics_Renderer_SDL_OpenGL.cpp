@@ -97,6 +97,7 @@ void RetroGraphics::Renderer_SDL_OpenGL::render()
 		_shader_manager->bind( shader_handle );
 		u32 prog_handle = _shader_manager->program( shader_handle );
 
+		glUniform1f( glGetUniformLocation( prog_handle, "timestamp" ), 0.001f * (float)SDL_GetTicks() );
 		glUniform2fv( glGetUniformLocation( prog_handle, "model_pos" ), 1, _render_data[ data_i ].pos.v );
 
 		GLuint vbo_handle = _render_data[ data_i ].vbo;

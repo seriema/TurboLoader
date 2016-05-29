@@ -16,6 +16,7 @@ namespace RetroResource
 	{
 		Handle           handle;
 		string           name;
+		vector< Handle > fonts;
 		vector< Handle > bitmaps;
 		vector< Handle > shaders;
 	};

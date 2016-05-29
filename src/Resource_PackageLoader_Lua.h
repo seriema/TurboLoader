@@ -2,33 +2,26 @@
 #define A_RETRO_UI_RESOURCE_PACKAGELOADER_LUA_H
 
 #include "Resource_PackageLoader.h"
-#include "Resource_BitmapLoader.h"
-#include "Resource_ShaderLoader.h"
+#include "Resource_HandleManager.h"
 
-namespace RetroResource
-{
-	class HandleManager;
-	class BitmapCollection;
-	class ShaderCollection;
-	class PackageCollection;
-}
-class PackageCollection;
+#include "Resource_PackageCollection.h"
+#include "Resource_FontCollection.h"
+#include "Resource_BitmapCollection.h"
+#include "Resource_ShaderCollection.h"
 
 namespace RetroResource
 {
 	class PackageLoader_Lua : public IPackageLoader
 	{
 		HandleManager     & _handle_manager;
-		PackageCollection & _packages;
+		FontCollection    & _fonts;
 		BitmapCollection  & _bitmaps;
 		ShaderCollection  & _shaders;
-
-		BitmapLoader        _bitmap_loader;
-		ShaderLoader        _shader_loader;
+		PackageCollection & _packages;
 
 	public:
-		PackageLoader_Lua( HandleManager & handle_manager,
-			PackageCollection & packages, BitmapCollection & bitmaps, ShaderCollection & shaders );
+		PackageLoader_Lua( HandleManager & handle_manager, PackageCollection & packages,
+			FontCollection & fonts, BitmapCollection & bitmaps, ShaderCollection & shaders );
 
 		virtual ~PackageLoader_Lua() override;
 		virtual u32 load( const std::string name, Handle & handle ) override;

@@ -1,6 +1,7 @@
 //#version 100
 //precision mediump float;
 
+uniform float timestamp;
 uniform vec2 model_pos;
 
 //attribute vec2 uv;
