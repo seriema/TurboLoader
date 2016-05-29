@@ -1,5 +1,11 @@
 
-local argc, argv = lua_hello_world( 13 )
+bitmaps {
+	jp = "./res/jp.png",
+	jb = "./res/jb.png",
+	img_test_bmp = "./res/img_test.bmp",
+	img_test_dds = "./res/img_test.dds",
+}
 
-print( "Argc: ", argc )
-print( "Argv: ", argv )
+shaders {
+	debug = "./res/debug",
+}

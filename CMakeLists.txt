@@ -50,17 +50,34 @@ include_directories(
 )
 
 set(SOURCE_FILES
-	src/shader.h
-	src/shader.cpp
-	src/shader_program.h
-	src/shader_program.cpp
+	${DEPENDENCIES_SOURCES}
 	src/platform.h
-	src/Renderer.h
-	src/TextureLoader.h
+	src/Resource_Aux.h
+	src/Resource_Handle.h
+	src/Resource_HandleManager.h
+	src/Resource_BitmapCollection.h
+	src/Resource_ShaderCollection.h
+	src/Resource_PackageCollection.h
+	src/Resource_BitmapLoader.h
+	src/Resource_ShaderLoader.h
+	src/Resource_ShaderLoader.cpp
+	src/Resource_PackageLoader.h
+	src/Resource_PackageLoader_Lua.h
+	src/Resource_PackageLoader_Lua.cpp
+	src/EnvironmentManager.h
+	src/EnvironmentFactory.h
+	src/Application.h
+	src/Application_Main.h
 	src/Input.cpp
 	src/Input.h
-
-	${DEPENDENCIES_SOURCES}
+	src/Graphics_Renderer.h
+	src/Graphics_Renderer_SDL_OpenGL.h
+	src/Graphics_Renderer_SDL_OpenGL.cpp
+	src/Graphics_TextureManager.h
+	src/Graphics_TextureManager_OpenGL.h
+	src/Graphics_ShaderManager.h
+	src/Graphics_ShaderManager_OpenGL.h
+	src/Gui_Renderer.h
 )
 
 # MAIN

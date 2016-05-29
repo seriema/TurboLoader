@@ -1,18 +1,29 @@
 #include <iostream>
 
-#include "msdfgen.h"
-#include "msdfgen-ext.h"
+#include <msdfgen.h>
+#include <msdfgen-ext.h>
 
 extern "C"
 {
-	#include "lua.h"
-	#include "lualib.h"
-	#include "lauxlib.h"
+    #include "lua.h"
+    #include "lualib.h"
+    #include "lauxlib.h"
 }
 
 #include "platform.h"
-#include "Renderer.h"
+#include "EnvironmentFactory.h"
+#include "Graphics_Renderer.h"
+#include "Graphics_Renderer_SDL_OpenGL.h"
 #include "Input.h"
+#include "Application_Main.h"
+#include "Resource_BitmapCollection.h"
+#include "Resource_ShaderCollection.h"
+#include "Graphics_TextureManager_OpenGL.h"
+#include "Graphics_ShaderManager_OpenGL.h"
+#include "Gui_Renderer.h"
+#include "Resource_HandleManager.h"
+#include "Resource_BitmapLoader.h"
+#include "Resource_ShaderLoader.h"
 
 static int lua_hello_world( lua_State* L )
 {
@@ -64,24 +75,65 @@ int main( int argc, char* args[] )
 
 	// --- STARTUP ------------------------------
 
-	//Startup renderer.
-	printf( "¿¿ Startup renderer ??\n" );
-	if ( !init_sdl_gl() )
+	printf( "¿¿ Startup environment ??\n" );
+	EnvironmentFactory_SDL_OpenGL environment_factory;
+	IEnvironmentManager * environment_manager = environment_factory.create_environment_manager();
+	if ( environment_manager == nullptr )
 		return 1;
-	Renderer_SDL_OpenGL renderer;
+
+	printf( "¿¿ Load resources ??\n" );
+	RetroResource::HandleManager handle_manager;
+	RetroResource::BitmapCollection bitmaps;
+	RetroResource::ShaderCollection shaders;
+	std::vector< RetroResource::Handle > bitmap_handles;
+	std::vector< RetroResource::Handle > shader_handles;
+	// Load base bitmap resources.
+	{
+		RetroResource::BitmapLoader bitmap_loader( handle_manager, bitmaps );
+
+		std::vector< std::string > names = { "img_test_a", "img_test_b", "jp", "jb" };
+		std::vector< std::string > paths = { "./res/img_test.bmp", "./res/img_test.dds", "./res/jp.png", "./res/jb.png" };
+		u32 size = names.size();
+		bitmap_handles.resize( size );
+		u32 bitmap_handles_size = bitmap_loader.load( names.data(), paths.data(), bitmap_handles.data(), size );
+	}
+	// Load base shader resources.
+	{
+		RetroResource::ShaderLoader shader_loader( handle_manager, shaders );
+
+		std::vector< std::string > names = { "debug" };
+		std::vector< std::string > paths = { "./res/debug" };
+		u32 size = names.size();
+		//shader_handles.reserve( size );
+		shader_handles.resize( size );
+		u32 shader_handles_size = shader_loader.load( names.data(), paths.data(), shader_handles.data(), size );
+	}
+	auto texture_manager = new RetroGraphics::TextureManager_OpenGL( bitmaps );
+	auto shader_manager = new RetroGraphics::ShaderManager_OpenGL( shaders );
+	texture_manager->load( bitmap_handles.data(), bitmap_handles.size() );
+	shader_manager->load( shader_handles.data(), shader_handles.size() );
+
+	printf( "¿¿ Startup renderer ??\n" );
+	RetroGraphics::IRenderer * renderer = new RetroGraphics::Renderer_SDL_OpenGL( &bitmaps, &shaders, texture_manager, shader_manager );
+	RetroGui::Renderer * gui_renderer = new RetroGui::Renderer( *renderer );
 	GLenum error = glGetError();
 	if( error != GL_NO_ERROR )
 	{
 		printf( "Unable to initialize OpenGL!\n%d\n", error );
-		return false;
+		return 2;
 	}
 
-	//Startup input.
 	printf( "¿¿ Startup input ??\n" );
-	Input* input = new Input();
+	Input * input = new Input();
 
+	printf( "¿¿ Startup app ??\n" );
+	IApplication * app = new Application_Main( environment_manager, renderer, gui_renderer, input, bitmaps, shaders );
 
 	// --- TEST ---------------------------------
+
+	//Test run msdf font.
+	printf( "¿¿ Test run msdfgen ??\n" );
+	msdfgen_hello_world();
 
 	//Test run input.
 	printf( "¿¿ Test run input ??\n" );
@@ -89,23 +141,40 @@ int main( int argc, char* args[] )
 
 	//Test run renderer.
 	printf( "¿¿ Test run renderer ??\n" );
-	renderer.render();
-	SDL_GL_SwapWindow( gWindow );
+	renderer->render();
 
-	//Test run msdf font.
-	printf( "¿¿ Test run msdfgen ??\n" );
-	msdfgen_hello_world();
-
+	printf( "¿¿ Test run app ??\n" );
+	app->tick();
 
 	// --- SHUTDOWN -----------------------------
 
-	//Shutdown input.
+	printf( "¿¿ Shutdown app ??\n" );
+	delete app;
+
 	printf( "¿¿ Shutdown input ??\n" );
 	delete input;
 
-	//Shutdown renderer.
+	printf( "¿¿ Shutdown gui renderer ??\n" );
+	delete gui_renderer;
+
 	printf( "¿¿ Shutdown renderer ??\n" );
-	shutdown_sdl_gl();
+	delete renderer;
+
+	printf( "¿¿ Unload resources ??\n" );
+	texture_manager->unload( bitmap_handles.data(), bitmap_handles.size() );
+	shader_manager->unload( shader_handles.data(), shader_handles.size() );
+	delete texture_manager;
+	delete shader_manager;
+	// Unload base resources.
+	{
+		RetroResource::BitmapLoader bitmap_loader( handle_manager, bitmaps );
+		RetroResource::ShaderLoader shader_loader( handle_manager, shaders );
+		bitmap_loader.unload( bitmap_handles.data(), bitmap_handles.size() );
+		shader_loader.unload( shader_handles.data(), shader_handles.size() );
+	}
+
+	printf( "¿¿ Shutdown environment ??\n" );
+	environment_factory.destroy_environment_manager( environment_manager );
 
 	// --- EXIT ---------------------------------
 

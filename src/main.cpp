@@ -1,33 +1,31 @@
+#include <memory>
 #include <iostream>
 #include <vector>
 #include <utility>
 #include <cmath>
 
-#include "msdfgen.h"
-#include "msdfgen-ext.h"
-
-extern "C"
-{
-	#include "lua.h"
-	#include "lualib.h"
-	#include "lauxlib.h"
-}
+#include <msdfgen.h>
+#include <msdfgen-ext.h>
 
 #include "platform.h"
-#include "Renderer.h"
-#include "Input.h"
+#include "Resource_BitmapCollection.h"
+#include "Resource_ShaderCollection.h"
+#include "Resource_PackageCollection.h"
+#include "Resource_BitmapLoader.h"
+#include "Resource_ShaderLoader.h"
+#include "Resource_PackageLoader.h"
+#include "Resource_PackageLoader_Lua.h"
+#include "EnvironmentFactory.h"
+#include "Graphics_TextureManager_OpenGL.h"
+#include "Graphics_ShaderManager_OpenGL.h"
+#include "Graphics_Renderer_SDL_OpenGL.h"
+#include "Gui_Renderer.h"
+#include "Application_Main.h"
 
-static int lua_hello_world( lua_State* L )
-{
-	int argc = lua_gettop( L );
-	int argv = lua_tointeger( L, 1 );
+#define A_RETRO_UI_USE_SDL 1
+#define A_RETRO_UI_USE_OPENGL 1
 
-	printf( "Got data from Lua :: %d args :: '%d'\n", argc, argv );
-
-	lua_pushnumber( L, argc );
-	lua_pushnumber( L, argv );
-	return 2; // Number of lua_pushX calls.
-}
+#if defined(A_RETRO_UI_USE_SDL) && defined(A_RETRO_UI_USE_OPENGL)
 
 static void msdfgen_hello_world()
 {
@@ -56,136 +54,99 @@ static void msdfgen_hello_world()
 
 int main( int argc, char* args[] )
 {
-	std::cout << "STARTING IN: " << args[0] << std::endl;
-
-	lua_State* L = luaL_newstate();
-	luaL_openlibs( L );
-	lua_register( L, "lua_hello_world", lua_hello_world );
-	luaL_dofile( L, "hello_world.lua" );
-	lua_close( L );
-	L = nullptr;
+	std::cout << "STARTING IN: " << args[ 0 ] << std::endl;
+	std::cout << "Initializing..." << std::endl;
 
 	// Just make sure it runs.
 	msdfgen_hello_world();
 
-	//Start up SDL and create window
-	printf("Initializing...\n");
-	if ( !init_sdl_gl() )
+	// Setup env.
+
+	EnvironmentFactory_SDL_OpenGL environment_factory;
+	IEnvironmentManager * environment_manager = environment_factory.create_environment_manager();
+
+	if ( environment_manager == nullptr )
 		return 1;
 
-	Renderer_SDL_OpenGL renderer;
+	// Setup data structures.
 
+	RetroResource::HandleManager handle_manager;
+	RetroResource::BitmapCollection bitmaps;
+	RetroResource::ShaderCollection shaders;
+	RetroResource::PackageCollection packages;
+	RetroResource::Handle base_package_handle;
 
-	GLenum error = glGetError();
-	if( error != GL_NO_ERROR )
+	// Load base resources.
 	{
-		printf( "Unable to initialize OpenGL!\n%d\n", error );
-		return false;
+		RetroResource::BitmapLoader bitmap_loader( handle_manager, bitmaps );
+		RetroResource::ShaderLoader shader_loader( handle_manager, shaders );
+		RetroResource::PackageLoader_Lua package_loader( handle_manager, packages, bitmaps, shaders );//, material_loader );
+		package_loader.load( "./src/hello_world", base_package_handle );
 	}
 
-
-
-
-
-	std::vector< std::pair<RenderKey, RenderData> > objects;
-
-	GLfloat vertices[] =
+	// Setup renderering env.
+	auto texture_manager = new RetroGraphics::TextureManager_OpenGL( bitmaps );
+	auto shader_manager = new RetroGraphics::ShaderManager_OpenGL( shaders );
 	{
-		0.0f,  0.2f, 0.0f,
-		-0.15f, 0.0f, 0.0f,
-		0.15f, 0.0f, 0.0f,
-	};
-	int n_vertices = sizeof(vertices) / sizeof(GL_FLOAT);
-	const GLuint vbo_handle = renderer.add_mesh( vertices, n_vertices );
-
-	// Allocate triangle 1.
-	{
-		RenderKey render_key;
-		RenderData render_data;
-
-		render_key.RenderOpaque.material_index = 0;
-		render_data.vbo_handle = vbo_handle;
-		render_data.x = -0.5f;
-		render_data.y = -0.1f;
-
-		objects.push_back( { render_key, render_data } );
+		auto & package = packages.handle_lookup.at( base_package_handle.id );
+		texture_manager->load( package.bitmaps.data(), package.bitmaps.size() );
+		shader_manager->load( package.shaders.data(), package.shaders.size() );
 	}
 
-	// Allocate triangle 2.
+	// TODO temp shader poop fix.
 	{
-		RenderKey render_key;
-		RenderData render_data;
-
-		render_key.RenderOpaque.material_index = 0;
-		render_data.vbo_handle = vbo_handle;
-		render_data.x = 0.3f;
-		render_data.y = 0.6f;
-
-		objects.push_back( { render_key, render_data } );
+		u32 shader_i = shaders.name_index.at( "debug" );
+		RetroResource::Handle shader_handle = shaders.handle[ shader_i ];
+		shader_manager->bind( shader_handle );
+		u32 prog_handle = shader_manager->program( shader_handle );
+		glEnableVertexAttribArray( glGetAttribLocation( prog_handle, "vert" ) );
 	}
 
-	// Allocate triangle 3.
+	RetroGraphics::IRenderer * renderer = new RetroGraphics::Renderer_SDL_OpenGL( &bitmaps, &shaders, texture_manager, shader_manager );
+	RetroGui::Renderer * gui_renderer = new RetroGui::Renderer( *renderer );
+
+	// Run app.
+
+	//IInputManager* input_manager = new InputManager_SDL();
+	Input * input = new Input();
+	IApplication* app = new Application_Main( environment_manager, renderer, gui_renderer, input, bitmaps, shaders );
+
+	app->loop();
+
 	{
-		RenderKey render_key;
-		RenderData render_data;
-
-		render_key.RenderOpaque.material_index = 0;
-		render_data.vbo_handle = vbo_handle;
-		render_data.x = 0.9f;
-		render_data.y = -0.6f;
-
-		objects.push_back( { render_key, render_data } );
+		auto & package = packages.handle_lookup.at( base_package_handle.id );
+		texture_manager->unload( package.bitmaps.data(), package.bitmaps.size() );
+		shader_manager->unload( package.shaders.data(), package.shaders.size() );
 	}
 
-	printf("Entering main loop\n");
-	//While application is running
-
-	uint32_t t0 = SDL_GetTicks() - 17;
-
-	Input* input = new Input();
-
-	while( !input->quit_requested() )
-	{
-//		printf("Looping\n");
-
-		uint32_t t1 = SDL_GetTicks();
-		uint32_t dt = t1 - t0;
-		t0 = t1;
-
-		//Handle events on queue
-		input->poll_events();
-
-		for ( auto& obj : objects )
-		{
-			obj.second.x += 0.0001f * dt;
-			if ( obj.second.x > 1.1f )
-				obj.second.x = -1.1f;
-		}
-
-		for ( auto& obj : objects )
-		{
-			renderer.draw( obj.first, obj.second );
-		}
-
-		renderer.render();
-		SDL_GL_SwapWindow( gWindow );
-	}
-
-	for ( auto obj : objects )
-	{
-		renderer.del_mesh( obj.second.vbo_handle );
-	}
-
-
-//	printf("ERRORS >>");
-//	printf( SDL_GetError() );
-//	printf("<< ERRORS");
-
+	delete app;
 	delete input;
+	delete gui_renderer;
+	delete renderer;
+	delete texture_manager;
+	delete shader_manager;
 
+	// Unload base resources.
+	{
+		RetroResource::BitmapLoader bitmap_loader( handle_manager, bitmaps );
+		RetroResource::ShaderLoader shader_loader( handle_manager, shaders );
+		RetroResource::PackageLoader_Lua package_loader( handle_manager, packages, bitmaps, shaders );//, material_loader );
+		package_loader.unload( &base_package_handle );
+	}
 
-	//Free resources and close SDL
-	shutdown_sdl_gl();
+	// Destroy env.
+
+	environment_factory.destroy_environment_manager( environment_manager );
 
 	return 0;
 }
+
+#else
+
+int main( int argc, char* args[] )
+{
+	std::cout << "Wrong environment! Only SDL + OpenGL supported!" << std::endl;
+	return 2;
+}
+
+#endif
