@@ -158,8 +158,8 @@ FT_BEGIN_HEADER
   */
   typedef FT_Error
   (*FT_Incremental_GetGlyphDataFunc)( FT_Incremental  incremental,
-				      FT_UInt         glyph_index,
-				      FT_Data*        adata );
+									  FT_UInt glyph_index,
+									  FT_Data* adata );
 
 
  /***************************************************************************
@@ -182,7 +182,7 @@ FT_BEGIN_HEADER
   */
   typedef void
   (*FT_Incremental_FreeGlyphDataFunc)( FT_Incremental  incremental,
-				       FT_Data*        data );
+									   FT_Data* data );
 
 
  /***************************************************************************
@@ -219,10 +219,10 @@ FT_BEGIN_HEADER
   */
   typedef FT_Error
   (*FT_Incremental_GetGlyphMetricsFunc)
-		      ( FT_Incremental              incremental,
-			FT_UInt                     glyph_index,
-			FT_Bool                     vertical,
-			FT_Incremental_MetricsRec  *ametrics );
+		  ( FT_Incremental incremental,
+			FT_UInt glyph_index,
+			FT_Bool vertical,
+			FT_Incremental_MetricsRec* ametrics );
 
 
   /**************************************************************************

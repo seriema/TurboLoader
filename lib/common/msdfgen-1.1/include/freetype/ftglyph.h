@@ -232,7 +232,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_Get_Glyph( FT_GlyphSlot  slot,
-		FT_Glyph     *aglyph );
+				FT_Glyph* aglyph );
 
 
   /*************************************************************************/
@@ -256,7 +256,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_Glyph_Copy( FT_Glyph   source,
-		 FT_Glyph  *target );
+				 FT_Glyph* target );
 
 
   /*************************************************************************/
@@ -285,8 +285,8 @@ FT_BEGIN_HEADER
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_Glyph_Transform( FT_Glyph    glyph,
-		      FT_Matrix*  matrix,
-		      FT_Vector*  delta );
+					  FT_Matrix* matrix,
+					  FT_Vector* delta );
 
 
   /*************************************************************************/
@@ -411,8 +411,8 @@ FT_BEGIN_HEADER
   /*                                                                       */
   FT_EXPORT( void )
   FT_Glyph_Get_CBox( FT_Glyph  glyph,
-		     FT_UInt   bbox_mode,
-		     FT_BBox  *acbox );
+					 FT_UInt bbox_mode,
+					 FT_BBox* acbox );
 
 
   /*************************************************************************/
@@ -486,9 +486,9 @@ FT_BEGIN_HEADER
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_Glyph_To_Bitmap( FT_Glyph*       the_glyph,
-		      FT_Render_Mode  render_mode,
-		      FT_Vector*      origin,
-		      FT_Bool         destroy );
+					  FT_Render_Mode render_mode,
+					  FT_Vector* origin,
+					  FT_Bool destroy );
 
 
   /*************************************************************************/
@@ -537,7 +537,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   FT_EXPORT( void )
   FT_Matrix_Multiply( const FT_Matrix*  a,
-		      FT_Matrix*  b );
+					  FT_Matrix* b );
 
 
   /*************************************************************************/

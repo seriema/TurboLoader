@@ -153,7 +153,7 @@ FT_BEGIN_HEADER
    */
   FT_EXPORT( FT_Error )
   FT_Library_SetLcdFilter( FT_Library    library,
-			   FT_LcdFilter  filter );
+						   FT_LcdFilter filter );
 
   /* */
 

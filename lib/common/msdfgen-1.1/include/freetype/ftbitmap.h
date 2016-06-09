@@ -87,8 +87,8 @@ FT_BEGIN_HEADER
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_Bitmap_Copy( FT_Library        library,
-		  const FT_Bitmap  *source,
-		  FT_Bitmap        *target);
+				  const FT_Bitmap* source,
+				  FT_Bitmap* target );
 
 
   /*************************************************************************/
@@ -125,9 +125,9 @@ FT_BEGIN_HEADER
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_Bitmap_Embolden( FT_Library  library,
-		      FT_Bitmap*  bitmap,
-		      FT_Pos      xStrength,
-		      FT_Pos      yStrength );
+					  FT_Bitmap* bitmap,
+					  FT_Pos xStrength,
+					  FT_Pos yStrength );
 
 
   /*************************************************************************/
@@ -165,9 +165,9 @@ FT_BEGIN_HEADER
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_Bitmap_Convert( FT_Library        library,
-		     const FT_Bitmap  *source,
-		     FT_Bitmap        *target,
-		     FT_Int            alignment );
+					 const FT_Bitmap* source,
+					 FT_Bitmap* target,
+					 FT_Int alignment );
 
 
   /*************************************************************************/
@@ -192,7 +192,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_Bitmap_Done( FT_Library  library,
-		  FT_Bitmap  *bitmap );
+				  FT_Bitmap* bitmap );
 
 
   /* */
