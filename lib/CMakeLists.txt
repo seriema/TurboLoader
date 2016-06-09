@@ -24,7 +24,6 @@ elseif(MSVC OR CYGWIN)
 	# set environmental path for our cmake/Find*.cmake scripts
 	set(ENV{SDL2DIR} win/SDL2-2.0.4)
 	set(ENV{FREEIMAGE_HOME} win/FreeImage-3.17.0)
-	set(ENV{FREETYPE_DIR} common/msdfgen-1.1) # Makes this unneeded, I hope: 	${CMAKE_CURRENT_SOURCE_DIR}/common/msdfgen/lib/freetype.lib
 	set(ENV{LUA_DIR} win/LuaJIT-2.0.4/src)
 
 	set(PLATFORM_SPECIFIC_LIBRARIES
@@ -48,7 +47,6 @@ endif()
 find_package(SDL2 REQUIRED)
 find_package(FreeImage REQUIRED)
 find_package(Lua51 REQUIRED) #Lua50, Lua51
-find_package(Freetype REQUIRED)
 
 add_definitions(-DENTRY_CONFIG_USE_SDL=1) # use SDL2
 
@@ -56,8 +54,6 @@ add_definitions(-DENTRY_CONFIG_USE_SDL=1) # use SDL2
 #--- EXPORT PATHS ------------------------------------------------------------------------------------------------------
 
 set(DEPENDENCIES_INCLUDES
-	${CMAKE_CURRENT_SOURCE_DIR}/common/msdfgen-1.1
-	${CMAKE_CURRENT_SOURCE_DIR}/common/msdfgen-1.1/include
 	${CMAKE_CURRENT_SOURCE_DIR}/common/glad/include
 
 	${SDL2_INCLUDE_DIR}
@@ -68,15 +64,7 @@ set(DEPENDENCIES_INCLUDES
 	PARENT_SCOPE
 )
 
-# TODO: See if this can be put in msdfgen as a CMakeLists.txt, and try to make a PR for MSDFGEN: https://github.com/Chlumsky/msdfgen
-file(GLOB MSDFGEN_SOURCES
-	${CMAKE_CURRENT_SOURCE_DIR}/common/msdfgen-1.1/core/*.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/common/msdfgen-1.1/lib/*.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/common/msdfgen-1.1/ext/*.cpp
-)
-
 set(DEPENDENCIES_SOURCES
-	${MSDFGEN_SOURCES}
 	${CMAKE_CURRENT_SOURCE_DIR}/common/glad/src/glad.c
 	PARENT_SCOPE
 )
@@ -85,9 +73,10 @@ set(DEPENDENCIES_LIBRARIES
 	${PLATFORM_SPECIFIC_LIBRARIES}
 	${SDL2_LIBRARY}
 	${FreeImage_LIBRARIES}
-	${FREETYPE_LIBRARIES}
 	${LUA_LIBRARIES}
 	PARENT_SCOPE
 )
+
+add_subdirectory(common/msdfgen-1.1)
 
 MESSAGE("Lua version: " ${LUA_VERSION_STRING})
