@@ -79,6 +79,11 @@ set(SOURCE_FILES
 	src/Graphics_ShaderManager.h
 	src/Graphics_ShaderManager_OpenGL.h
 	src/Gui_Renderer.h
+	src/Ecs_Aux.h
+	src/Ecs_Entity.h
+	src/Ecs_EntityManager.h
+	src/Ecs_Component.h
+	src/Ecs_System.h
 )
 
 # MAIN

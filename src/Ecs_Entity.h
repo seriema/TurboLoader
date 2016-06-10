@@ -1,12 +1,12 @@
-#ifndef A_RETRO_UI_RESOURCE_HANDLE_H
-#define A_RETRO_UI_RESOURCE_HANDLE_H
+#ifndef A_RETRO_UI_ECS_ENTITY_H
+#define A_RETRO_UI_ECS_ENTITY_H
 
 #include "platform.h"
-#include "Resource_Aux.h"
+#include "Ecs_Aux.h"
 
-namespace RetroResource
+namespace RetroEcs
 {
-	struct Handle
+	struct Entity
 	{
 		u32 id;
 		inline u32 index() const { return id & Aux::INDEX_MASK; }
@@ -14,4 +14,4 @@ namespace RetroResource
 	};
 }
 
-#endif //A_RETRO_UI_RESOURCE_HANDLE_H
+#endif //A_RETRO_UI_ECS_ENTITY_H
