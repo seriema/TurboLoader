@@ -9,8 +9,6 @@ namespace RetroEcs
 	{
 	public:
 		virtual ~System() {}
-		virtual void init() {}
-		virtual void exit() {}
 		virtual void tick( u32 dt ) = 0;
 	};
 }

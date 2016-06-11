@@ -37,7 +37,7 @@ class IEnvironmentManager
 public:
 	virtual ~IEnvironmentManager() {};
 	virtual void swap() = 0;
-	virtual uint32_t get_ticks() = 0;
+	virtual u32 get_ticks() = 0;
 };
 
 
@@ -63,7 +63,7 @@ public:
 		SDL_GL_SwapWindow( _sdl_window );
 	}
 
-	virtual uint32_t get_ticks() override
+	virtual u32 get_ticks() override
 	{
 		return SDL_GetTicks();
 	}

@@ -145,7 +145,7 @@ int main( int argc, char* args[] )
 	renderer->render();
 
 	printf( "¿¿ Test run app ??\n" );
-	app->tick();
+	app->tick( 1.0f );
 
 	// --- SHUTDOWN -----------------------------
 

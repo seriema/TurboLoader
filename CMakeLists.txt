@@ -71,6 +71,7 @@ set(SOURCE_FILES
 	src/Application_Main.h
 	src/Input.cpp
 	src/Input.h
+	src/Graphics_RenderKey.h
 	src/Graphics_Renderer.h
 	src/Graphics_Renderer_SDL_OpenGL.h
 	src/Graphics_Renderer_SDL_OpenGL.cpp
@@ -84,6 +85,10 @@ set(SOURCE_FILES
 	src/Ecs_EntityManager.h
 	src/Ecs_Component.h
 	src/Ecs_System.h
+	src/Ui_Component_Bitmap.h
+	src/Ui_Component_Transform.h
+	src/Ui_System_Main.h
+	src/Ui_System_Renderer.h
 )
 
 # MAIN

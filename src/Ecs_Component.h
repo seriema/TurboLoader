@@ -5,16 +5,19 @@
 #include <unordered_map>
 
 #include "platform.h"
-#include "Ecs_EntityManager.h"
+#include "Ecs_Entity.h"
+
+#define GETSET( TYPE, COMP ) \
+	inline const TYPE& COMP( Entity e ) { return get( _data._##COMP, e ); } \
+	inline void set_##COMP( Entity e, TYPE COMP ) { set( _data._##COMP, e, COMP ); } \
 
 namespace RetroEcs
 {
 	template< typename T >
 	class Component
 	{
-		EntityManager& _entity_manager;
-		u32            _capacity;
-		u32            _size;
+		u32 _capacity;
+		u32 _size;
 
 	protected:
 		std::unordered_map< u32, u32 > _index;
@@ -22,21 +25,25 @@ namespace RetroEcs
 		template< typename U >
 		inline const U& get( const std::vector<U>& a, Entity e )
 		{
-			return a[ _index[e.id] ];
+			return a[ _index.at(e.id) ];
 		}
 
 		template< typename U >
 		inline void set( std::vector<U>& a, Entity e, U& data )
 		{
-			a[ _index[e.id] ] = data;
+			a[ _index.at(e.id) ] = data;
 		}
 
 	public:
-		explicit Component( EntityManager & em, u32 capacity )
-			: _entity_manager( em )
-			, _capacity( capacity )
+		explicit Component( u32 capacity )
+			: _capacity( capacity )
 			, _size( 0 )
 		{
+		}
+
+		inline u32 size()
+		{
+			return _size;
 		}
 
 		inline u32 lookup( Entity e )
@@ -44,21 +51,17 @@ namespace RetroEcs
 			return _index.at( e.id );
 		}
 
-		Entity create()
+		u32 create( Entity e )
 		{
 			// TODO assert _size doesnt become larger than _capacity!
 
-			auto& data = static_cast< T& >( *this )._data;
-
-			Entity e = _entity_manager.create();
 			const u32 i = _size;
-
-			_index.insert( { e.id, i } );
-			data._entity[ i ] = e;
-
 			++_size;
 
-			return e;
+			_index.insert( { e.id, i } );
+			static_cast< T& >( *this )._data.entity[ i ] = e;
+
+			return i;
 		}
 
 		void destroy( Entity e )
@@ -66,9 +69,8 @@ namespace RetroEcs
 			auto& data = static_cast< T& >( *this )._data;
 
 			const u32 i = _index.at( e.id );
-			const char* name = data._name.at( i );
 			const unsigned i_last = _size - 1;
-			const Entity e_last = data._resource.at( i_last );
+			const Entity e_last = data.entity[ i_last ];
 
 			static_cast< T& >( *this )._copy( i_last, i, data );
 

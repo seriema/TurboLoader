@@ -13,154 +13,80 @@
 #include "Resource_BitmapCollection.h"
 #include "Resource_ShaderCollection.h"
 
+#include "Ecs_EntityManager.h"
+#include "Ui_Component_Bitmap.h"
+#include "Ui_Component_Transform.h"
+#include "Ui_System_Renderer.h"
+#include "Ui_System_Main.h"
+
 class Application_Main : public IApplication
 {
-	IEnvironmentManager      * _environment_manager;
-	RetroGraphics::IRenderer * _renderer;
-	RetroGui::Renderer       * _gui_renderer;
-	Input                    * _input;
-	RetroResource::BitmapCollection & _bitmaps;
-	RetroResource::ShaderCollection & _shaders;
+	IEnvironmentManager*              _environment_manager;
+	RetroGraphics::IRenderer*         _renderer;
+	RetroGui::Renderer*               _gui_renderer;
+	Input*                            _input;
+	RetroResource::BitmapCollection&  _bitmaps;
+	RetroResource::ShaderCollection&  _shaders;
 
-	u32                        _dt;
-	std::vector< std::pair<RetroGraphics::RenderKey, RetroGraphics::RenderData> > _objects;
+	RetroEcs::EntityManager           _em;
+	std::vector< RetroEcs::System * > _systems;
+	RetroUi::ComponentBitmap          _comp_bitmap;
+	RetroUi::ComponentTransform       _comp_transform;
 
 public:
-	Application_Main( IEnvironmentManager * environment_manager, RetroGraphics::IRenderer * renderer,
-			RetroGui::Renderer * gui_renderer, Input * input,
-			RetroResource::BitmapCollection & bitmaps, RetroResource::ShaderCollection & shaders )
+	Application_Main(
+			IEnvironmentManager * environment_manager,
+			RetroGraphics::IRenderer * renderer,
+			RetroGui::Renderer * gui_renderer,
+			Input * input,
+			RetroResource::BitmapCollection & bitmaps,
+			RetroResource::ShaderCollection & shaders )
 		: _environment_manager( environment_manager )
 		, _renderer( renderer )
 		, _gui_renderer( gui_renderer )
 		, _input( input )
 		, _bitmaps( bitmaps )
 		, _shaders( shaders )
+		, _comp_bitmap( RetroUi::ComponentBitmap( 16 ) )
+		, _comp_transform( RetroUi::ComponentTransform( 16 ) )
 	{
-		GLenum error = glGetError();
-		if( error != GL_NO_ERROR )
-		{
-			std::cout << "Unable to initialize OpenGL! Error: " << error << std::endl;
-		}
-		else
-		{
-			std::cout << _renderer->calc_description() << std::endl;
-			init_scene();
-		}
+		_systems.push_back( new RetroUi::SystemMain( _em, _comp_bitmap, _comp_transform, _bitmaps, _shaders ) );
+		_systems.push_back( new RetroUi::SystemRenderer( _comp_bitmap, _comp_transform, *_gui_renderer ) );
 	}
 
 	virtual ~Application_Main() override
 	{
 	}
 
-	void init_scene()
-	{
-		GLfloat vertices[] =
-		{
-			0.0f, 0.0f, 0.0f,
-			0.0f, 1.0f, 0.0f,
-			1.0f, 0.0f, 0.0f,
-			1.0f, 1.0f, 0.0f,
-		};
-		int n_vertices = sizeof(vertices) / sizeof(GL_FLOAT);
-		const GLuint vbo_handle = _renderer->add_mesh( vertices, n_vertices );
-
-		RetroResource::Handle bitmap_handle_jp = _bitmaps.handle[ _bitmaps.name_index.at( "jp" ) ];
-		RetroResource::Handle bitmap_handle_jb = _bitmaps.handle[ _bitmaps.name_index.at( "jb" ) ];
-		RetroResource::Handle shader_handle = _shaders.handle[ _shaders.name_index.at( "debug" ) ];
-
-		// Allocate triangle 1.
-		{
-			RetroGraphics::RenderKey render_key;
-			RetroGraphics::RenderData render_data;
-
-			render_key.RenderOpaque.material_index = 0;
-			render_data.vbo = vbo_handle;
-			render_data.bitmap = bitmap_handle_jp;
-			render_data.shader = shader_handle;
-			render_data.pos.x = -0.5f;
-			render_data.pos.y = -0.1f;
-
-			_objects.push_back( { render_key, render_data } );
-		}
-
-		// Allocate triangle 2.
-		{
-			RetroGraphics::RenderKey render_key;
-			RetroGraphics::RenderData render_data;
-
-			render_key.RenderOpaque.material_index = 0;
-			render_data.vbo = vbo_handle;
-			render_data.bitmap = bitmap_handle_jp;
-			render_data.shader = shader_handle;
-			render_data.pos.x = 0.3f;
-			render_data.pos.y = 0.6f;
-
-			_objects.push_back( { render_key, render_data } );
-		}
-
-		// Allocate triangle 3.
-		{
-			RetroGraphics::RenderKey render_key;
-			RetroGraphics::RenderData render_data;
-
-			render_key.RenderOpaque.material_index = 0;
-			render_data.vbo = vbo_handle;
-			render_data.bitmap = bitmap_handle_jb;
-			render_data.shader = shader_handle;
-			render_data.pos.x = 0.9f;
-			render_data.pos.y = -0.6f;
-
-			_objects.push_back( { render_key, render_data } );
-		}
-	}
-
 	virtual void loop() override
 	{
 		printf("Entering main loop\n");
 
-		uint32_t t0 = SDL_GetTicks() - 17;
+		uint32_t t0 = _environment_manager->get_ticks() - 17;
 
 		while( !_input->quit_requested() )
 		{
-			uint32_t t1 = SDL_GetTicks();
-			_dt = t1 - t0;
+			u32 t1 = _environment_manager->get_ticks();
+			u32 dt = t1 - t0;
 			t0 = t1;
-			tick();
+			tick( dt );
 		}
 
-		for ( auto obj : _objects )
+		for ( auto system : _systems )
 		{
-			_renderer->del_mesh( obj.second.vbo );
+			delete system;
 		}
+
+		_systems.clear();
 	}
 
-	virtual void tick() override
+	virtual void tick( u32 dt ) override
 	{
 		_input->poll_events();
 
-		for ( auto& obj : _objects )
+		for ( auto system : _systems )
 		{
-			obj.second.pos.x += 0.0001f * _dt;
-			if ( obj.second.pos.x > 1.1f )
-				obj.second.pos.x = -1.1f;
-		}
-
-		for ( auto& obj : _objects )
-		{
-			_renderer->draw( obj.first, obj.second );
-		}
-
-		// TODO Proof of concept immediate gui draw example.
-		{
-			RetroResource::Handle bitmap_handle_jp = _bitmaps.handle[ _bitmaps.name_index[ "jp" ] ];
-			RetroResource::Handle bitmap_handle_jb = _bitmaps.handle[ _bitmaps.name_index[ "jb" ] ];
-			RetroResource::Handle shader_handle = _shaders.handle[ _shaders.name_index[ "debug" ] ];
-
-			vec2 pos_jp = { -0.6f, 0.1f };
-			vec2 pos_jb = { 0.1f, -0.35f };
-			vec2 size = { 1.0f, 1.0f }; // TODO Not used yet.
-			_gui_renderer->draw_rect( bitmap_handle_jp, shader_handle, pos_jp, size );
-			_gui_renderer->draw_rect( bitmap_handle_jb, shader_handle, pos_jb, size );
+			system->tick( dt );
 		}
 
 		_renderer->render();

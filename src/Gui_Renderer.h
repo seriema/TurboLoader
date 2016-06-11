@@ -43,7 +43,10 @@ namespace RetroGui
 			_vbo_handle = _renderer.add_mesh( RECT, RECT_N );
 		}
 
-		virtual ~Renderer() {}
+		virtual ~Renderer()
+		{
+			_renderer.del_mesh( _vbo_handle );
+		}
 
 		void draw_rect( RetroResource::Handle bitmap, RetroResource::Handle shader, vec2 pos, vec2 size )
 		{

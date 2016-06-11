@@ -105,13 +105,26 @@ int main( int argc, char* args[] )
 	RetroGraphics::IRenderer * renderer = new RetroGraphics::Renderer_SDL_OpenGL( &bitmaps, &shaders, texture_manager, shader_manager );
 	RetroGui::Renderer * gui_renderer = new RetroGui::Renderer( *renderer );
 
-	// Run app.
+	GLenum error = glGetError();
+	if( error != GL_NO_ERROR )
+	{
+		std::cout << "Unable to initialize OpenGL! Error: " << error << std::endl;
+	}
+	else
+	{
+		std::cout << renderer->calc_description() << std::endl;
 
-	//IInputManager* input_manager = new InputManager_SDL();
-	Input * input = new Input();
-	IApplication* app = new Application_Main( environment_manager, renderer, gui_renderer, input, bitmaps, shaders );
+		// Run app.
 
-	app->loop();
+		//IInputManager* input_manager = new InputManager_SDL();
+		Input * input = new Input();
+		IApplication* app = new Application_Main( environment_manager, renderer, gui_renderer, input, bitmaps, shaders );
+
+		app->loop();
+
+		delete app;
+		delete input;
+	}
 
 	{
 		auto & package = packages.handle_lookup.at( base_package_handle.id );
@@ -119,8 +132,6 @@ int main( int argc, char* args[] )
 		shader_manager->unload( package.shaders.data(), package.shaders.size() );
 	}
 
-	delete app;
-	delete input;
 	delete gui_renderer;
 	delete renderer;
 	delete texture_manager;
