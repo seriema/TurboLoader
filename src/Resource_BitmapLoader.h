@@ -1,6 +1,7 @@
 #ifndef A_RETRO_UI_BITMAPLOADER_H
 #define A_RETRO_UI_BITMAPLOADER_H
 
+#include <string>
 #include <vector>
 
 #include <FreeImage.h>

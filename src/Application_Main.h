@@ -2,6 +2,7 @@
 #define A_RETRO_UI_APPLICATION_MAIN_H
 
 #include <iostream>
+#include <string>
 #include <vector>
 
 #include "Application.h"
