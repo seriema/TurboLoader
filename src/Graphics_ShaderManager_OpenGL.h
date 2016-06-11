@@ -1,6 +1,7 @@
 #ifndef A_RETRO_UI_GRAPHICS_SHADERMANAGER_OPENGL_H
 #define A_RETRO_UI_GRAPHICS_SHADERMANAGER_OPENGL_H
 
+#include <algorithm>
 #include <unordered_map>
 #include <queue>
 
@@ -94,7 +95,8 @@ namespace RetroGraphics
 			{
 				GLsizei len;
 				glGetShaderiv( shader_handle, GL_INFO_LOG_LENGTH, &len );
-				GLchar msg[len];
+				GLchar msg[4096];
+				len = std::min(len, 4096);
 				glGetShaderInfoLog( shader_handle, len, &len, msg );
 				std::cout << "[shader manager opengl[ shader error '" << shader_type << "':" << std::endl;
 				std::cout << "    " << msg << std::endl;
@@ -124,7 +126,8 @@ namespace RetroGraphics
 			{
 				GLsizei len;
 				glGetProgramiv( prog_handle, GL_INFO_LOG_LENGTH, &len );
-				GLchar msg[len];
+				GLchar msg[4096];
+				len = std::min(len, 4096);
 				glGetProgramInfoLog( prog_handle, len, &len, msg );
 				std::cout << "[shader manager opengl] program error:" << std::endl;
 				std::cout << "    " << msg << std::endl;

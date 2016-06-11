@@ -3,6 +3,7 @@
 
 #include <unordered_map>
 #include <queue>
+#include <string>
 
 // TODO Remove free image dependency from this file!
 #include <FreeImage.h>
