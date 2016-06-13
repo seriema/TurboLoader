@@ -89,7 +89,7 @@ FT_BEGIN_HEADER
   */
   FT_EXPORT( FT_Error )
   FT_Stream_OpenGzip( FT_Stream  stream,
-		      FT_Stream  source );
+					  FT_Stream source );
 
  /* */
 

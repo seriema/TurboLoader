@@ -190,7 +190,8 @@ FT_BEGIN_HEADER
    */
   FT_EXPORT( FT_Angle )
   FT_Atan2( FT_Fixed  x,
-	    FT_Fixed  y );
+FT_Fixed y
+);
 
 
   /*************************************************************************
@@ -215,7 +216,8 @@ FT_BEGIN_HEADER
    */
   FT_EXPORT( FT_Angle )
   FT_Angle_Diff( FT_Angle  angle1,
-		 FT_Angle  angle2 );
+FT_Angle angle2
+);
 
 
   /*************************************************************************
@@ -242,7 +244,8 @@ FT_BEGIN_HEADER
    */
   FT_EXPORT( void )
   FT_Vector_Unit( FT_Vector*  vec,
-		  FT_Angle    angle );
+FT_Angle angle
+);
 
 
   /*************************************************************************
@@ -264,7 +267,8 @@ FT_BEGIN_HEADER
    */
   FT_EXPORT( void )
   FT_Vector_Rotate( FT_Vector*  vec,
-		    FT_Angle    angle );
+FT_Angle angle
+);
 
 
   /*************************************************************************
@@ -310,8 +314,9 @@ FT_BEGIN_HEADER
    */
   FT_EXPORT( void )
   FT_Vector_Polarize( FT_Vector*  vec,
-		      FT_Fixed   *length,
-		      FT_Angle   *angle );
+FT_Fixed* length,
+		FT_Angle
+*angle );
 
 
   /*************************************************************************
@@ -336,8 +341,9 @@ FT_BEGIN_HEADER
    */
   FT_EXPORT( void )
   FT_Vector_From_Polar( FT_Vector*  vec,
-			FT_Fixed    length,
-			FT_Angle    angle );
+FT_Fixed length,
+		FT_Angle
+angle );
 
   /* */
 

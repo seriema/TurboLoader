@@ -216,9 +216,9 @@ FT_BEGIN_HEADER
   */
   FT_EXPORT( FT_Error )
   FT_TrueTypeGX_Validate( FT_Face   face,
-			  FT_UInt   validation_flags,
-			  FT_Bytes  tables[FT_VALIDATE_GX_LENGTH],
-			  FT_UInt   table_length );
+						  FT_UInt validation_flags,
+						  FT_Bytes tables[FT_VALIDATE_GX_LENGTH],
+						  FT_UInt table_length );
 
 
   /* */
@@ -245,7 +245,7 @@ FT_BEGIN_HEADER
   */
   FT_EXPORT( void )
   FT_TrueTypeGX_Free( FT_Face   face,
-		      FT_Bytes  table );
+					  FT_Bytes table );
 
 
   /* */
@@ -316,8 +316,8 @@ FT_BEGIN_HEADER
   */
   FT_EXPORT( FT_Error )
   FT_ClassicKern_Validate( FT_Face    face,
-			   FT_UInt    validation_flags,
-			   FT_Bytes  *ckern_table );
+						   FT_UInt validation_flags,
+						   FT_Bytes* ckern_table );
 
 
   /* */
@@ -344,7 +344,7 @@ FT_BEGIN_HEADER
   */
   FT_EXPORT( void )
   FT_ClassicKern_Free( FT_Face   face,
-		       FT_Bytes  table );
+					   FT_Bytes table );
 
 
  /* */

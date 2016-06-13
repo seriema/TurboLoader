@@ -155,8 +155,8 @@ FT_BEGIN_HEADER
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_Get_Sfnt_Name( FT_Face       face,
-		    FT_UInt       idx,
-		    FT_SfntName  *aname );
+					FT_UInt idx,
+					FT_SfntName* aname );
 
 
   /* */

@@ -8,6 +8,10 @@ project(a_retro_ui)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}")
 set_directory_properties(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES "CMakeCache.txt")  # "make clean"
 
+# Add project dependencies before anything else as they need to be able to
+# work independently from our project setup.
+add_subdirectory("lib")
+
 
 #--- PLATFORM SPECIFIC SETUP -------------------------------------------------------------------------------------------
 
@@ -41,9 +45,6 @@ endif()
 
 
 #--- MAIN EXECUTABLE SETUP ---------------------------------------------------------------------------------------------
-
-# Add project dependencies
-add_subdirectory("lib")
 
 include_directories(
 	${DEPENDENCIES_INCLUDES}

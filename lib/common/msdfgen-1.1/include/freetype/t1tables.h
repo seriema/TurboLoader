@@ -404,7 +404,7 @@ FT_BEGIN_HEADER
   */
   FT_EXPORT( FT_Error )
   FT_Get_PS_Font_Info( FT_Face          face,
-		       PS_FontInfoRec  *afont_info );
+					   PS_FontInfoRec* afont_info );
 
 
  /************************************************************************
@@ -436,7 +436,7 @@ FT_BEGIN_HEADER
   */
   FT_EXPORT( FT_Error )
   FT_Get_PS_Font_Private( FT_Face         face,
-			  PS_PrivateRec  *afont_private );
+						  PS_PrivateRec* afont_private );
 
  /* */
 

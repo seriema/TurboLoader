@@ -599,7 +599,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   FT_EXPORT( void* )
   FT_Get_Sfnt_Table( FT_Face      face,
-		     FT_Sfnt_Tag  tag );
+					 FT_Sfnt_Tag tag );
 
 
  /**************************************************************************
@@ -662,10 +662,10 @@ FT_BEGIN_HEADER
   */
   FT_EXPORT( FT_Error )
   FT_Load_Sfnt_Table( FT_Face    face,
-		      FT_ULong   tag,
-		      FT_Long    offset,
-		      FT_Byte*   buffer,
-		      FT_ULong*  length );
+					  FT_ULong tag,
+					  FT_Long offset,
+					  FT_Byte* buffer,
+					  FT_ULong* length );
 
 
  /**************************************************************************
@@ -700,9 +700,9 @@ FT_BEGIN_HEADER
   */
   FT_EXPORT( FT_Error )
   FT_Sfnt_Table_Info( FT_Face    face,
-		      FT_UInt    table_index,
-		      FT_ULong  *tag,
-		      FT_ULong  *length );
+					  FT_UInt table_index,
+					  FT_ULong* tag,
+					  FT_ULong* length );
 
 
   /*************************************************************************/
