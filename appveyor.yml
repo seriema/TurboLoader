@@ -31,3 +31,8 @@ build_script:
 #  - .\Debug\a_retro_test.exe
 
 deploy: off
+
+notifications:
+  - provider: Slack
+    incoming_webhook:
+      secure: EFpQnafknWWQ215QQ3QOmXlw/CNwK7PL2qEv61nVukqFLrm7tiwn6t/29vYJd+XfkyhNmLhJFrF1TZksiVx2pg0eBXqnKGGnil3cjE7EK2k=
