@@ -66,6 +66,8 @@ namespace RetroEcs
 
 		void destroy( Entity e )
 		{
+			// TODO In debug mode this should always clear all memory!
+
 			auto& data = static_cast< T& >( *this )._data;
 
 			const u32 i = _index.at( e.id );

@@ -105,12 +105,17 @@ namespace
 
 
 RetroResource::PackageLoader_Lua::PackageLoader_Lua(
-		HandleManager & handle_manager, PackageCollection & packages,
-		BitmapCollection & bitmaps, ShaderCollection & shaders )
+		HandleManager& handle_manager,
+		PackageCollection& packages,
+		MeshCollection& meshes,
+		BitmapCollection& bitmaps,
+		ShaderCollection & shaders )
 	: _handle_manager( handle_manager )
 	, _packages( packages )
+	, _meshes( meshes )
 	, _bitmaps( bitmaps )
 	, _shaders( shaders )
+	, _mesh_loader( MeshLoader(handle_manager, meshes) )
 	, _bitmap_loader( BitmapLoader(handle_manager, bitmaps) )
 	, _shader_loader( ShaderLoader(handle_manager, shaders) )
 {

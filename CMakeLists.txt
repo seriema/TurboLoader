@@ -52,43 +52,62 @@ include_directories(
 
 set(SOURCE_FILES
 	${DEPENDENCIES_SOURCES}
+
 	src/platform.h
+
+	src/Ioc_Container.h
+
+	src/Application.h
+	src/Application_Builder.h
+
+	src/Environment_Manager.h
+	src/Environment_Factory.h
+	src/Environment_Factory.cpp
+	src/Environment_Manager_SDL_OpenGL.h
+	src/Environment_Manager_SDL_OpenGL.cpp
+
 	src/Resource_Aux.h
 	src/Resource_Handle.h
 	src/Resource_HandleManager.h
+	src/Resource_MeshCollection.h
 	src/Resource_BitmapCollection.h
 	src/Resource_ShaderCollection.h
 	src/Resource_PackageCollection.h
+	src/Resource_MeshLoader.h
 	src/Resource_BitmapLoader.h
 	src/Resource_ShaderLoader.h
 	src/Resource_ShaderLoader.cpp
 	src/Resource_PackageLoader.h
 	src/Resource_PackageLoader_Lua.h
 	src/Resource_PackageLoader_Lua.cpp
-	src/EnvironmentManager.h
-	src/EnvironmentFactory.h
-	src/Application.h
-	src/Application_Main.h
-	src/Input.cpp
+
 	src/Input.h
+	src/Input.cpp
+
 	src/Graphics_RenderKey.h
 	src/Graphics_Renderer.h
-	src/Graphics_Renderer_SDL_OpenGL.h
-	src/Graphics_Renderer_SDL_OpenGL.cpp
 	src/Graphics_TextureManager.h
 	src/Graphics_TextureManager_OpenGL.h
 	src/Graphics_ShaderManager.h
 	src/Graphics_ShaderManager_OpenGL.h
-	src/Gui_Renderer.h
+	src/Graphics_MeshManager.h
+	src/Graphics_MeshManager_OpenGL.h
+
 	src/Ecs_Aux.h
 	src/Ecs_Entity.h
-	src/Ecs_EntityManager.h
 	src/Ecs_Component.h
 	src/Ecs_System.h
-	src/Ui_Component_Bitmap.h
-	src/Ui_Component_Transform.h
-	src/Ui_System_Main.h
-	src/Ui_System_Renderer.h
+	src/Ecs_EntityManager.h
+	src/Ecs_Time.h
+	src/Ecs_SystemTick.h
+
+	src/Ui_EntityFactory.h
+	src/Ui_ComponentRender.h
+	src/Ui_ComponentTransform.h
+	src/Ui_SystemMain.h
+	src/Ui_SystemRenderer.h
+	src/Ui_SystemInput.h
+	src/Ui_SystemAnimator.h
 )
 
 # MAIN

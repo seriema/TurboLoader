@@ -1,26 +1,22 @@
 #include <memory>
 #include <iostream>
-#include <vector>
-#include <utility>
-#include <cmath>
 
 #include <msdfgen.h>
 #include <msdfgen-ext.h>
 
 #include "platform.h"
-#include "Resource_BitmapCollection.h"
-#include "Resource_ShaderCollection.h"
-#include "Resource_PackageCollection.h"
-#include "Resource_BitmapLoader.h"
-#include "Resource_ShaderLoader.h"
-#include "Resource_PackageLoader.h"
-#include "Resource_PackageLoader_Lua.h"
-#include "EnvironmentFactory.h"
-#include "Graphics_TextureManager_OpenGL.h"
-#include "Graphics_ShaderManager_OpenGL.h"
-#include "Graphics_Renderer_SDL_OpenGL.h"
-#include "Gui_Renderer.h"
-#include "Application_Main.h"
+
+#include "Environment_Factory.h"
+
+#include "Application_Builder.h"
+
+#include "Ecs_SystemTick.h"
+
+#include "Ui_EntityFactory.h"
+#include "Ui_SystemInput.h"
+#include "Ui_SystemMain.h"
+#include "Ui_SystemAnimator.h"
+#include "Ui_SystemRenderer.h"
 
 #define A_RETRO_UI_USE_SDL 1
 #define A_RETRO_UI_USE_OPENGL 1
@@ -60,94 +56,58 @@ int main( int argc, char* args[] )
 	// Just make sure it runs.
 	msdfgen_hello_world();
 
-	// Setup env.
+	RetroEnvironment::Factory environment_factory;
+	std::shared_ptr< RetroEnvironment::IManager > env = environment_factory.create();
 
-	EnvironmentFactory_SDL_OpenGL environment_factory;
-	IEnvironmentManager * environment_manager = environment_factory.create_environment_manager();
-
-	if ( environment_manager == nullptr )
+	if ( !env )
 		return 1;
 
-	// Setup data structures.
-
-	RetroResource::HandleManager handle_manager;
-	RetroResource::BitmapCollection bitmaps;
-	RetroResource::ShaderCollection shaders;
-	RetroResource::PackageCollection packages;
-	RetroResource::Handle base_package_handle;
-
-	// Load base resources.
+	std::shared_ptr< RetroApplication::Application > app;
 	{
-		RetroResource::BitmapLoader bitmap_loader( handle_manager, bitmaps );
-		RetroResource::ShaderLoader shader_loader( handle_manager, shaders );
-		RetroResource::PackageLoader_Lua package_loader( handle_manager, packages, bitmaps, shaders );//, material_loader );
-		package_loader.load( "./src/hello_world", base_package_handle );
+		RetroApplication::Builder builder;
+
+		builder.env( env );
+
+		builder.add< RetroUi::ComponentTransform >( 16 );
+		builder.add< RetroUi::ComponentRender >( 16 );
+		builder.add< RetroUi::EntityFactory,
+				RetroEcs::EntityManager,
+				RetroGraphics::IShaderManager,
+				RetroGraphics::ITextureManager,
+				RetroGraphics::IMeshManager,
+				RetroResource::MeshLoader,
+				RetroUi::ComponentTransform,
+				RetroUi::ComponentRender >();
+
+		builder.system< RetroEcs::SystemTick,
+				RetroEnvironment::IManager,
+				RetroEcs::TimeRaw >();
+
+		builder.system< RetroUi::SystemInput,
+				RetroApplication::StayAlive,
+				Input >();
+
+		builder.system< RetroUi::SystemMain,
+				RetroResource::IPackageLoader,
+				RetroResource::PackageCollection,
+				RetroGraphics::IShaderManager,
+				RetroGraphics::ITextureManager,
+				RetroUi::EntityFactory >();
+
+		builder.system< RetroUi::SystemAnimator,
+				RetroEcs::Time,
+				RetroUi::ComponentTransform >();
+
+		builder.system< RetroUi::SystemRenderer,
+				RetroEnvironment::IManager,
+				RetroUi::ComponentTransform,
+				RetroUi::ComponentRender >();
+
+		app = builder.build();
 	}
 
-	// Setup renderering env.
-	auto texture_manager = new RetroGraphics::TextureManager_OpenGL( bitmaps );
-	auto shader_manager = new RetroGraphics::ShaderManager_OpenGL( shaders );
-	{
-		auto & package = packages.handle_lookup.at( base_package_handle.id );
-		texture_manager->load( package.bitmaps.data(), package.bitmaps.size() );
-		shader_manager->load( package.shaders.data(), package.shaders.size() );
-	}
-
-	// TODO temp shader poop fix.
-	{
-		u32 shader_i = shaders.name_index.at( "debug" );
-		RetroResource::Handle shader_handle = shaders.handle[ shader_i ];
-		shader_manager->bind( shader_handle );
-		u32 prog_handle = shader_manager->program( shader_handle );
-		glEnableVertexAttribArray( glGetAttribLocation( prog_handle, "vert" ) );
-	}
-
-	RetroGraphics::IRenderer * renderer = new RetroGraphics::Renderer_SDL_OpenGL( &bitmaps, &shaders, texture_manager, shader_manager );
-	RetroGui::Renderer * gui_renderer = new RetroGui::Renderer( *renderer );
-
-	GLenum error = glGetError();
-	if( error != GL_NO_ERROR )
-	{
-		std::cout << "Unable to initialize OpenGL! Error: " << error << std::endl;
-	}
-	else
-	{
-		std::cout << renderer->calc_description() << std::endl;
-
-		// Run app.
-
-		//IInputManager* input_manager = new InputManager_SDL();
-		Input * input = new Input();
-		IApplication* app = new Application_Main( environment_manager, renderer, gui_renderer, input, bitmaps, shaders );
-
-		app->loop();
-
-		delete app;
-		delete input;
-	}
-
-	{
-		auto & package = packages.handle_lookup.at( base_package_handle.id );
-		texture_manager->unload( package.bitmaps.data(), package.bitmaps.size() );
-		shader_manager->unload( package.shaders.data(), package.shaders.size() );
-	}
-
-	delete gui_renderer;
-	delete renderer;
-	delete texture_manager;
-	delete shader_manager;
-
-	// Unload base resources.
-	{
-		RetroResource::BitmapLoader bitmap_loader( handle_manager, bitmaps );
-		RetroResource::ShaderLoader shader_loader( handle_manager, shaders );
-		RetroResource::PackageLoader_Lua package_loader( handle_manager, packages, bitmaps, shaders );//, material_loader );
-		package_loader.unload( &base_package_handle );
-	}
-
-	// Destroy env.
-
-	environment_factory.destroy_environment_manager( environment_manager );
+	app->run();
+	environment_factory.destroy( env );
 
 	return 0;
 }

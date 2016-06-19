@@ -5,11 +5,11 @@
 
 namespace RetroEcs
 {
-	class System
+	class ISystem
 	{
 	public:
-		virtual ~System() {}
-		virtual void tick( u32 dt ) = 0;
+		virtual ~ISystem() {}
+		virtual void tick() = 0;
 	};
 }
 

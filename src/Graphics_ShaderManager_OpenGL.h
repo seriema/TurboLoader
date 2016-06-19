@@ -52,6 +52,8 @@ namespace RetroGraphics
 				if ( !create_program( vert_handle, frag_handle, prog_handle ) )
 					continue;
 
+				link_vertex_attributes( prog_handle );
+
 				glDeleteShader( vert_handle );
 				glDeleteShader( frag_handle );
 
@@ -67,6 +69,7 @@ namespace RetroGraphics
 			{
 				RetroResource::Handle handle = handles[ j ];
 				glDeleteProgram( _handles.at( handle.id ) );
+				_handles.erase( handle.id );
 			}
 		}
 
@@ -76,7 +79,14 @@ namespace RetroGraphics
 			glUseProgram( prog_handle );
 		}
 
-		u32 program( const RetroResource::Handle handle ) const
+		inline u32 lookup( const std::string& name ) const
+		{
+			u32 index = _shaders.name_index.at( name );
+			RetroResource::Handle handle = _shaders.handle[ index ];
+			return _handles.at( handle.id );
+		}
+
+		inline u32 lookup( const RetroResource::Handle handle ) const
 		{
 			return _handles.at( handle.id );
 		}
@@ -135,6 +145,25 @@ namespace RetroGraphics
 			}
 
 			return true;
+		}
+
+		void link_vertex_attributes( GLuint prog_handle )
+		{
+			GLint n = GL_ZERO;
+			GLsizei len = GL_ZERO;
+			GLint size = GL_ZERO;
+			GLenum type = GL_ZERO;
+			GLchar name[ 128 ];
+			GLsizei max_len = sizeof( name ) - 1;
+
+			glGetProgramiv( prog_handle, GL_ACTIVE_ATTRIBUTES, &n );
+
+			for( GLint i = 0; i < n; ++i )
+			{
+				glGetActiveAttrib( prog_handle, GLuint(i), max_len, &len, &size, &type, name );
+				name[ len ] = GL_ZERO;
+				glEnableVertexAttribArray( glGetAttribLocation( prog_handle, name ) );
+			}
 		}
 	};
 }

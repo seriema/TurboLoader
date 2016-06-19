@@ -22,20 +22,30 @@ struct vec2
 {
 	union
 	{
-		float v[ 2 ];
+		float raw[ 2 ];
 		struct { float x, y; };
 	};
-	float& operator[](int i) { return v[ i ]; }
+	inline float operator[](int i) { return raw[ i ]; }
 };
 
 struct vec3
 {
 	union
 	{
-		float v[ 3 ];
+		float raw[ 3 ];
 		struct { float x, y, z; };
 	};
-	float& operator[](int i) { return v[ i ]; }
+	inline float operator[](int i) { return raw[ i ]; }
+};
+
+struct vec4
+{
+	union
+	{
+		float raw[ 4 ];
+		struct { float w, x, y, z; };
+	};
+	inline float operator[](int i) { return raw[ i ]; }
 };
 
 #endif //PLATFORM_H
