@@ -5,9 +5,9 @@
 
 extern "C"
 {
-    #include "lua.h"
-    #include "lualib.h"
-    #include "lauxlib.h"
+	#include "lua.h"
+	#include "lualib.h"
+	#include "lauxlib.h"
 }
 
 #include "platform.h"
@@ -87,7 +87,7 @@ int main( int argc, char* args[] )
 	RetroResource::ShaderCollection shaders;
 	std::vector< RetroResource::Handle > bitmap_handles;
 	std::vector< RetroResource::Handle > shader_handles;
-	// Load base bitmap resources.
+	printf( "¿¿¿ Load resources: bitmaps ???\n" );
 	{
 		RetroResource::BitmapLoader bitmap_loader( handle_manager, bitmaps );
 
@@ -97,7 +97,7 @@ int main( int argc, char* args[] )
 		bitmap_handles.resize( size );
 		u32 bitmap_handles_size = bitmap_loader.load( names.data(), paths.data(), bitmap_handles.data(), size );
 	}
-	// Load base shader resources.
+	printf( "¿¿¿ Load resources: shaders ???\n" );
 	{
 		RetroResource::ShaderLoader shader_loader( handle_manager, shaders );
 
@@ -108,6 +108,7 @@ int main( int argc, char* args[] )
 		shader_handles.resize( size );
 		u32 shader_handles_size = shader_loader.load( names.data(), paths.data(), shader_handles.data(), size );
 	}
+	printf( "¿¿¿ Load resources: managers ???\n" );
 	auto texture_manager = new RetroGraphics::TextureManager_OpenGL( bitmaps );
 	auto shader_manager = new RetroGraphics::ShaderManager_OpenGL( shaders );
 	texture_manager->load( bitmap_handles.data(), bitmap_handles.size() );
