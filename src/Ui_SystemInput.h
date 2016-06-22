@@ -1,5 +1,5 @@
-#ifndef A_RETRO_UI_UI_SYSTEM_INPUT_H
-#define A_RETRO_UI_UI_SYSTEM_INPUT_H
+#ifndef A_RETRO_UI_UI_SYSTEMINPUT_H
+#define A_RETRO_UI_UI_SYSTEMINPUT_H
 
 #include <memory>
 #include <cmath>
@@ -16,15 +16,15 @@ namespace RetroUi
 
 	class SystemInput : public RetroEcs::ISystem
 	{
+		shared_ptr< Input >                       _input;
 		shared_ptr< RetroApplication::StayAlive > _stay_alive;
-		shared_ptr< Input > _input;
 
 	public:
 		explicit SystemInput(
-			shared_ptr< RetroApplication::StayAlive > stay_alive,
-			shared_ptr< Input > input )
-			: _stay_alive( stay_alive )
-			, _input( input )
+			shared_ptr< Input > input,
+			shared_ptr< RetroApplication::StayAlive > stay_alive )
+			: _input( input )
+			, _stay_alive( stay_alive )
 		{
 		}
 
@@ -39,4 +39,4 @@ namespace RetroUi
 	};
 }
 
-#endif //A_RETRO_UI_UI_SYSTEM_INPUT_H
+#endif //A_RETRO_UI_UI_SYSTEMINPUT_H

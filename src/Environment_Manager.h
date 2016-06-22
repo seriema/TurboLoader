@@ -1,6 +1,8 @@
 #ifndef A_RETRO_UI_ENVIRONMENTMANAGER_H
 #define A_RETRO_UI_ENVIRONMENTMANAGER_H
 
+#include <glm/vec2.hpp>
+
 #include "platform.h"
 
 namespace RetroEnvironment
@@ -11,7 +13,7 @@ namespace RetroEnvironment
 		virtual ~IManager() {};
 		virtual void swap() = 0;
 		virtual u32 get_ticks() = 0;
-		virtual float aspect_ratio() = 0;
+		virtual glm::vec2 resolution() = 0;
 	};
 }
 

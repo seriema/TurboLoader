@@ -3,6 +3,7 @@
 
 #include <vector>
 
+#include <glm/vec2.hpp>
 #include <glm/mat4x4.hpp>
 
 #include "platform.h"
@@ -21,6 +22,7 @@ namespace RetroUi
 		u32 vbo; // vbo contains attributes such as vert,norm,color, these must then also exist in shader.
 		u32 shader;
 		u32 bitmap;
+		glm::vec2 size;
 		glm::mat4 mvp;
 	};
 

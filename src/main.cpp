@@ -71,11 +71,12 @@ int main( int argc, char* args[] )
 		builder.add< RetroUi::ComponentTransform >( 16 );
 		builder.add< RetroUi::ComponentRender >( 16 );
 		builder.add< RetroUi::EntityFactory,
+				RetroResource::BitmapCollection,
+				RetroResource::MeshLoader,
 				RetroEcs::EntityManager,
 				RetroGraphics::IShaderManager,
 				RetroGraphics::ITextureManager,
 				RetroGraphics::IMeshManager,
-				RetroResource::MeshLoader,
 				RetroUi::ComponentTransform,
 				RetroUi::ComponentRender >();
 
@@ -84,8 +85,8 @@ int main( int argc, char* args[] )
 				RetroEcs::TimeRaw >();
 
 		builder.system< RetroUi::SystemInput,
-				RetroApplication::StayAlive,
-				Input >();
+				Input,
+				RetroApplication::StayAlive >();
 
 		builder.system< RetroUi::SystemMain,
 				RetroResource::IPackageLoader,

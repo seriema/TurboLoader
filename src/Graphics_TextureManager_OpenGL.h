@@ -2,11 +2,11 @@
 #define A_RETRO_UI_GRAPHICS_TEXTUREMANAGER_OPENGL_H
 
 #include <unordered_map>
-#include <queue>
 #include <string>
 
 // TODO Remove free image dependency from this file!
 #include <FreeImage.h>
+#include <glm/vec2.hpp>
 
 #include "platform.h"
 #include "Graphics_TextureManager.h"
@@ -45,7 +45,7 @@ namespace RetroGraphics
 			{
 				RetroResource::Handle handle = handles[ j ];
 				u32 i = _bitmaps.handle_index.at( handle.id );
-				std::pair<u32,u32> size = _bitmaps.size[ i ];
+				glm::vec2 size = _bitmaps.size[ i ];
 				void * bitmap = _bitmaps.resource[ i ];
 
 				u32 texture_handle;
@@ -62,8 +62,8 @@ namespace RetroGraphics
 				// glPixelStorei( GL_UNPACK_ALIGNMENT, 1 );
 
 				// http://docs.gl/es2/glTexImage2D
-				void * bits = get_bits( size.first, size.second, static_cast<FIBITMAP*>(bitmap) );
-				glTexImage2D( GL_TEXTURE_2D, 0 ,GL_RGBA, size.first, size.second, 0, GL_RGBA, GL_UNSIGNED_BYTE, bits );
+				void * bits = get_bits((u32)size.x, (u32)size.y, (FIBITMAP*)bitmap);
+				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, (GLsizei)size.x, (GLsizei)size.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, bits);
 				//glGenerateMipmap( GL_TEXTURE_2D );
 
 				// TODO make sure handle isnt already in _handles.
