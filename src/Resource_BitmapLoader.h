@@ -35,7 +35,7 @@ namespace RetroResource
 			_bitmaps.size.reserve( size );
 			_bitmaps.resource.reserve( size );
 
-			for ( int i = 0; i < size; ++i )
+			for ( u32 i = 0; i < size; ++i )
 			{
 				const std::string & name = names[ i ].c_str();
 				const std::string & path = paths[ i ].c_str();
@@ -77,7 +77,7 @@ namespace RetroResource
 		{
 			u32 i_last = _bitmaps.handle.size() - 1;
 
-			for ( int j = 0; j < size; ++j )
+			for ( u32 j = 0; j < size; ++j )
 			{
 				Handle handle = handles[ j ];
 				u32 i = _bitmaps.handle_index.at( handle.id );

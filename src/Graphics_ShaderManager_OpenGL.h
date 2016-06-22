@@ -33,7 +33,7 @@ namespace RetroGraphics
 
 		virtual void load( RetroResource::Handle * handles, const u32 size = 1 ) override
 		{
-			for ( int j = 0; j < size; ++j )
+			for ( u32 j = 0; j < size; ++j )
 			{
 				RetroResource::Handle handle = handles[ j ];
 				u32 i = _shaders.handle_index.at( handle.id );
@@ -65,7 +65,7 @@ namespace RetroGraphics
 
 		virtual void unload( RetroResource::Handle * handles, const u32 size = 1 ) override
 		{
-			for ( int j = 0; j < size; ++j )
+			for ( u32 j = 0; j < size; ++j )
 			{
 				RetroResource::Handle handle = handles[ j ];
 				glDeleteProgram( _handles.at( handle.id ) );

@@ -9,9 +9,8 @@
 namespace RetroResource
 {
 	class HandleManager;
-	class PackageCollection;
+	struct PackageCollection;
 }
-class PackageCollection;
 
 namespace RetroResource
 {

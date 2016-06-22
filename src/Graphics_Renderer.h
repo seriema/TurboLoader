@@ -68,7 +68,7 @@ namespace RetroGraphics
 		void render()
 		{
 			std::sort( _render_key, _render_key + _render_count, compare_render_key );
-			for ( int i = 0; i < _render_count; ++i )
+			for ( u32 i = 0; i < _render_count; ++i )
 			{
 				int command_i = _render_key[ i ].RenderCommon.data_index;
 				RenderCommand & command = _render_command[ command_i ];

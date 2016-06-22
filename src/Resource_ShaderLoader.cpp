@@ -43,7 +43,7 @@ u32 RetroResource::ShaderLoader::load( const std::string * names, const std::str
 	_shaders.vert.reserve( size );
 	_shaders.frag.reserve( size );
 
-	for ( int i = 0; i < size; ++i )
+	for ( u32 i = 0; i < size; ++i )
 	{
 		const std::string & name = names[ i ];
 		const std::string & path = paths[ i ];
@@ -81,7 +81,7 @@ void RetroResource::ShaderLoader::unload( const Handle * handles, const u32 size
 {
 	u32 i_last = _shaders.handle.size() - 1;
 
-	for ( int j = 0; j < size; ++j )
+	for ( u32 j = 0; j < size; ++j )
 	{
 		Handle handle = handles[ j ];
 		u32 i = _shaders.handle_index.at( handle.id );

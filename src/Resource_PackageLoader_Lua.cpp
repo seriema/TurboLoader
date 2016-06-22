@@ -152,7 +152,7 @@ u32 RetroResource::PackageLoader_Lua::load( const std::string * names, Handle * 
 	lua_pushcclosure( L, &lua_read_shaders, 1 );
 	lua_setglobal( L, "shaders" );
 
-	for ( int i = 0; i < size; ++i )
+	for ( u32 i = 0; i < size; ++i )
 	{
 		const std::string & name = names[ i ];
 		std::vector< Handle > bitmap_handles;
