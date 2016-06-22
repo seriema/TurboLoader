@@ -124,7 +124,7 @@ int main( int argc, char* args[] )
 	auto texture_manager = new RetroGraphics::TextureManager_OpenGL( bitmaps );
 	auto shader_manager = new RetroGraphics::ShaderManager_OpenGL( shaders );
 	texture_manager->load( bitmap_handles.data(), bitmap_handles.size() );
-	shader_manager->load( shader_handles.data(), shader_handles.size() );
+	//shader_manager->load( shader_handles.data(), shader_handles.size() );
 
 	GLenum error = glGetError();
 	if( error != GL_NO_ERROR )
@@ -171,7 +171,7 @@ int main( int argc, char* args[] )
 
 	printf( "¿¿ Unload resources ??\n" );
 	texture_manager->unload( bitmap_handles.data(), bitmap_handles.size() );
-	shader_manager->unload( shader_handles.data(), shader_handles.size() );
+	//shader_manager->unload( shader_handles.data(), shader_handles.size() );
 	delete texture_manager;
 	delete shader_manager;
 	// Unload base resources.
