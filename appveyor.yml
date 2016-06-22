@@ -1,0 +1,38 @@
+platform:
+- x86
+
+environment:
+  matrix:
+
+# VS 2015
+  - BUILD_TYPE: cmake
+    VS_VERSION: Visual Studio 14
+
+shallow_clone: true
+
+## We can't use our PowerShell convenience scripts because I couldn't
+## get the errors to propagate properly even when adding "$host.SetShouldExit($LastExitCode)":
+## https://www.appveyor.com/docs/build-configuration#script-blocks-in-build-configuration
+## It would just say "Command executed with exception: " on error, which isn't good enough.
+build_script:
+  - echo build_script
+  - echo "%platform% %VS_VERSION%"
+  - cmake .
+  - msbuild .\ALL_BUILD.vcxproj /m
+
+## Running the renderer in Appveyor crashes on glCreateShader in Graphics_ShaderManager_OpenGL.h with this message: "Command exited with code -1073741819"
+## It also gives a warning when setting up SDL:
+## "Warning: Unable to set VSync! SDL Error: That operation is not supported"
+## If we want to try again, read this and uncomment the below lines: http://help.appveyor.com/discussions/problems/3586-black-screenshots#comment_38618584
+#install:
+#- ps: $screen_resolution = '1280x800'; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-desktop.ps1'))
+#test_script:
+#  - echo test_script
+#  - .\Debug\a_retro_test.exe
+
+deploy: off
+
+notifications:
+  - provider: Slack
+    incoming_webhook:
+      secure: EFpQnafknWWQ215QQ3QOmXlw/CNwK7PL2qEv61nVukqFLrm7tiwn6t/29vYJd+XfkyhNmLhJFrF1TZksiVx2pg0eBXqnKGGnil3cjE7EK2k=
