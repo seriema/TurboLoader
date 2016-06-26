@@ -26,9 +26,17 @@ namespace RetroUi
 	private:
 		void handle_keys(SDL_KeyboardEvent event)
 		{
-			if (event.keysym.sym == SDLK_q)
+			switch (event.keysym.sym)
 			{
-				_input->quit = true;
+				case SDLK_q:      _input->quit   = true; break;
+
+				case SDLK_UP:     _input->up     = true; break;
+				case SDLK_RIGHT:  _input->right  = true; break;
+				case SDLK_DOWN:   _input->down   = true; break;
+				case SDLK_LEFT:   _input->left   = true; break;
+
+				case SDLK_SPACE:  _input->select = true; break;
+				case SDLK_RETURN: _input->start  = true; break;
 			}
 		}
 
@@ -97,6 +105,8 @@ namespace RetroUi
 
 		virtual void tick() override
 		{
+			memset( &*_input, 0, sizeof(*_input) );
+
 			SDL_Event e;
 			while (SDL_PollEvent(&e))
 			{
