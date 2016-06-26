@@ -3,7 +3,6 @@
 
 #include <vector>
 #include <unordered_map>
-#include <utility>
 
 #include "platform.h"
 #include "Resource_Handle.h"

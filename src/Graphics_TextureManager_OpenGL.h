@@ -41,7 +41,7 @@ namespace RetroGraphics
 
 		virtual void load( RetroResource::Handle * handles, const u32 size = 1 ) override
 		{
-			for ( int j = 0; j <  size; ++j )
+			for ( u32 j = 0; j < size; ++j )
 			{
 				RetroResource::Handle handle = handles[ j ];
 				u32 i = _bitmaps.handle_index.at( handle.id );
@@ -79,7 +79,7 @@ namespace RetroGraphics
 
 		virtual void unload( RetroResource::Handle * handles, const u32 size = 1 ) override
 		{
-			for ( int j = 0; j <  size; ++j )
+			for ( u32 j = 0; j <  size; ++j )
 			{
 				RetroResource::Handle handle = handles[ j ];
 				glDeleteTextures( 1, &_handles.at( handle.id ) );
@@ -92,13 +92,25 @@ namespace RetroGraphics
 			glBindTexture( GL_TEXTURE_2D, texture_handle );
 		}
 
+		inline u32 lookup( const std::string& name ) const
+		{
+			u32 index = _bitmaps.name_index.at( name );
+			RetroResource::Handle handle = _bitmaps.handle[ index ];
+			return _handles.at( handle.id );
+		}
+
+		inline u32 lookup( const RetroResource::Handle handle ) const
+		{
+			return _handles.at( handle.id );
+		}
+
 	private:
-		void * get_bits( int w, int h, FIBITMAP * bitmap )
+		void * get_bits( u32 w, u32 h, FIBITMAP * bitmap )
 		{
 			// https://www.opengl.org/discussion_boards/showthread.php/163929-image-loading?p=1158293#post1158293
 			BYTE * bgra = FreeImage_GetBits( bitmap );
 			GLubyte * rgba = new GLubyte[ 4 * w * h ];
-			for( int j = 0, jSize = w * h; j < jSize; ++j )
+			for( u32 j = 0, jSize = w * h; j < jSize; ++j )
 			{
 				rgba[ j * 4 + 0 ] = bgra[ j * 4 + 2 ];
 				rgba[ j * 4 + 1 ] = bgra[ j * 4 + 1 ];

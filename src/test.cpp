@@ -11,16 +11,14 @@ extern "C"
 }
 
 #include "platform.h"
-#include "EnvironmentFactory.h"
+#include "Environment_Factory.h"
 #include "Graphics_Renderer.h"
-#include "Graphics_Renderer_SDL_OpenGL.h"
 #include "Input.h"
-#include "Application_Main.h"
+#include "Application_Builder.h"
 #include "Resource_BitmapCollection.h"
 #include "Resource_ShaderCollection.h"
 #include "Graphics_TextureManager_OpenGL.h"
 #include "Graphics_ShaderManager_OpenGL.h"
-#include "Gui_Renderer.h"
 #include "Resource_HandleManager.h"
 #include "Resource_BitmapLoader.h"
 #include "Resource_ShaderLoader.h"
@@ -62,6 +60,20 @@ static void msdfgen_hello_world()
 	}
 }
 
+class SystemTest : public RetroEcs::ISystem
+{
+	shared_ptr< RetroApplication::StayAlive > _stay_alive;
+public:
+	SystemTest( shared_ptr<RetroApplication::StayAlive> stay_alive )
+		: _stay_alive( stay_alive )
+	{}
+
+	void tick()
+	{
+		_stay_alive->value = false;
+	}
+};
+
 int main( int argc, char* args[] )
 {
 	//Smoke test Lua.
@@ -76,9 +88,9 @@ int main( int argc, char* args[] )
 	// --- STARTUP ------------------------------
 
 	printf( "¿¿ Startup environment ??\n" );
-	EnvironmentFactory_SDL_OpenGL environment_factory;
-	IEnvironmentManager * environment_manager = environment_factory.create_environment_manager();
-	if ( environment_manager == nullptr )
+	RetroEnvironment::Factory env_factory;
+	shared_ptr< RetroEnvironment::IManager > env = env_factory.create();
+	if ( !env )
 		return 1;
 
 	printf( "¿¿ Load resources ??\n" );
@@ -112,11 +124,8 @@ int main( int argc, char* args[] )
 	auto texture_manager = new RetroGraphics::TextureManager_OpenGL( bitmaps );
 	auto shader_manager = new RetroGraphics::ShaderManager_OpenGL( shaders );
 	texture_manager->load( bitmap_handles.data(), bitmap_handles.size() );
-	shader_manager->load( shader_handles.data(), shader_handles.size() );
+	//shader_manager->load( shader_handles.data(), shader_handles.size() );
 
-	printf( "¿¿ Startup renderer ??\n" );
-	RetroGraphics::IRenderer * renderer = new RetroGraphics::Renderer_SDL_OpenGL( &bitmaps, &shaders, texture_manager, shader_manager );
-	RetroGui::Renderer * gui_renderer = new RetroGui::Renderer( *renderer );
 	GLenum error = glGetError();
 	if( error != GL_NO_ERROR )
 	{
@@ -127,8 +136,14 @@ int main( int argc, char* args[] )
 	printf( "¿¿ Startup input ??\n" );
 	Input * input = new Input();
 
-	printf( "¿¿ Startup app ??\n" );
-	IApplication * app = new Application_Main( environment_manager, renderer, gui_renderer, input, bitmaps, shaders );
+	printf( "¿¿ Build app ??\n" );
+	std::shared_ptr< RetroApplication::Application > app;
+	{
+		RetroApplication::Builder builder;
+		builder.env( env );
+		builder.system< SystemTest, RetroApplication::StayAlive >();
+		app = builder.build();
+	}
 
 	// --- TEST ---------------------------------
 
@@ -142,28 +157,21 @@ int main( int argc, char* args[] )
 
 	//Test run renderer.
 	printf( "¿¿ Test run renderer ??\n" );
-	renderer->render();
 
 	printf( "¿¿ Test run app ??\n" );
-	app->tick();
+	app->run();
 
 	// --- SHUTDOWN -----------------------------
 
 	printf( "¿¿ Shutdown app ??\n" );
-	delete app;
+	app.reset();
 
 	printf( "¿¿ Shutdown input ??\n" );
 	delete input;
 
-	printf( "¿¿ Shutdown gui renderer ??\n" );
-	delete gui_renderer;
-
-	printf( "¿¿ Shutdown renderer ??\n" );
-	delete renderer;
-
 	printf( "¿¿ Unload resources ??\n" );
 	texture_manager->unload( bitmap_handles.data(), bitmap_handles.size() );
-	shader_manager->unload( shader_handles.data(), shader_handles.size() );
+	//shader_manager->unload( shader_handles.data(), shader_handles.size() );
 	delete texture_manager;
 	delete shader_manager;
 	// Unload base resources.
@@ -175,7 +183,7 @@ int main( int argc, char* args[] )
 	}
 
 	printf( "¿¿ Shutdown environment ??\n" );
-	environment_factory.destroy_environment_manager( environment_manager );
+	env_factory.destroy( env );
 
 	// --- EXIT ---------------------------------
 

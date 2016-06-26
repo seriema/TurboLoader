@@ -1,21 +1,13 @@
 #ifndef A_RETRO_UI_RENDERER_H
 #define A_RETRO_UI_RENDERER_H
 
+#include <algorithm>
+
 #include "platform.h"
 #include "Resource_Handle.h"
-
-#define RENDER_INPUT_BITS_DATA_INDEX 13
-#define RENDER_INPUT_BITS_DEPTH 8
-
-#define RENDER_INPUT_ARRAY_SIZE 1 << RENDER_INPUT_BITS_DATA_INDEX
-
-#define RENDER_INPUT_DATA_INDEX        u32 data_index        : RENDER_INPUT_BITS_DATA_INDEX;
-#define RENDER_INPUT_MATERIAL_INDEX    u32 material_index    : 8;
-#define RENDER_INPUT_DEPTH             u32 depth             : RENDER_INPUT_BITS_DEPTH;
-#define RENDER_INPUT_IS_COMMAND        u32 is_command        : 1;
-#define RENDER_INPUT_TRANSLUCENCY_TYPE u32 translucency_type : 2;
-
-
+#include "Graphics_RenderKey.h"
+#include "Graphics_ShaderManager.h"
+#include "Graphics_TextureManager.h"
 
 /* TODO
  * Add a factory for render keys?
@@ -24,55 +16,16 @@
  *
  */
 
-namespace RetroGraphics
+namespace
 {
-	union RenderKey
+	inline bool compare_render_key ( RetroGraphics::RenderKey a, RetroGraphics::RenderKey b )
 	{
-		u32 raw;
-
-		struct
-		{
-			RENDER_INPUT_DATA_INDEX
-			u32 padding : 16;
-			RENDER_INPUT_IS_COMMAND
-			RENDER_INPUT_TRANSLUCENCY_TYPE
-		} RenderCommon;
-
-		struct
-		{
-			RENDER_INPUT_DATA_INDEX
-			RENDER_INPUT_DEPTH
-			RENDER_INPUT_MATERIAL_INDEX
-			RENDER_INPUT_IS_COMMAND
-			RENDER_INPUT_TRANSLUCENCY_TYPE
-		} RenderOpaque;
-
-		struct
-		{
-			RENDER_INPUT_DATA_INDEX
-			RENDER_INPUT_MATERIAL_INDEX
-			RENDER_INPUT_DEPTH
-			RENDER_INPUT_IS_COMMAND
-			RENDER_INPUT_TRANSLUCENCY_TYPE
-		} RenderTranslucent;
-
-		struct
-		{
-			RENDER_INPUT_DATA_INDEX
-			u32 command : 10;
-			u32 sequence : 6;
-			RENDER_INPUT_IS_COMMAND
-			RENDER_INPUT_TRANSLUCENCY_TYPE
-		} RenderCommand;
-	};
+		return a.raw < b.raw;
+	}
 }
 
 namespace RetroGraphics
 {
-	struct RendererSettings
-	{
-	};
-
 	struct RenderMaterial
 	{
 		u32 shader_handle;
@@ -82,36 +35,47 @@ namespace RetroGraphics
 		// glm::vec4 color;
 	};
 
-	struct RenderData
+	typedef void* RenderData;
+	typedef void ( *RenderFunc )( const RenderData );
+
+	struct RenderCommand
 	{
-		u32 vbo; // vbo contains attributes such as vert,norm,color, these must then also exist in shader.
-		RetroResource::Handle shader;
-		RetroResource::Handle bitmap;
-		vec2 pos;
-		//glm::mat4 model_transform;
+		RenderData data;
+		RenderFunc func;
 	};
 
-	namespace Aux
-	{
-		inline bool CompareRenderKey ( RenderKey a, RenderKey b )
-		{
-			return a.raw < b.raw;
-		}
-	}
-}
 
-namespace RetroGraphics
-{
-	class IRenderer
+	class Renderer
 	{
+		u32              _render_count;
+		RenderKey        _render_key[ 1024 ];
+		RenderCommand    _render_command[ 1024 ];
+
 	public:
-		virtual ~IRenderer() {}
-		virtual std::string calc_description() const = 0;
-		virtual uint32_t add_mesh( const float *vertices, int n_vertices ) = 0;
-		virtual bool del_mesh( uint32_t mesh_handle ) = 0;
-		virtual void draw( const RenderKey& render_key, const RenderData& render_data ) = 0;
-		virtual void render() = 0;
+		explicit Renderer()
+			: _render_count( 0 )
+		{}
 
+		RenderCommand & submit( const RenderKey key )
+		{
+			_render_key[ _render_count ] = key;
+			_render_key[ _render_count ].RenderCommon.data_index = _render_count;
+			RenderCommand & command = _render_command[ _render_count ];
+			++_render_count;
+			return command;
+		}
+
+		void render()
+		{
+			std::sort( _render_key, _render_key + _render_count, compare_render_key );
+			for ( u32 i = 0; i < _render_count; ++i )
+			{
+				int command_i = _render_key[ i ].RenderCommon.data_index;
+				RenderCommand & command = _render_command[ command_i ];
+				command.func( command.data );
+			}
+			_render_count = 0;
+		}
 	};
 }
 
