@@ -62,15 +62,15 @@ static void msdfgen_hello_world()
 
 class SystemTest : public RetroEcs::ISystem
 {
-	shared_ptr< RetroApplication::StayAlive > _stay_alive;
+	shared_ptr< RetroApplication::InputContext > _input;
 public:
-	SystemTest( shared_ptr<RetroApplication::StayAlive> stay_alive )
-		: _stay_alive( stay_alive )
+	SystemTest( shared_ptr<RetroApplication::InputContext> input )
+		: _input( input )
 	{}
 
 	void tick()
 	{
-		_stay_alive->value = false;
+		_input->stay_alive = false;
 	}
 };
 
@@ -138,8 +138,8 @@ int main( int argc, char* args[] )
 	{
 		RetroApplication::Builder builder;
 		builder.env( env );
-		builder.system< RetroUi::SystemInput, RetroApplication::StayAlive >();
-		builder.system< SystemTest, RetroApplication::StayAlive >();
+		builder.system< RetroUi::SystemInput, RetroApplication::InputContext >();
+		builder.system< SystemTest, RetroApplication::InputContext >();
 		app = builder.build();
 	}
 

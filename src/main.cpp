@@ -87,7 +87,7 @@ int main( int argc, char* args[] )
 				RetroEcs::TimeRaw >();
 
 		builder.system< RetroUi::SystemInput,
-				RetroApplication::StayAlive >();
+				RetroApplication::InputContext >();
 
 		builder.system< RetroUi::SystemInteraction,
 				RetroUi::ComponentInteraction,

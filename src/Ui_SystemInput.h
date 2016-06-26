@@ -15,7 +15,7 @@ namespace RetroUi
 
 	class SystemInput : public RetroEcs::ISystem
 	{
-		shared_ptr< RetroApplication::StayAlive > _stay_alive;
+		shared_ptr< RetroApplication::InputContext > _input;
 
 		bool _quit;
 		int _num_controllers;
@@ -68,8 +68,8 @@ namespace RetroUi
 
 	public:
 		explicit SystemInput(
-			shared_ptr< RetroApplication::StayAlive > stay_alive)
-			: _stay_alive( stay_alive )
+			shared_ptr< RetroApplication::InputContext > input)
+			: _input( input )
 			, _quit(false)
 			, _num_controllers(0)
 			, _controller(NULL)
@@ -121,7 +121,7 @@ namespace RetroUi
 
 			if (_quit)
 			{
-				_stay_alive->value = false;
+				_input->stay_alive = false;
 			}
 		}
 	};

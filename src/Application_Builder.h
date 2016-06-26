@@ -50,7 +50,7 @@ namespace RetroApplication
 
 			ioc.instance( _ioc );
 
-			ioc.singleton< RetroApplication::StayAlive >(); // TODO Replace with a command or message!
+			ioc.singleton< RetroApplication::InputContext >(); // TODO Replace with a command or message!
 
 			// RETRO RESOURCES
 
@@ -137,7 +137,7 @@ namespace RetroApplication
 				return nullptr;
 			}
 
-			auto stay_alive = _ioc->resolve< StayAlive >();
+			auto stay_alive = _ioc->resolve< InputContext >();
 
 			return make_shared< RetroApplication::Application >( env, stay_alive, _systems );
 		}
