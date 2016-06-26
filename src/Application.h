@@ -11,6 +11,12 @@ namespace RetroApplication
 	struct InputContext
 	{
 		bool quit;
+		bool up;
+		bool right;
+		bool down;
+		bool left;
+		bool select;
+		bool start;
 	};
 
 	class Application
