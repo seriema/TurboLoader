@@ -34,7 +34,7 @@ namespace
 
 std::shared_ptr<RetroEnvironment::IManager> RetroEnvironment::Factory::create()
 {
-	if( SDL_Init( SDL_INIT_VIDEO ) < 0 )
+	if( SDL_Init( SDL_INIT_VIDEO | SDL_INIT_JOYSTICK ) < 0 )
 	{
 		cout << "[Environment::Factory::create] SDL could not initialize! SDL Error: '" << SDL_GetError() << "'" << endl;
 		return nullptr;
