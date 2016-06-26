@@ -66,6 +66,7 @@ set(DEPENDENCIES_INCLUDES
 
 	# Dependencies in this directory.
 	${CMAKE_CURRENT_SOURCE_DIR}/common/glad/include
+	${CMAKE_CURRENT_SOURCE_DIR}/common/glm-0.9.7.5
 	${MSDFGEN_INCLUDES}
 
 	PARENT_SCOPE
