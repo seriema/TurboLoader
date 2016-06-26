@@ -14,6 +14,7 @@
 
 #include "Ui_EntityFactory.h"
 #include "Ui_SystemInput.h"
+#include "Ui_SystemInteraction.h"
 #include "Ui_SystemMain.h"
 #include "Ui_SystemAnimator.h"
 #include "Ui_SystemRenderer.h"
@@ -68,6 +69,7 @@ int main( int argc, char* args[] )
 
 		builder.env( env );
 
+		builder.add< RetroUi::ComponentInteraction >( 16 );
 		builder.add< RetroUi::ComponentTransform >( 16 );
 		builder.add< RetroUi::ComponentRender >( 16 );
 		builder.add< RetroUi::EntityFactory,
@@ -86,6 +88,10 @@ int main( int argc, char* args[] )
 		builder.system< RetroUi::SystemInput,
 				RetroApplication::StayAlive,
 				Input >();
+
+		builder.system< RetroUi::SystemInteraction,
+				RetroUi::ComponentInteraction,
+				RetroUi::ComponentTransform >();
 
 		builder.system< RetroUi::SystemMain,
 				RetroResource::IPackageLoader,

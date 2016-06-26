@@ -108,7 +108,7 @@ set(SOURCE_FILES
 	src/Ui_SystemRenderer.h
 	src/Ui_SystemInput.h
 	src/Ui_SystemAnimator.h
-)
+	src/Ui_ComponentInteraction.h src/Ui_SystemInteraction.h)
 
 # MAIN
 add_executable(a_retro_ui
