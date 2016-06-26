@@ -63,11 +63,11 @@ namespace RetroUi
 			, _c_transform( c_transform )
 			, _c_render( c_render )
 		{
-			float quad[ 4 * 3 ] = {
-				0.0f, 0.0f, 0.0f,
-				0.0f, 1.0f, 0.0f,
-				1.0f, 0.0f, 0.0f,
-				1.0f, 1.0f, 0.0f,
+			float quad[ 4 * (3+2) ] = {
+				-.3f, -.3f, .0f, 0.f, 0.f,
+				-.3f,  .3f, .0f, 0.f, 1.f,
+				 .3f, -.3f, .0f, 1.f, 0.f,
+				 .3f,  .3f, .0f, 1.f, 1.f,
 			};
 			const u32 quad_n = sizeof( quad ) / sizeof( float );
 

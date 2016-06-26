@@ -24,3 +24,10 @@ u32 RetroEnvironment::Manager_SDL_OpenGL::get_ticks()
 {
 	return SDL_GetTicks();
 }
+
+float RetroEnvironment::Manager_SDL_OpenGL::aspect_ratio()
+{
+	int w, h;
+	SDL_GetWindowSize(_sdl_window, &w, &h );
+	return (float)w / (float)h;
+}

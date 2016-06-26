@@ -11,6 +11,7 @@ namespace RetroEnvironment
 		virtual ~IManager() {};
 		virtual void swap() = 0;
 		virtual u32 get_ticks() = 0;
+		virtual float aspect_ratio() = 0;
 	};
 }
 
