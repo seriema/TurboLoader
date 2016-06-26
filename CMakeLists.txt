@@ -81,9 +81,6 @@ set(SOURCE_FILES
 	src/Resource_PackageLoader_Lua.h
 	src/Resource_PackageLoader_Lua.cpp
 
-	src/Input.h
-	src/Input.cpp
-
 	src/Graphics_RenderKey.h
 	src/Graphics_Renderer.h
 	src/Graphics_TextureManager.h

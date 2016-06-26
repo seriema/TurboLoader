@@ -22,8 +22,6 @@
 
 #include "Resource_PackageLoader_Lua.h"
 
-#include "Input.h"
-
 #include "Graphics_TextureManager_OpenGL.h"
 #include "Graphics_ShaderManager_OpenGL.h"
 #include "Graphics_MeshManager_OpenGL.h"
@@ -80,10 +78,6 @@ namespace RetroApplication
 				*ioc.resolve< RetroResource::MeshCollection >(),
 				*ioc.resolve< RetroResource::BitmapCollection >(),
 				*ioc.resolve< RetroResource::ShaderCollection >() );
-
-			// RETRO INPUT
-
-			ioc.singleton< Input >();
 
 			// RETRO GRAPHICS :: REQUIRES RESOURCES
 
