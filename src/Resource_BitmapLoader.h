@@ -5,6 +5,7 @@
 #include <vector>
 
 #include <FreeImage.h>
+#include <glm/vec2.hpp>
 
 #include "platform.h"
 #include "Resource_Handle.h"
@@ -60,7 +61,7 @@ namespace RetroResource
 				_bitmaps.handle.push_back( handle );
 				_bitmaps.name.push_back( name );
 				_bitmaps.path.push_back( path );
-				_bitmaps.size.push_back( { w, h } );
+				_bitmaps.size.push_back( glm::vec2(w, h) );
 				_bitmaps.resource.push_back( bitmap );
 
 				handles[ size1 - size0 ] = handle;

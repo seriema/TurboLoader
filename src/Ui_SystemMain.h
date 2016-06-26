@@ -54,12 +54,12 @@ namespace RetroUi
 				_shader_manager->load( package.shaders.data(), package.shaders.size() );
 			}
 
-			_entities.push_back( _entity_factory->create("debug", "jp", 0.3f, 0.3f) );
-			_entities.push_back( _entity_factory->create("debug", "jp", -0.4f, -0.4f) );
-			_entities.push_back( _entity_factory->create("debug", "jp", 0.8f, -0.4f) );
+			_entities.push_back( _entity_factory->create("debug", "jp", glm::vec3(300.f, 400.f, .0f)) );
+			_entities.push_back( _entity_factory->create("debug", "jp", glm::vec3(-400.f, -100.f, .0f)) );
+			_entities.push_back( _entity_factory->create("debug", "jp", glm::vec3(800.f, -150.f, .0f)) );
 
-			_entities.push_back( _entity_factory->create("debug", "jb", -0.9f, -0.1f) );
-			_entities.push_back( _entity_factory->create("debug", "jb", 0.1f, -0.8f) );
+			_entities.push_back( _entity_factory->create("debug", "jb", glm::vec3(-800.f, 100.f, .0f)) );
+			_entities.push_back( _entity_factory->create("debug", "jb", glm::vec3(200.f, -300.f, .0f)) );
 		}
 
 		virtual ~SystemMain() override

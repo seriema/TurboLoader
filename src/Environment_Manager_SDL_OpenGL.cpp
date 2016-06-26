@@ -24,3 +24,11 @@ u32 RetroEnvironment::Manager_SDL_OpenGL::get_ticks()
 {
 	return SDL_GetTicks();
 }
+
+
+glm::vec2 RetroEnvironment::Manager_SDL_OpenGL::resolution()
+{
+	int w, h;
+	SDL_GetWindowSize(_sdl_window, &w, &h );
+	return glm::vec2( w, h );
+}

@@ -7,6 +7,10 @@
 #include <utility>
 #include <memory>
 
+#include <glm/mat4x4.hpp>               // glm::mat4
+#include <glm/gtc/matrix_transform.hpp> // glm::translate, glm::rotate, glm::scale, glm::perspective
+#include <glm/gtc/type_ptr.hpp>         // glm::value_ptr
+
 #include "platform.h"
 
 #include "Ecs_EntityManager.h"
@@ -45,11 +49,14 @@ namespace
 
 		glUseProgram( data.shader );
 
-		glUniform2fv( glGetUniformLocation( data.shader, "model_pos" ), 1, data.pos.raw );
+		glUniformMatrix4fv( glGetUniformLocation( data.shader, "mvp" ), 1, GL_FALSE, glm::value_ptr(data.mvp) );
+		glUniform2fv( glGetUniformLocation( data.shader, "size" ), 1, glm::value_ptr(data.size) );
 
 		int n_verts = 4;//sizeof(vertices) / sizeof(GL_FLOAT);
 		glBindBuffer( GL_ARRAY_BUFFER, data.vbo );
-		glVertexAttribPointer( glGetAttribLocation( data.shader, "vert" ), 3, GL_FLOAT, GL_FALSE, 3*sizeof(GL_FLOAT), 0 );
+		glVertexAttribPointer( glGetAttribLocation( data.shader, "pos" ), 3, GL_FLOAT, GL_FALSE, 5*sizeof(GL_FLOAT), 0 );
+		glVertexAttribPointer( glGetAttribLocation( data.shader, "uv" ), 2, GL_FLOAT, GL_FALSE, 5*sizeof(GL_FLOAT), (void*)(3*sizeof(GL_FLOAT)) );
+		//glVertexAttribPointer( glGetAttribLocation( data.shader, "col" ), 3, GL_FLOAT, GL_FALSE, 3*sizeof(GL_FLOAT), 0 );
 
 		// TODO bind relevant texture here.
 		// TODO only activate and rebind if neccessary.
@@ -110,13 +117,24 @@ namespace RetroUi
 		{
 			glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 
+			glm::vec2 resolution = _env->resolution();
+			float h = 1080.f / 2.f;
+			float w = h * resolution.x / resolution.y;
+			float z_near = .1f;
+			float z_far = 100.f;
+			glm::mat4 proj = glm::ortho(-w, w, -h, h, z_near, z_far );
+			//glm::mat4 proj = glm::perspective( glm::radians(90.f), ar, z_near, z_far );
+			glm::mat4 view = glm::translate( glm::mat4(1.f), glm::vec3(0.f, 0.f, -2.f) );
+			glm::mat4 vp = proj * view;
+
 			for ( u32 i = 0, n = _c_render->size(); i < n; ++i )
 			{
 				Entity e = _c_render->_data.entity[ i ];
 				RenderKey key = _c_render->_data.key[ i ];
 				RenderData_Draw* data = &_c_render->_data.data[ i ];
-				data->pos.x = _c_transform->x( e );
-				data->pos.y = _c_transform->y( e );
+
+				glm::mat4 model = glm::translate( glm::mat4(1.f), glm::vec3(_c_transform->x(e), _c_transform->y(e), _c_transform->z(e)) );
+				data->mvp = vp * model;
 
 				RenderCommand& command = _renderer.submit( key );
 				command.data = data;

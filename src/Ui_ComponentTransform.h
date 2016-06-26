@@ -49,7 +49,4 @@ namespace RetroUi
 	};
 }
 
-
-
-
 #endif //A_RETRO_UI_UI_COMPONENT_POSITION_H

@@ -32,8 +32,8 @@ namespace RetroUi
 		{
 			for ( u32 i = 0, n = _c_transform->size(); i < n; ++i )
 			{
-				float new_x = _c_transform->_data.x[ i ] + 0.0005f * _time->dt();
-				_c_transform->_data.x[ i ] = std::fmod( 1.1f + new_x, 2.2f ) - 1.1f;
+				float new_x = _c_transform->_data.x[ i ] + 0.5f * _time->dt();
+				_c_transform->_data.x[ i ] = std::fmod( 1100.f + new_x, 2200.f ) - 1100.f;
 			}
 		}
 	};
