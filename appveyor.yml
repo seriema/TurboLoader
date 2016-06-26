@@ -20,15 +20,9 @@ build_script:
   - cmake .
   - msbuild .\ALL_BUILD.vcxproj /m
 
-## Running the renderer in Appveyor crashes on glCreateShader in Graphics_ShaderManager_OpenGL.h with this message: "Command exited with code -1073741819"
-## It also gives a warning when setting up SDL:
-## "Warning: Unable to set VSync! SDL Error: That operation is not supported"
-## If we want to try again, read this and uncomment the below lines: http://help.appveyor.com/discussions/problems/3586-black-screenshots#comment_38618584
-#install:
-#- ps: $screen_resolution = '1280x800'; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-desktop.ps1'))
-#test_script:
-#  - echo test_script
-#  - .\Debug\a_retro_test.exe
+test_script:
+  - echo test_script
+  - .\Debug\a_retro_test.exe
 
 deploy: off
 
