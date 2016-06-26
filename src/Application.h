@@ -8,32 +8,32 @@
 
 namespace RetroApplication
 {
-	struct StayAlive
+	struct InputContext
 	{
-		bool value;
+		bool quit;
 	};
 
 	class Application
 	{
 		std::shared_ptr< RetroEnvironment::IManager >     _env;
-		std::shared_ptr< StayAlive >                      _stay_alive; // TODO Replace with a command or message!
+		std::shared_ptr< InputContext >                   _input; // TODO Replace with a command or message!
 		std::vector< std::shared_ptr<RetroEcs::ISystem> > _systems;
 
 	public:
 		explicit Application(
 				std::shared_ptr< RetroEnvironment::IManager > env,
-				std::shared_ptr< StayAlive > stay_alive,
+				std::shared_ptr< InputContext > input,
 				std::vector< std::shared_ptr<RetroEcs::ISystem> > systems )
 			: _env( env )
-			, _stay_alive( stay_alive )
+			, _input( input )
 			, _systems( systems )
 		{
 		}
 
 		void run()
 		{
-			_stay_alive->value = true;
-			while( _stay_alive->value )
+			_input->quit = false;
+			while( !_input->quit )
 			{
 				for ( auto system : _systems )
 				{
@@ -44,7 +44,7 @@ namespace RetroApplication
 
 		void stop()
 		{
-			_stay_alive->value = false;
+			_input->quit = true;
 		}
 	};
 }

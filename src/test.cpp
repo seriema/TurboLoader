@@ -13,7 +13,6 @@ extern "C"
 #include "platform.h"
 #include "Environment_Factory.h"
 #include "Graphics_Renderer.h"
-#include "Input.h"
 #include "Application_Builder.h"
 #include "Resource_BitmapCollection.h"
 #include "Resource_ShaderCollection.h"
@@ -22,6 +21,7 @@ extern "C"
 #include "Resource_HandleManager.h"
 #include "Resource_BitmapLoader.h"
 #include "Resource_ShaderLoader.h"
+#include "Ui_SystemInput.h"
 
 static int lua_hello_world( lua_State* L )
 {
@@ -62,15 +62,15 @@ static void msdfgen_hello_world()
 
 class SystemTest : public RetroEcs::ISystem
 {
-	shared_ptr< RetroApplication::StayAlive > _stay_alive;
+	shared_ptr< RetroApplication::InputContext > _input;
 public:
-	SystemTest( shared_ptr<RetroApplication::StayAlive> stay_alive )
-		: _stay_alive( stay_alive )
+	SystemTest( shared_ptr<RetroApplication::InputContext> input )
+		: _input( input )
 	{}
 
 	void tick()
 	{
-		_stay_alive->value = false;
+		_input->quit = true;
 	}
 };
 
@@ -133,15 +133,13 @@ int main( int argc, char* args[] )
 		return 2;
 	}
 
-	printf( "¿¿ Startup input ??\n" );
-	Input * input = new Input();
-
 	printf( "¿¿ Build app ??\n" );
 	std::shared_ptr< RetroApplication::Application > app;
 	{
 		RetroApplication::Builder builder;
 		builder.env( env );
-		builder.system< SystemTest, RetroApplication::StayAlive >();
+		builder.system< RetroUi::SystemInput, RetroApplication::InputContext >();
+		builder.system< SystemTest, RetroApplication::InputContext >();
 		app = builder.build();
 	}
 
@@ -150,10 +148,6 @@ int main( int argc, char* args[] )
 	//Test run msdf font.
 	printf( "¿¿ Test run msdfgen ??\n" );
 	msdfgen_hello_world();
-
-	//Test run input.
-	printf( "¿¿ Test run input ??\n" );
-	input->poll_events();
 
 	//Test run renderer.
 	printf( "¿¿ Test run renderer ??\n" );
@@ -165,9 +159,6 @@ int main( int argc, char* args[] )
 
 	printf( "¿¿ Shutdown app ??\n" );
 	app.reset();
-
-	printf( "¿¿ Shutdown input ??\n" );
-	delete input;
 
 	printf( "¿¿ Unload resources ??\n" );
 	texture_manager->unload( bitmap_handles.data(), bitmap_handles.size() );

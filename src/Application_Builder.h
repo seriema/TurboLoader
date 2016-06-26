@@ -22,8 +22,6 @@
 
 #include "Resource_PackageLoader_Lua.h"
 
-#include "Input.h"
-
 #include "Graphics_TextureManager_OpenGL.h"
 #include "Graphics_ShaderManager_OpenGL.h"
 #include "Graphics_MeshManager_OpenGL.h"
@@ -52,7 +50,7 @@ namespace RetroApplication
 
 			ioc.instance( _ioc );
 
-			ioc.singleton< RetroApplication::StayAlive >(); // TODO Replace with a command or message!
+			ioc.singleton< RetroApplication::InputContext >(); // TODO Replace with a command or message!
 
 			// RETRO RESOURCES
 
@@ -80,10 +78,6 @@ namespace RetroApplication
 				*ioc.resolve< RetroResource::MeshCollection >(),
 				*ioc.resolve< RetroResource::BitmapCollection >(),
 				*ioc.resolve< RetroResource::ShaderCollection >() );
-
-			// RETRO INPUT
-
-			ioc.singleton< Input >();
 
 			// RETRO GRAPHICS :: REQUIRES RESOURCES
 
@@ -143,7 +137,7 @@ namespace RetroApplication
 				return nullptr;
 			}
 
-			auto stay_alive = _ioc->resolve< StayAlive >();
+			auto stay_alive = _ioc->resolve< InputContext >();
 
 			return make_shared< RetroApplication::Application >( env, stay_alive, _systems );
 		}
