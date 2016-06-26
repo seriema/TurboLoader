@@ -16,14 +16,17 @@ namespace RetroUi
 
 	class SystemInteraction : public RetroEcs::ISystem
 	{
+		shared_ptr< RetroApplication::InputContext > _input;
 		shared_ptr< RetroUi::ComponentInteraction > _c_interaction;
 		shared_ptr< RetroUi::ComponentTransform >   _c_transform;
 
 	public:
 		explicit SystemInteraction(
+			shared_ptr< RetroApplication::InputContext > input,
 			shared_ptr< RetroUi::ComponentInteraction > c_interaction,
 			shared_ptr< RetroUi::ComponentTransform > c_transform )
-			: _c_interaction( c_interaction )
+			: _input ( input )
+			, _c_interaction( c_interaction )
 			, _c_transform( c_transform )
 		{
 		}
