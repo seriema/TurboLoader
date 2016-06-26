@@ -17,7 +17,6 @@ namespace RetroUi
 	{
 		shared_ptr< RetroApplication::InputContext > _input;
 
-		bool _quit;
 		int _num_controllers;
 		SDL_Joystick* _controller;
 
@@ -29,7 +28,7 @@ namespace RetroUi
 		{
 			if (event.keysym.sym == SDLK_q)
 			{
-				_quit = true;
+				_input->quit = true;
 			}
 		}
 
@@ -43,7 +42,7 @@ namespace RetroUi
 				{
 					if (axisEvent.value > JOYSTICK_DEAD_ZONE || axisEvent.value < -JOYSTICK_DEAD_ZONE)
 					{
-						_quit = true;
+						_input->quit = true;
 					}
 				}
 				//Y axis motion
@@ -51,7 +50,7 @@ namespace RetroUi
 				{
 					if (axisEvent.value > JOYSTICK_DEAD_ZONE || axisEvent.value < -JOYSTICK_DEAD_ZONE)
 					{
-						_quit = true;
+						_input->quit = true;
 					}
 				}
 			}
@@ -61,7 +60,7 @@ namespace RetroUi
 			{
 				if (buttonEvent.state == SDL_PRESSED)
 				{
-					_quit = true;
+					_input->quit = true;
 				}
 			}
 		}
@@ -70,7 +69,6 @@ namespace RetroUi
 		explicit SystemInput(
 			shared_ptr< RetroApplication::InputContext > input)
 			: _input( input )
-			, _quit(false)
 			, _num_controllers(0)
 			, _controller(NULL)
 		{
@@ -106,7 +104,7 @@ namespace RetroUi
 				{
 				case SDL_QUIT:
 					//User requests quit
-					_quit = true;
+					_input->quit = true;
 					break;
 				case SDL_KEYDOWN:
 					handle_keys(e.key);
@@ -117,11 +115,6 @@ namespace RetroUi
 					handle_controller(e.jaxis, e.jbutton);
 					break;
 				}
-			}
-
-			if (_quit)
-			{
-				_input->stay_alive = false;
 			}
 		}
 	};

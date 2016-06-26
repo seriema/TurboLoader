@@ -10,7 +10,7 @@ namespace RetroApplication
 {
 	struct InputContext
 	{
-		bool stay_alive;
+		bool quit;
 	};
 
 	class Application
@@ -32,8 +32,8 @@ namespace RetroApplication
 
 		void run()
 		{
-			_input->stay_alive = true;
-			while( _input->stay_alive )
+			_input->quit = false;
+			while( !_input->quit )
 			{
 				for ( auto system : _systems )
 				{
@@ -44,7 +44,7 @@ namespace RetroApplication
 
 		void stop()
 		{
-			_input->stay_alive = false;
+			_input->quit = true;
 		}
 	};
 }

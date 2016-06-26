@@ -70,7 +70,7 @@ public:
 
 	void tick()
 	{
-		_input->stay_alive = false;
+		_input->quit = true;
 	}
 };
 
