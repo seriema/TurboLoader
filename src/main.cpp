@@ -90,6 +90,7 @@ int main( int argc, char* args[] )
 				RetroApplication::InputContext >();
 
 		builder.system< RetroUi::SystemInteraction,
+				RetroApplication::InputContext,
 				RetroUi::ComponentInteraction,
 				RetroUi::ComponentTransform >();
 
