@@ -40,10 +40,63 @@ namespace RetroUi
 		{
 			// TODO Get a message or command about grid being dirty and needs relayout?
 
+			handle_focus();
 			handle_layout(); // TODO Do relayout every tick for now!
 		}
 
 	private:
+		void handle_focus()
+		{
+			RetroEcs::Entity focus = _ui->focus;
+
+			if ( !focus.id )
+				return;
+
+			// Focusable object always has a parent, check if that parent is a grid.
+			u32 i_transform = _c_transform->parent( focus );
+			RetroEcs::Entity e = _c_transform->_data.entity[ i_transform ];
+
+			if ( !_c_grid->contains(e) )
+				return;
+
+			if ( _input->horizontal )
+			{
+				// TODO Do we want wrapping?
+
+				u32 i_sibling = _input->horizontal > 0.f ?
+					_c_transform->next_sibling( focus ) :
+					_c_transform->prev_sibling( focus );
+
+				// TODO make sure i_sibling is valid or don't change focus!
+
+				focus = _c_transform->_data.entity[ i_sibling ];
+			}
+
+			if ( _input->vertical )
+			{
+				// TODO Do we want wrapping?
+
+				vector< u32 >& siblings_candidates = _input->vertical > 0.f ?
+					_c_transform->_data.prev_sibling :
+					_c_transform->_data.next_sibling;
+
+				u32 i_sibling = _c_transform->lookup( focus );
+				int i = _c_grid->grid_size( e ).x;
+
+				while ( i-- )
+				{
+					// TODO make sure i_sibling is valid before indexing again!
+					i_sibling = siblings_candidates[ i_sibling ];
+				}
+
+				// TODO make sure i_sibling is valid or don't change focus!
+
+				focus = _c_transform->_data.entity[ i_sibling ];
+			}
+
+			_ui->focus = focus;
+		}
+
 		void handle_layout()
 		{
 			for ( u32 i_grid = 0, n = _c_grid->size(); i_grid < n; ++i_grid )

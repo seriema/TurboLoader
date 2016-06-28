@@ -5,6 +5,8 @@
 #include <unordered_map>
 #include <utility>
 
+#include <glm/vec3.hpp>
+
 #include "platform.h"
 #include "Resource_Handle.h"
 
@@ -19,7 +21,7 @@ namespace RetroResource
 			float raw[ 3 ];
 			struct
 			{
-				vec3 position;
+				glm::vec3 position;
 //				vec3 normal;
 //				vec4 color;
 			};
