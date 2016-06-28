@@ -24,6 +24,11 @@ namespace RetroMath
 	{
 		return fnv1a( &data, sizeof(u32) );
 	}
+
+	inline float lerp( float a, float b, float t )
+	{
+		return a + t * (b-a);
+	}
 }
 
 #endif //A_RETRO_UI_MATH_H

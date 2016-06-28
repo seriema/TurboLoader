@@ -111,6 +111,7 @@ int main( int argc, char* args[] )
 
 		builder.system< RetroUi::SystemAnimator,
 				RetroEcs::Time,
+				RetroUi::Context,
 				RetroUi::ComponentTransform >();
 
 		builder.system< RetroUi::SystemRenderer,
