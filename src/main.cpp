@@ -12,9 +12,10 @@
 
 #include "Ecs_SystemTick.h"
 
+#include "Ui_Context.h"
 #include "Ui_EntityFactory.h"
 #include "Ui_SystemInput.h"
-#include "Ui_SystemInteraction.h"
+#include "Ui_SystemGrid.h"
 #include "Ui_SystemMain.h"
 #include "Ui_SystemAnimator.h"
 #include "Ui_SystemRenderer.h"
@@ -69,9 +70,12 @@ int main( int argc, char* args[] )
 
 		builder.env( env );
 
-		builder.add< RetroUi::ComponentInteraction >( 16 );
-		builder.add< RetroUi::ComponentTransform >( 16 );
-		builder.add< RetroUi::ComponentRender >( 16 );
+		builder.add< RetroUi::Context >();
+
+		builder.add< RetroUi::ComponentGrid >( 16 );
+		builder.add< RetroUi::ComponentTransform >( 256 );
+		builder.add< RetroUi::ComponentRender >( 256 );
+
 		builder.add< RetroUi::EntityFactory,
 				RetroResource::BitmapCollection,
 				RetroResource::MeshLoader,
@@ -79,6 +83,7 @@ int main( int argc, char* args[] )
 				RetroGraphics::IShaderManager,
 				RetroGraphics::ITextureManager,
 				RetroGraphics::IMeshManager,
+				RetroUi::ComponentGrid,
 				RetroUi::ComponentTransform,
 				RetroUi::ComponentRender >();
 
@@ -89,9 +94,10 @@ int main( int argc, char* args[] )
 		builder.system< RetroUi::SystemInput,
 				RetroApplication::InputContext >();
 
-		builder.system< RetroUi::SystemInteraction,
+		builder.system< RetroUi::SystemGrid,
 				RetroApplication::InputContext,
-				RetroUi::ComponentInteraction,
+				RetroUi::Context,
+				RetroUi::ComponentGrid,
 				RetroUi::ComponentTransform >();
 
 		builder.system< RetroUi::SystemMain,
@@ -99,6 +105,7 @@ int main( int argc, char* args[] )
 				RetroResource::PackageCollection,
 				RetroGraphics::IShaderManager,
 				RetroGraphics::ITextureManager,
+				RetroUi::Context,
 				RetroUi::EntityFactory >();
 
 		builder.system< RetroUi::SystemAnimator,

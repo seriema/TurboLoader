@@ -56,6 +56,7 @@ add_library(turboloader-lib
 add_library(turboloader-core
 	src/platform.h
 
+	src/Math.h
 	src/Ioc_Container.h
 
 	src/Application.h
@@ -99,14 +100,16 @@ add_library(turboloader-core
 	src/Ecs_Time.h
 	src/Ecs_SystemTick.h
 
+	src/Ui_Context.h
 	src/Ui_EntityFactory.h
 	src/Ui_ComponentRender.h
 	src/Ui_ComponentTransform.h
+	src/Ui_ComponentGrid.h
 	src/Ui_SystemMain.h
 	src/Ui_SystemRenderer.h
 	src/Ui_SystemInput.h
 	src/Ui_SystemAnimator.h
-	src/Ui_ComponentInteraction.h src/Ui_SystemInteraction.h
+	src/Ui_SystemGrid.h
 )
 
 # MAIN
