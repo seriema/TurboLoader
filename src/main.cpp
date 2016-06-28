@@ -106,7 +106,8 @@ int main( int argc, char* args[] )
 				RetroGraphics::IShaderManager,
 				RetroGraphics::ITextureManager,
 				RetroUi::Context,
-				RetroUi::EntityFactory >();
+				RetroUi::EntityFactory,
+				RetroUi::ComponentTransform >();
 
 		builder.system< RetroUi::SystemAnimator,
 				RetroEcs::Time,

@@ -30,13 +30,13 @@ namespace RetroUi
 			{
 				case SDLK_q:      _input->quit   = true; break;
 
-				case SDLK_UP:     _input->up     = true; break;
-				case SDLK_RIGHT:  _input->right  = true; break;
-				case SDLK_DOWN:   _input->down   = true; break;
-				case SDLK_LEFT:   _input->left   = true; break;
-
 				case SDLK_SPACE:  _input->select = true; break;
 				case SDLK_RETURN: _input->start  = true; break;
+
+				case SDLK_RIGHT:  _input->horizontal += 1.f; break;
+				case SDLK_LEFT:   _input->horizontal -= 1.f; break;
+				case SDLK_UP:     _input->vertical += 1.f; break;
+				case SDLK_DOWN:   _input->vertical -= 1.f; break;
 			}
 		}
 

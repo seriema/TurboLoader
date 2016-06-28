@@ -20,6 +20,7 @@ namespace RetroUi
 			vector< float >  x;
 			vector< float >  y;
 			vector< float >  z;
+			vector< float >  scale;
 			vector< u32 >    parent;
 			vector< u32 >    first_child;
 			vector< u32 >    next_sibling; // TODO performance test if there's any benefit of keeping siblings sorted together.
@@ -32,6 +33,7 @@ namespace RetroUi
 			_data.x.resize( capacity );
 			_data.y.resize( capacity );
 			_data.z.resize( capacity );
+			_data.scale.resize( capacity );
 			_data.parent.resize( capacity );
 			_data.first_child.resize( capacity );
 			_data.next_sibling.resize( capacity );
@@ -49,6 +51,7 @@ namespace RetroUi
 			data_dst.x[ i_dst ]   = _data.x.at( i );
 			data_dst.y[ i_dst ]   = _data.y.at( i );
 			data_dst.z[ i_dst ]   = _data.z.at( i );
+			data_dst.scale[ i_dst ]   = _data.scale.at( i );
 			data_dst.parent[ i_dst ]   = _data.parent.at( i );
 			data_dst.first_child[ i_dst ]   = _data.first_child.at( i );
 			data_dst.next_sibling[ i_dst ]   = _data.next_sibling.at( i );
@@ -63,6 +66,9 @@ namespace RetroUi
 
 		inline const float z( Entity e ) { return get( _data.z, e ); }
 		inline void set_z( Entity e, float z ) { set( _data.z, e, z ); }
+
+		inline const float scale( Entity e ) { return get( _data.scale, e ); }
+		inline void set_scale( Entity e, float scale ) { set( _data.scale, e, scale ); }
 
 		inline const u32 parent( Entity e ) { return get( _data.parent, e ); }
 		inline void set_parent( Entity e, u32 parent ) { set( _data.parent, e, parent ); }

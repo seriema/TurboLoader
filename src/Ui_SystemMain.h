@@ -33,6 +33,7 @@ namespace RetroUi
 		shared_ptr< RetroGraphics::ITextureManager >   _texture_manager;
 		shared_ptr< Context >                          _ui;
 		shared_ptr< EntityFactory >                    _entity_factory;
+		shared_ptr< ComponentTransform >               _c_transform;
 
 		Entity                   _main;
 		RetroResource::Handle    _base_package_handle;
@@ -44,13 +45,15 @@ namespace RetroUi
 			shared_ptr< RetroGraphics::IShaderManager > shader_manager,
 			shared_ptr< RetroGraphics::ITextureManager > texture_manager,
 			shared_ptr< Context > ui,
-			shared_ptr< EntityFactory > entity_factory )
+			shared_ptr< EntityFactory > entity_factory,
+			shared_ptr< ComponentTransform > c_transform )
 			: _package_loader( package_loader )
 			, _packages( packages )
 			, _shader_manager( shader_manager )
 			, _texture_manager( texture_manager )
 			, _ui( ui )
 			, _entity_factory( entity_factory )
+			, _c_transform( c_transform )
 		{
 			_package_loader->load( "./src/hello_world", _base_package_handle );
 			{
@@ -62,15 +65,15 @@ namespace RetroUi
 			_ui->scene = _entity_factory->create_scene();
 			_ui->focus = RetroEcs::Entity { 0 };
 
-			_main = _entity_factory->create_grid( _ui->scene, glm::vec3(-800.f, 400.f, 0.f), glm::ivec2(12,1), glm::ivec2(140,140) );
+			_main = _entity_factory->create_grid( _ui->scene, glm::vec3(-800.f, 400.f, 0.f), glm::ivec2(10), glm::ivec2(166) );
 
-			for ( u32 i = 0, n = 84; i < n; ++i )
+			for ( u32 i = 0, n = 60; i < n; ++i )
 			{
 				std::string image = RetroMath::fnv1a( 99877*i ) < 2200000000u ? "jp" : "jb";
 				_entity_factory->create_image( _main, "debug", image, glm::vec3(0) );
 			}
 
-			// TODO Set initial focus: _ui->focus =
+			_ui->focus = _c_transform->_data.entity[ _c_transform->first_child(_main) ];
 		}
 
 		virtual ~SystemMain() override
@@ -88,6 +91,12 @@ namespace RetroUi
 
 		virtual void tick() override
 		{
+			// TODO this should be triggered via an animation in animation system. But that remains to be built!
+
+			for ( u32 i = 0, n = _c_transform->size(); i < n; ++i )
+			{
+				_c_transform->_data.scale[ i ] = _c_transform->_data.entity[ i ].id == _ui->focus.id ? 1.5f : 1.f;
+			}
 		}
 	};
 }

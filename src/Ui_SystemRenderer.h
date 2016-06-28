@@ -8,8 +8,9 @@
 #include <memory>
 
 #include <glm/mat4x4.hpp>               // glm::mat4
-#include <glm/gtc/matrix_transform.hpp> // glm::translate, glm::rotate, glm::scale, glm::perspective
+#include <glm/gtc/matrix_transform.hpp> // glm::perspective
 #include <glm/gtc/type_ptr.hpp>         // glm::value_ptr
+#include <glm/gtx/transform.hpp>        // glm::translate, glm::rotate, glm::scale
 
 #include "platform.h"
 
@@ -122,7 +123,7 @@ namespace RetroUi
 			float w = h * resolution.x / resolution.y;
 			float z_near = .1f;
 			float z_far = 100.f;
-			glm::mat4 proj = glm::ortho(-w, w, -h, h, z_near, z_far );
+			glm::mat4 proj = glm::ortho( -w, w, -h, h, z_near, z_far );
 			//glm::mat4 proj = glm::perspective( glm::radians(90.f), ar, z_near, z_far );
 			glm::mat4 view = glm::translate( glm::mat4(1.f), glm::vec3(0.f, 0.f, -2.f) );
 			glm::mat4 vp = proj * view;
@@ -133,8 +134,13 @@ namespace RetroUi
 				RenderKey key = _c_render->_data.key[ i ];
 				RenderData_Draw* data = &_c_render->_data.data[ i ];
 
-				glm::mat4 model = glm::translate( glm::mat4(1.f), glm::vec3(_c_transform->x(e), _c_transform->y(e), _c_transform->z(e)) );
-				data->mvp = vp * model;
+				// Build mvp (model view projection) matrix.
+				// Build model matrix from srt (scale rotation translation).
+
+				glm::mat4 scale = glm::scale( glm::vec3(_c_transform->scale(e)) );
+				glm::mat4 rotation = glm::rotate( 0.f, glm::vec3(0,0,1) );
+				glm::mat4 translation = glm::translate( glm::mat4(1.f), glm::vec3(_c_transform->x(e), _c_transform->y(e), _c_transform->z(e)) );
+				data->mvp = vp * translation * rotation * scale;
 
 				RenderCommand& command = _renderer.submit( key );
 				command.data = data;

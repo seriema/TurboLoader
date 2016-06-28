@@ -103,6 +103,7 @@ namespace RetroUi
 			_c_transform->_data.x[ i ] = pos.x;
 			_c_transform->_data.y[ i ] = pos.y;
 			_c_transform->_data.z[ i ] = pos.z;
+			_c_transform->set_scale( e, 1.f );
 
 			u32 i_grid = _c_grid->create( e );
 			_c_grid->_data.grid_size[ i_grid ] = grid_size;
@@ -138,6 +139,7 @@ namespace RetroUi
 			_c_transform->set_x( e, pos.x );
 			_c_transform->set_y( e, pos.y );
 			_c_transform->set_z( e, pos.z );
+			_c_transform->set_scale( e, 1.f );
 
 			_c_render->create( e );
 			_c_render->set_key( e, key );
