@@ -91,12 +91,6 @@ namespace RetroUi
 
 		virtual void tick() override
 		{
-			// TODO this should be triggered via an animation in animation system. But that remains to be built!
-
-			for ( u32 i = 0, n = _c_transform->size(); i < n; ++i )
-			{
-				_c_transform->_data.scale[ i ] = _c_transform->_data.entity[ i ].id == _ui->focus.id ? 1.5f : 1.f;
-			}
 		}
 	};
 }
