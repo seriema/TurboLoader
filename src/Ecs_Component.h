@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <unordered_map>
+#include <limits>
 
 #include "platform.h"
 #include "Ecs_Entity.h"
@@ -29,12 +30,14 @@ namespace RetroEcs
 		}
 
 		template< typename U >
-		inline void set( std::vector<U>& a, Entity e, U& data )
+		inline void set( std::vector<U>& a, Entity e, const U& data )
 		{
 			a[ _index.at(e.id) ] = data;
 		}
 
 	public:
+		const u32 INVALID_INDEX = std::numeric_limits<u32>::max();
+
 		explicit Component( u32 capacity )
 			: _capacity( capacity )
 			, _size( 0 )
@@ -44,6 +47,11 @@ namespace RetroEcs
 		inline u32 size()
 		{
 			return _size;
+		}
+
+		inline bool contains( Entity e )
+		{
+			return _index.find( e.id ) != _index.end();
 		}
 
 		inline u32 lookup( Entity e )

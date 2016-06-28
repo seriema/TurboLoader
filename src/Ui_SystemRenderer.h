@@ -118,7 +118,7 @@ namespace RetroUi
 			glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 
 			glm::vec2 resolution = _env->resolution();
-			float h = 1080.f / 2.f;
+			float h = .5f * 1080.f;
 			float w = h * resolution.x / resolution.y;
 			float z_near = .1f;
 			float z_far = 100.f;

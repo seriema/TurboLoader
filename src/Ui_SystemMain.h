@@ -19,6 +19,8 @@
 #include "Ui_ComponentTransform.h"
 #include "Ui_ComponentRender.h"
 
+#include "Math.h"
+
 namespace RetroUi
 {
 	using std::shared_ptr;
@@ -29,9 +31,10 @@ namespace RetroUi
 		shared_ptr< RetroResource::PackageCollection > _packages;
 		shared_ptr< RetroGraphics::IShaderManager >    _shader_manager;
 		shared_ptr< RetroGraphics::ITextureManager >   _texture_manager;
+		shared_ptr< Context >                          _ui;
 		shared_ptr< EntityFactory >                    _entity_factory;
 
-		std::vector< Entity >    _entities;
+		Entity                   _main;
 		RetroResource::Handle    _base_package_handle;
 
 	public:
@@ -40,11 +43,13 @@ namespace RetroUi
 			shared_ptr< RetroResource::PackageCollection > packages,
 			shared_ptr< RetroGraphics::IShaderManager > shader_manager,
 			shared_ptr< RetroGraphics::ITextureManager > texture_manager,
+			shared_ptr< Context > ui,
 			shared_ptr< EntityFactory > entity_factory )
 			: _package_loader( package_loader )
 			, _packages( packages )
 			, _shader_manager( shader_manager )
 			, _texture_manager( texture_manager )
+			, _ui( ui )
 			, _entity_factory( entity_factory )
 		{
 			_package_loader->load( "./src/hello_world", _base_package_handle );
@@ -54,20 +59,29 @@ namespace RetroUi
 				_shader_manager->load( package.shaders.data(), package.shaders.size() );
 			}
 
-			_entities.push_back( _entity_factory->create("debug", "jp", glm::vec3(300.f, 400.f, .0f)) );
-			_entities.push_back( _entity_factory->create("debug", "jp", glm::vec3(-400.f, -100.f, .0f)) );
-			_entities.push_back( _entity_factory->create("debug", "jp", glm::vec3(800.f, -150.f, .0f)) );
+			_ui->scene = _entity_factory->create_scene();
+			_ui->focus = RetroEcs::Entity { 0 };
 
-			_entities.push_back( _entity_factory->create("debug", "jb", glm::vec3(-800.f, 100.f, .0f)) );
-			_entities.push_back( _entity_factory->create("debug", "jb", glm::vec3(200.f, -300.f, .0f)) );
+			_main = _entity_factory->create_grid( _ui->scene, glm::vec3(-800.f, 400.f, 0.f), glm::ivec2(12,1), glm::ivec2(140,140) );
+
+			for ( u32 i = 0, n = 84; i < n; ++i )
+			{
+				std::string image = RetroMath::fnv1a( 99877*i ) < 2200000000u ? "jp" : "jb";
+				_entity_factory->create_image( _main, "debug", image, glm::vec3(0) );
+			}
+
+			// TODO Set initial focus: _ui->focus =
 		}
 
 		virtual ~SystemMain() override
 		{
-			for ( auto e : _entities )
-			{
-				_entity_factory->destroy( e );
-			}
+			// TODO When destroying then do iterate grid and delete images before deleting grid!
+			// TODO Can we do some more general destroying of entity children via transforms?
+
+//			for ( auto e : _entities )
+//			{
+//				_entity_factory->destroy_image( e );
+//			}
 
 			_package_loader->unload( &_base_package_handle );
 		}

@@ -19,8 +19,9 @@
 
 #include "Ecs_EntityManager.h"
 
-#include "Ui_ComponentRender.h"
+#include "Ui_ComponentGrid.h"
 #include "Ui_ComponentTransform.h"
+#include "Ui_ComponentRender.h"
 
 namespace RetroUi
 {
@@ -35,6 +36,7 @@ namespace RetroUi
 		shared_ptr< RetroGraphics::IShaderManager >   _shader_manager;
 		shared_ptr< RetroGraphics::ITextureManager >  _texture_manager;
 		shared_ptr< RetroGraphics::IMeshManager >     _mesh_manager;
+		shared_ptr< RetroUi::ComponentGrid >          _c_grid;
 		shared_ptr< RetroUi::ComponentTransform >     _c_transform;
 		shared_ptr< RetroUi::ComponentRender >        _c_render;
 
@@ -48,6 +50,7 @@ namespace RetroUi
 			shared_ptr< RetroGraphics::IShaderManager > shader_manager,
 			shared_ptr< RetroGraphics::ITextureManager > texture_manager,
 			shared_ptr< RetroGraphics::IMeshManager > mesh_manager,
+			shared_ptr< RetroUi::ComponentGrid > c_grid,
 			shared_ptr< RetroUi::ComponentTransform > c_transform,
 			shared_ptr< RetroUi::ComponentRender > c_render )
 			: _entity_manager( entity_manager )
@@ -56,14 +59,15 @@ namespace RetroUi
 			, _mesh_manager( mesh_manager )
 			, _mesh_loader( mesh_loader )
 			, _bitmaps( bitmaps )
+			, _c_grid( c_grid )
 			, _c_transform( c_transform )
 			, _c_render( c_render )
 		{
 			float quad[ 4 * (3+2) ] = {
-				-1.f, -1.f, .0f, 0.f, 0.f,
-				-1.f,  1.f, .0f, 0.f, 1.f,
-				 1.f, -1.f, .0f, 1.f, 0.f,
-				 1.f,  1.f, .0f, 1.f, 1.f,
+				-.5f, -.5f, .0f, 0.f, 0.f,
+				-.5f,  .5f, .0f, 0.f, 1.f,
+				 .5f, -.5f, .0f, 1.f, 0.f,
+				 .5f,  .5f, .0f, 1.f, 1.f,
 			};
 			const u32 quad_n = sizeof( quad ) / sizeof( float );
 
@@ -78,7 +82,45 @@ namespace RetroUi
 			mm.unload( &_quad_handle );
 		}
 
-		Entity create( const string& shader, const string& bitmap, glm::vec3 pos )
+		Entity create_scene()
+		{
+			Entity e = _entity_manager->create();
+			_c_transform->create( e );
+			return e;
+		}
+
+		void destroy_scene( Entity e )
+		{
+			_c_transform->destroy( e );
+			_entity_manager->destroy( e );
+		}
+
+		Entity create_grid( const RetroEcs::Entity e_parent, const glm::vec3& pos, const glm::ivec2& grid_size, const glm::ivec2& cell_size )
+		{
+			Entity e = _entity_manager->create();
+
+			u32 i = _c_transform->create( e );
+			_c_transform->_data.x[ i ] = pos.x;
+			_c_transform->_data.y[ i ] = pos.y;
+			_c_transform->_data.z[ i ] = pos.z;
+
+			u32 i_grid = _c_grid->create( e );
+			_c_grid->_data.grid_size[ i_grid ] = grid_size;
+			_c_grid->_data.cell_size[ i_grid ] = cell_size;
+
+			_c_transform->append_child( e_parent, e );
+
+			return e;
+		}
+
+		void destroy_grid( Entity e )
+		{
+			_c_transform->destroy( e );
+			_c_grid->destroy( e );
+			_entity_manager->destroy( e );
+		}
+
+		Entity create_image( const RetroEcs::Entity e_parent, const string& shader, const string& bitmap, const glm::vec3& pos )
 		{
 			RetroGraphics::RenderKey key;
 			key.RenderTranslucent.translucency_type = 1;
@@ -101,13 +143,16 @@ namespace RetroUi
 			_c_render->set_key( e, key );
 			_c_render->set_data( e, data );
 
+			_c_transform->append_child( e_parent, e );
+
 			return e;
 		}
 
-		void destroy( Entity e )
+		void destroy_image( Entity e )
 		{
 			_c_transform->destroy( e );
 			_c_render->destroy( e );
+			_entity_manager->destroy( e );
 		}
 	};
 }
