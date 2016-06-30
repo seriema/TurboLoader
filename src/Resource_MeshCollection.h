@@ -14,20 +14,6 @@ namespace RetroResource
 {
 	using namespace std;
 
-	struct MeshVertex
-	{
-		union
-		{
-			float raw[ 3 ];
-			struct
-			{
-				glm::vec3 position;
-//				vec3 normal;
-//				vec4 color;
-			};
-		};
-	};
-
 	struct Mesh
 	{
 		u32    vertices_n;
