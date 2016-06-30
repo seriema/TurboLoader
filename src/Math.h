@@ -13,7 +13,7 @@ namespace RetroMath
 	inline u32 fnv1a( const void* data, const u32 size )
 	{
 		u32 hash = FNV_OFFSET_BASIS_32;
-		for ( int i = 0; i < size; ++i )
+		for ( u32 i = 0; i < size; ++i )
 		{
 			hash = ( hash ^ (((unsigned char*)(data))[i] ) ) * FNV_PRIME_32;
 		}

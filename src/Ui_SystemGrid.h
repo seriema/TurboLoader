@@ -40,12 +40,12 @@ namespace RetroUi
 		{
 			// TODO Get a message or command about grid being dirty and needs relayout?
 
-			handle_focus();
+			handle_input();
 			handle_layout(); // TODO Do relayout every tick for now!
 		}
 
 	private:
-		void handle_focus()
+		void handle_input()
 		{
 			RetroEcs::Entity focus = _ui->focus;
 
@@ -59,42 +59,50 @@ namespace RetroUi
 			if ( !_c_grid->contains(e) )
 				return;
 
-			if ( _input->horizontal )
-			{
-				// TODO Do we want wrapping?
+			// TODO Do we want wrapping?
 
-				u32 i_sibling = _input->horizontal > 0.f ?
-					_c_transform->next_sibling( focus ) :
-					_c_transform->prev_sibling( focus );
-
-				// TODO make sure i_sibling is valid or don't change focus!
-
-				focus = _c_transform->_data.entity[ i_sibling ];
-			}
-
-			if ( _input->vertical )
-			{
-				// TODO Do we want wrapping?
-
-				vector< u32 >& siblings_candidates = _input->vertical > 0.f ?
-					_c_transform->_data.prev_sibling :
-					_c_transform->_data.next_sibling;
-
-				u32 i_sibling = _c_transform->lookup( focus );
-				int i = _c_grid->grid_size( e ).x;
-
-				while ( i-- )
-				{
-					// TODO make sure i_sibling is valid before indexing again!
-					i_sibling = siblings_candidates[ i_sibling ];
-				}
-
-				// TODO make sure i_sibling is valid or don't change focus!
-
-				focus = _c_transform->_data.entity[ i_sibling ];
-			}
-
+			handle_input_horizontal( focus );
+			handle_input_vertical( e, focus );
 			_ui->focus = focus;
+		}
+
+		bool handle_input_horizontal( RetroEcs::Entity& focus )
+		{
+			if ( !_input->horizontal )
+				return false;
+
+			u32 i_sibling = _input->horizontal > 0.f ?
+				_c_transform->next_sibling( focus ) :
+				_c_transform->prev_sibling( focus );
+
+			if ( i_sibling == _c_transform->INVALID_INDEX )
+				return false;
+
+			focus = _c_transform->_data.entity[ i_sibling ];
+			return true;
+		}
+
+		bool handle_input_vertical( RetroEcs::Entity e, RetroEcs::Entity& focus )
+		{
+			if ( !_input->vertical )
+				return false;
+
+			vector< u32 >& siblings_candidates = _input->vertical > 0.f ?
+				_c_transform->_data.prev_sibling :
+				_c_transform->_data.next_sibling;
+
+			u32 i_sibling = _c_transform->lookup( focus );
+			int i = _c_grid->grid_size( e ).x;
+
+			while ( i-- )
+			{
+				i_sibling = siblings_candidates[ i_sibling ];
+				if ( i_sibling == _c_transform->INVALID_INDEX )
+					return false;
+			}
+
+			focus = _c_transform->_data.entity[ i_sibling ];
+			return true;
 		}
 
 		void handle_layout()
@@ -118,7 +126,7 @@ namespace RetroUi
 					i_cell = _c_transform->_data.next_sibling[ i_cell ];
 					++n_cell;
 
-					if ( n_cell > 100 )
+					if ( n_cell > 1000 )
 					{
 						std::cout << "[RetroUi::SystemGrid::handle_layou] ERROR BROKEN WHILE!" << std::endl;
 						return;
