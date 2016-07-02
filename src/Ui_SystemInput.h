@@ -1,13 +1,16 @@
 #ifndef A_RETRO_UI_UI_SYSTEM_INPUT_H
 #define A_RETRO_UI_UI_SYSTEM_INPUT_H
 
-#include <memory>
-#include <cmath>
-#include <iostream>
+#include <memory>   // std::shared_ptr
+#include <cstring>  // std::memset
+#include <cstdlib>  // std::abs
+#include <limits>   // std::numeric_limits::max
+#include <iostream> // std::cout, std::endl
 
 #include "platform.h"
 #include "Ecs_System.h"
 #include "Application.h"
+#include "Math.h"
 
 namespace RetroUi
 {
@@ -20,10 +23,18 @@ namespace RetroUi
 		int _num_controllers;
 		SDL_Joystick* _controller;
 
-		//Analog joystick dead zone
-		const int JOYSTICK_DEAD_ZONE = 8000;
+		const float JOY_DEADZONE = .2f;
+		const float JOY_SCALE = 1.f / std::numeric_limits<Sint16>::max();
+		const float JOY_INTERVAL_INVERSE = 1.f / (1.f - JOY_DEADZONE);
+		const float JOY_INTERVAL_DEADZONE = JOY_DEADZONE * JOY_INTERVAL_INVERSE;
+		const float JOY_INTERVAL_SCALE = JOY_SCALE * JOY_INTERVAL_INVERSE;
 
 	private:
+		inline float read_axis( float v )
+		{
+			return RetroMath::sign(v) * std::max( 0.f, JOY_INTERVAL_SCALE * std::abs(v) - JOY_INTERVAL_DEADZONE );
+		}
+
 		void handle_keys(SDL_KeyboardEvent event)
 		{
 			switch (event.keysym.sym)
@@ -42,31 +53,33 @@ namespace RetroUi
 
 		void handle_controller(SDL_JoyAxisEvent axisEvent, SDL_JoyButtonEvent buttonEvent)
 		{
+			std::cout << "[RetroUi::SystemInput::handle_controller] " << axisEvent.which << "::" << (int)axisEvent.axis << "::" << axisEvent.value << std::endl;
+
 			//Motion on controller 0
-			if (axisEvent.which == 0)
+			if ( axisEvent.which == 0 )
 			{
-				//X axis motion
-				if (axisEvent.axis == 0)
+#if defined(__APPLE__) || defined(_WIN32)
+				if ( axisEvent.axis < 2u )
+#else
+				if ( axisEvent.axis == 0u )
+#endif
 				{
-					if (axisEvent.value > JOYSTICK_DEAD_ZONE || axisEvent.value < -JOYSTICK_DEAD_ZONE)
-					{
-						_input->quit = true;
-					}
+					_input->horizontal += read_axis( (float)axisEvent.value );
 				}
-				//Y axis motion
-				else if (axisEvent.axis == 1)
+#if defined(__APPLE__) || defined(_WIN32)
+				else if ( axisEvent.axis < 4u )
+#else
+				else if ( axisEvent.axis == 1u )
+#endif
 				{
-					if (axisEvent.value > JOYSTICK_DEAD_ZONE || axisEvent.value < -JOYSTICK_DEAD_ZONE)
-					{
-						_input->quit = true;
-					}
+					_input->vertical -= read_axis( (float)axisEvent.value );
 				}
 			}
 
 			//Button on controller 0
-			if (buttonEvent.which == 0)
+			if ( buttonEvent.which == 0 )
 			{
-				if (buttonEvent.state == SDL_PRESSED)
+				if ( buttonEvent.state == SDL_PRESSED )
 				{
 					_input->quit = true;
 				}
@@ -89,7 +102,7 @@ namespace RetroUi
 				_controller = SDL_JoystickOpen(0);
 				if (_controller == NULL)
 				{
-					printf("Warning: Unable to open game controller! SDL Error: %s\n", SDL_GetError());
+					std::cout << "Warning: Unable to open game controller! SDL Error: " << SDL_GetError() << std::endl;
 				}
 			}
 		}

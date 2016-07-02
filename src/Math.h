@@ -25,9 +25,16 @@ namespace RetroMath
 		return fnv1a( &data, sizeof(u32) );
 	}
 
-	inline float lerp( float a, float b, float t )
+	template< typename T >
+	inline T lerp( T a, T b, T t )
 	{
-		return a + t * (b-a);
+		return a + t * (b - a);
+	}
+
+	template< typename T >
+	inline T sign( T v )
+	{
+		return static_cast<T>( (T(0) < v) - (v < T(0)) );
 	}
 }
 
