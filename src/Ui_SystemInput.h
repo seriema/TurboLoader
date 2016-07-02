@@ -35,7 +35,7 @@ namespace RetroUi
 			return RetroMath::sign(v) * std::max( 0.f, JOY_INTERVAL_SCALE * std::abs(v) - JOY_INTERVAL_DEADZONE );
 		}
 
-		void handle_keys(SDL_KeyboardEvent event)
+		void handle_keys( SDL_KeyboardEvent event, float mult )
 		{
 			switch (event.keysym.sym)
 			{
@@ -44,16 +44,23 @@ namespace RetroUi
 				case SDLK_SPACE:  _input->select = true; break;
 				case SDLK_RETURN: _input->start  = true; break;
 
-				case SDLK_RIGHT:  _input->horizontal += 1.f; break;
-				case SDLK_LEFT:   _input->horizontal -= 1.f; break;
-				case SDLK_UP:     _input->vertical += 1.f; break;
-				case SDLK_DOWN:   _input->vertical -= 1.f; break;
+				case SDLK_RIGHT:  _input->horizontal = mult; break;
+				case SDLK_LEFT:   _input->horizontal = -mult; break;
+				case SDLK_UP:     _input->vertical = mult; break;
+				case SDLK_DOWN:   _input->vertical = -mult; break;
 			}
 		}
 
-		void handle_controller(SDL_JoyAxisEvent axisEvent, SDL_JoyButtonEvent buttonEvent)
+		void handle_controller_axis( SDL_JoyAxisEvent axisEvent )
 		{
 			std::cout << "[RetroUi::SystemInput::handle_controller] " << axisEvent.which << "::" << (int)axisEvent.axis << "::" << axisEvent.value << std::endl;
+
+			/* TODO Retardness overload! On apple (win also?) both controllers counts as first controller:
+			 * axis0 is x-axis joy0
+			 * axis1 is x-axis joy1
+			 * axis2 is y-axis joy0
+			 * axis3 is y-axis joy1
+			 */
 
 			//Motion on controller 0
 			if ( axisEvent.which == 0 )
@@ -64,7 +71,7 @@ namespace RetroUi
 				if ( axisEvent.axis == 0u )
 #endif
 				{
-					_input->horizontal += read_axis( (float)axisEvent.value );
+					_input->horizontal = read_axis( (float)axisEvent.value );
 				}
 #if defined(__APPLE__) || defined(_WIN32)
 				else if ( axisEvent.axis < 4u )
@@ -72,10 +79,13 @@ namespace RetroUi
 				else if ( axisEvent.axis == 1u )
 #endif
 				{
-					_input->vertical -= read_axis( (float)axisEvent.value );
+					_input->vertical = -read_axis( (float)axisEvent.value );
 				}
 			}
+		}
 
+		void handle_controller_button( SDL_JoyButtonEvent buttonEvent, float mult )
+		{
 			//Button on controller 0
 			if ( buttonEvent.which == 0 )
 			{
@@ -118,7 +128,7 @@ namespace RetroUi
 
 		virtual void tick() override
 		{
-			memset( &*_input, 0, sizeof(*_input) );
+			//memset( &*_input, 0, sizeof(*_input) );
 
 			SDL_Event e;
 			while (SDL_PollEvent(&e))
@@ -130,12 +140,19 @@ namespace RetroUi
 					_input->quit = true;
 					break;
 				case SDL_KEYDOWN:
-					handle_keys(e.key);
+					handle_keys( e.key, 1.f );
+					break;
+				case SDL_KEYUP:
+					handle_keys( e.key, 0.f );
 					break;
 				case SDL_JOYAXISMOTION:
+					handle_controller_axis( e.jaxis );
+					break;
 				case SDL_JOYBUTTONDOWN:
+					handle_controller_button( e.jbutton, 1.f );
+					break;
 				case SDL_JOYBUTTONUP:
-					handle_controller(e.jaxis, e.jbutton);
+					handle_controller_button( e.jbutton, 0.f );
 					break;
 				}
 			}
