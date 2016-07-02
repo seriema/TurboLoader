@@ -10,11 +10,11 @@ namespace RetroApplication
 {
 	struct InputContext
 	{
-		bool quit;
-		bool select;
-		bool start;
-		float horizontal;
-		float vertical;
+		bool quit = 0;
+		bool select = 0;
+		bool start = 0;
+		float horizontal = 0;
+		float vertical = 0;
 	};
 
 	class Application
