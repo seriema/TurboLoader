@@ -34,11 +34,16 @@ namespace
 
 std::shared_ptr<RetroEnvironment::IManager> RetroEnvironment::Factory::create()
 {
-	if( SDL_Init( SDL_INIT_VIDEO | SDL_INIT_JOYSTICK ) < 0 )
+	if( SDL_Init( SDL_INIT_VIDEO ) < 0 )
 	{
 		cout << "[Environment::Factory::create] SDL could not initialize! SDL Error: '" << SDL_GetError() << "'" << endl;
 		return nullptr;
 	}
+
+	// TODO On a glorious day we shall move this joystick init poop to a more suitable place.
+	SDL_SetHint(SDL_HINT_JOYSTICK_ALLOW_BACKGROUND_EVENTS, "1" );
+	SDL_InitSubSystem( SDL_INIT_JOYSTICK );
+	SDL_JoystickEventState( SDL_ENABLE );
 
 	//hide mouse cursor early
 	//	SDL_ShowCursor(0);
