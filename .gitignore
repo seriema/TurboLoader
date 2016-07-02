@@ -1,6 +1,10 @@
 # Custom a-retro-ui
 a_retro_ui
 a_retro_test
+## OSX
+liba_retro_lib.a
+liba_retro_core.a
+## Windows
 *.vcxproj
 *.vcxproj.filters
 *.sln

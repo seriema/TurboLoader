@@ -50,9 +50,10 @@ include_directories(
 	${DEPENDENCIES_INCLUDES}
 )
 
-set(SOURCE_FILES
+add_library(a_retro_lib
 	${DEPENDENCIES_SOURCES}
-
+)
+add_library(a_retro_core
 	src/platform.h
 
 	src/Ioc_Container.h
@@ -105,23 +106,26 @@ set(SOURCE_FILES
 	src/Ui_SystemRenderer.h
 	src/Ui_SystemInput.h
 	src/Ui_SystemAnimator.h
-	src/Ui_ComponentInteraction.h src/Ui_SystemInteraction.h)
+	src/Ui_ComponentInteraction.h src/Ui_SystemInteraction.h
+)
 
 # MAIN
 add_executable(a_retro_ui
 	src/main.cpp
-	${SOURCE_FILES}
 )
 target_link_libraries(a_retro_ui
+	a_retro_lib
+	a_retro_core
 	${DEPENDENCIES_LIBRARIES}
 )
 
 # TEST
 add_executable(a_retro_test
 	src/test.cpp
-	${SOURCE_FILES}
 )
 target_link_libraries(a_retro_test
+	a_retro_lib
+	a_retro_core
 	${DEPENDENCIES_LIBRARIES}
 )
 
