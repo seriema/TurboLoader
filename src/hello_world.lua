@@ -1,11 +1,10 @@
-
 bitmaps {
-	jp = "./res/jp.png",
-	jb = "./res/jb.png",
-	img_test_bmp = "./res/img_test.bmp",
-	img_test_dds = "./res/img_test.dds",
+	jp = "./res/bitmap/jp.png",
+	jb = "./res/bitmap/jb.png",
+	img_test_bmp = "./res/bitmap/img_test.bmp",
+	img_test_dds = "./res/bitmap/img_test.dds",
 }
 
 shaders {
-	debug = "./res/debug",
+	debug = "./res/shader/debug",
 }
