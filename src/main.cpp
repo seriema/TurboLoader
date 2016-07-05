@@ -72,6 +72,8 @@ int main( int argc, char* args[] )
 
 		builder.add< RetroUi::Context >();
 
+		builder.add< RetroUi::RenderFuncs >( RetroUi::render_funcs_OpenGL );
+
 		builder.add< RetroUi::ComponentGrid >( 16 );
 		builder.add< RetroUi::ComponentTransform >( 256 );
 		builder.add< RetroUi::ComponentRender >( 256 );
@@ -83,6 +85,7 @@ int main( int argc, char* args[] )
 				RetroGraphics::IShaderManager,
 				RetroGraphics::ITextureManager,
 				RetroGraphics::IMeshManager,
+				RetroUi::RenderFuncs,
 				RetroUi::ComponentGrid,
 				RetroUi::ComponentTransform,
 				RetroUi::ComponentRender >();

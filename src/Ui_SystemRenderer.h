@@ -9,8 +9,8 @@
 
 #include <glm/mat4x4.hpp>               // glm::mat4
 #include <glm/gtc/matrix_transform.hpp> // glm::perspective
-#include <glm/gtc/type_ptr.hpp>         // glm::value_ptr
 #include <glm/gtx/transform.hpp>        // glm::translate, glm::rotate, glm::scale
+#include <glm/gtc/type_ptr.hpp>         // glm::value_ptr
 
 #include "platform.h"
 
@@ -29,10 +29,6 @@
 
 namespace
 {
-	using RetroGraphics::RenderKey;
-	using RetroGraphics::RenderData;
-	using RetroUi::RenderData_Draw;
-
 	std::string calc_description()
 	{
 		std::ostringstream description;
@@ -43,32 +39,8 @@ namespace
 		description << "   Shading: " << glGetString( GL_SHADING_LANGUAGE_VERSION ) << std::endl;
 		return description.str();
 	}
-
-	void Draw_OpenGL( const RenderData _data )
-	{
-		auto& data = *reinterpret_cast< const RenderData_Draw* >( _data );
-
-		glUseProgram( data.shader );
-
-		glUniformMatrix4fv( glGetUniformLocation( data.shader, "mvp" ), 1, GL_FALSE, glm::value_ptr(data.mvp) );
-		glUniform2fv( glGetUniformLocation( data.shader, "size" ), 1, glm::value_ptr(data.size) );
-
-		int n_verts = 4;//sizeof(vertices) / sizeof(GL_FLOAT);
-		glBindBuffer( GL_ARRAY_BUFFER, data.vbo );
-		glVertexAttribPointer( glGetAttribLocation( data.shader, "pos" ), 3, GL_FLOAT, GL_FALSE, 5*sizeof(GL_FLOAT), 0 );
-		glVertexAttribPointer( glGetAttribLocation( data.shader, "uv" ), 2, GL_FLOAT, GL_FALSE, 5*sizeof(GL_FLOAT), (void*)(3*sizeof(GL_FLOAT)) );
-		//glVertexAttribPointer( glGetAttribLocation( data.shader, "col" ), 3, GL_FLOAT, GL_FALSE, 3*sizeof(GL_FLOAT), 0 );
-
-		// TODO bind relevant texture here.
-		// TODO only activate and rebind if neccessary.
-		int texture_i = 0;
-		glActiveTexture( GL_TEXTURE0 + texture_i );
-		glUniform1i( glGetUniformLocation( data.shader, "texture" ), texture_i );
-
-		glBindTexture( GL_TEXTURE_2D, data.bitmap );
-		glDrawArrays( GL_TRIANGLE_STRIP, 0, n_verts );
-	};
 }
+
 
 namespace RetroUi
 {
@@ -132,19 +104,20 @@ namespace RetroUi
 			{
 				Entity e = _c_render->_data.entity[ i ];
 				RenderKey key = _c_render->_data.key[ i ];
-				RenderData_Draw* data = &_c_render->_data.data[ i ];
+				RenderCommand* _command = &_c_render->_data.data[ i ];
 
 				// Build mvp (model view projection) matrix.
 				// Build model matrix from srt (scale rotation translation).
 
+				glm::mat4& mvp = reinterpret_cast< glm::mat4& >( _command->Common.mvp );
+
 				glm::mat4 scale = glm::scale( glm::vec3(_c_transform->scale(e)) );
 				glm::mat4 rotation = glm::rotate( 0.f, glm::vec3(0,0,1) );
 				glm::mat4 translation = glm::translate( glm::mat4(1.f), glm::vec3(_c_transform->x(e), _c_transform->y(e), _c_transform->z(e)) );
-				data->mvp = vp * translation * rotation * scale;
+				mvp = vp * translation * rotation * scale;
 
 				RenderCommand& command = _renderer.submit( key );
-				command.data = data;
-				command.func = Draw_OpenGL;
+				command = *_command; // TODO We shouldn't have to copy every command every tick! Graphics::Renderer should have access to ComponentRender.
 			}
 
 			_renderer.render();

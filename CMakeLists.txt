@@ -109,6 +109,7 @@ set(SOURCE_FILES
 	src/Ui_SystemInput.h
 	src/Ui_SystemAnimator.h
 	src/Ui_SystemGrid.h
+	src/Ui_RenderFuncs.h
 )
 
 # MAIN

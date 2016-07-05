@@ -5,6 +5,7 @@
 
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
+#include <glm/gtc/type_ptr.hpp>         // glm::value_ptr
 
 #include "Resource_MeshLoader.h"
 #include "Resource_BitmapCollection.h"
@@ -19,6 +20,7 @@
 
 #include "Ecs_EntityManager.h"
 
+#include "Ui_RenderFuncs.h"
 #include "Ui_ComponentGrid.h"
 #include "Ui_ComponentTransform.h"
 #include "Ui_ComponentRender.h"
@@ -36,6 +38,7 @@ namespace RetroUi
 		shared_ptr< RetroGraphics::IShaderManager >   _shader_manager;
 		shared_ptr< RetroGraphics::ITextureManager >  _texture_manager;
 		shared_ptr< RetroGraphics::IMeshManager >     _mesh_manager;
+		shared_ptr< RetroUi::RenderFuncs >            _render_funcs;
 		shared_ptr< RetroUi::ComponentGrid >          _c_grid;
 		shared_ptr< RetroUi::ComponentTransform >     _c_transform;
 		shared_ptr< RetroUi::ComponentRender >        _c_render;
@@ -50,6 +53,7 @@ namespace RetroUi
 			shared_ptr< RetroGraphics::IShaderManager > shader_manager,
 			shared_ptr< RetroGraphics::ITextureManager > texture_manager,
 			shared_ptr< RetroGraphics::IMeshManager > mesh_manager,
+			shared_ptr< RetroUi::RenderFuncs > render_funcs,
 			shared_ptr< RetroUi::ComponentGrid > c_grid,
 			shared_ptr< RetroUi::ComponentTransform > c_transform,
 			shared_ptr< RetroUi::ComponentRender > c_render )
@@ -59,6 +63,7 @@ namespace RetroUi
 			, _mesh_manager( mesh_manager )
 			, _mesh_loader( mesh_loader )
 			, _bitmaps( bitmaps )
+			, _render_funcs( render_funcs )
 			, _c_grid( c_grid )
 			, _c_transform( c_transform )
 			, _c_render( c_render )
@@ -127,11 +132,14 @@ namespace RetroUi
 			key.RenderTranslucent.translucency_type = 1;
 			key.RenderTranslucent.depth = 1;
 
-			RetroUi::RenderData_Draw data;
-			data.vbo = reinterpret_cast< RetroGraphics::MeshManager_OpenGL& >( *_mesh_manager ).lookup( _quad_handle ).vbo;
-			data.shader = reinterpret_cast< RetroGraphics::ShaderManager_OpenGL& >( *_shader_manager ).lookup( shader );
-			data.bitmap = reinterpret_cast< RetroGraphics::TextureManager_OpenGL& >( *_texture_manager ).lookup( bitmap );
-			data.size = _bitmaps->size[ _bitmaps->name_index.at(bitmap) ];
+			RetroGraphics::RenderCommand data;
+			data.DrawBitmap.func = _render_funcs->draw_bitmap;
+			data.DrawBitmap.vbo = reinterpret_cast< RetroGraphics::MeshManager_OpenGL& >( *_mesh_manager ).lookup( _quad_handle ).vbo;
+			data.DrawBitmap.shader = reinterpret_cast< RetroGraphics::ShaderManager_OpenGL& >( *_shader_manager ).lookup( shader );
+			data.DrawBitmap.bitmap = reinterpret_cast< RetroGraphics::TextureManager_OpenGL& >( *_texture_manager ).lookup( bitmap );
+
+			glm::vec2& size = reinterpret_cast< glm::vec2& >( data.DrawBitmap.size );
+			size = _bitmaps->size[ _bitmaps->name_index.at(bitmap) ];
 
 			Entity e = _entity_manager->create();
 

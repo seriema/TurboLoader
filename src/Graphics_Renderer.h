@@ -35,13 +35,37 @@ namespace RetroGraphics
 		// glm::vec4 color;
 	};
 
-	typedef void* RenderData;
-	typedef void ( *RenderFunc )( const RenderData );
+	union RenderCommand;
 
-	struct RenderCommand
+	typedef void ( *RenderFunc )( const RenderCommand* );
+
+	union RenderCommand
 	{
-		RenderData data;
-		RenderFunc func;
+		struct
+		{
+			RenderFunc func;
+			float      mvp[ 16 ];
+		} Common;
+
+		struct
+		{
+			RenderFunc func;
+			float      mvp[ 16 ];
+			u32        vbo; // vbo contains attributes such as vert,norm,color, these must then also exist in shader.
+			u32        shader;
+			u32        bitmap;
+			float      size[ 2 ];
+		} DrawBitmap;
+
+		struct
+		{
+			RenderFunc func;
+			float      mvp[ 16 ];
+			u32        vbo; // vbo contains attributes such as vert,norm,color, these must then also exist in shader.
+			u32        shader;
+			u32        bitmap;
+			float      size[ 2 ];
+		} DrawString;
 	};
 
 
@@ -71,8 +95,8 @@ namespace RetroGraphics
 			for ( u32 i = 0; i < _render_count; ++i )
 			{
 				int command_i = _render_key[ i ].RenderCommon.data_index;
-				RenderCommand & command = _render_command[ command_i ];
-				command.func( command.data );
+				RenderCommand& command = _render_command[ command_i ];
+				command.Common.func( &command );
 			}
 			_render_count = 0;
 		}
