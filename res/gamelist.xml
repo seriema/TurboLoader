@@ -1,0 +1,114 @@
+<?xml version="1.0"?>
+<gameList>
+	<game>
+		<path>./Shadowrun (U) [!].smc</path>
+		<name>Shadowrun</name>
+		<desc>Disoriented and confused, you are forced into a race against time, technology and termination. Running in the shadows and cracks between the Megaplexes, survival depends on your wits, your weapons and your wayward companions. Plunge into the dark side of the future, where technology and magic become one, where devolution and destruction are a way of life. Plunge into Shadowrun.</desc>
+		<image>~/.emulationstation/downloaded_images/snes/Shadowrun (U) [!]-image.jpg</image>
+		<rating>0.6</rating>
+		<releasedate>19930501T000000</releasedate>
+		<developer>Beam Software</developer>
+		<publisher>Data East</publisher>
+		<genre>Action</genre>
+	</game>
+	<game>
+		<path>./Super Mario All-Stars (U) [!].smc</path>
+		<name>Super Mario All-Stars + Super Mario World</name>
+		<desc>Revisit the magic and fun of the classic Super Mario Bros. series on your Super NES!  Play through Super Mario World, plus all the great Super Mario Bros. games for the NES have been powered up with 16-bit graphics and sound and collected on one super game pak.  As an added bonus, the previously unreleased “Lost Levels” are included.  These super challenging courses have never been available in this country until now!
+
+* Five great games in one game pak!  Play through Super Mario Bros., Super Mario Bros. Lost Levels, Super Mario Bros. 2, Super Mario Bros. 3 &amp; Super Mario World!
+* Battery backed memory saves up to 4 players’ progress through every game!
+* Play alone or 2 players can alternate play!
+* New 16-bit graphics, sound, and other surprises!</desc>
+		<image>~/.emulationstation/downloaded_images/snes/Super Mario All-Stars (U) [!]-image.jpg</image>
+		<rating>0.8</rating>
+		<releasedate>19931216T000000</releasedate>
+		<developer>Nintendo</developer>
+		<publisher>Nintendo</publisher>
+		<genre>Adventure</genre>
+		<players>2</players>
+	</game>
+	<game>
+		<path>./Super Mario All-Stars + Super Mario World (U) [!].smc</path>
+		<name>Super Mario All-Stars + Super Mario World</name>
+		<desc>Revisit the magic and fun of the classic Super Mario Bros. series on your Super NES!  Play through Super Mario World, plus all the great Super Mario Bros. games for the NES have been powered up with 16-bit graphics and sound and collected on one super game pak.  As an added bonus, the previously unreleased “Lost Levels” are included.  These super challenging courses have never been available in this country until now!
+
+* Five great games in one game pak!  Play through Super Mario Bros., Super Mario Bros. Lost Levels, Super Mario Bros. 2, Super Mario Bros. 3 &amp; Super Mario World!
+* Battery backed memory saves up to 4 players’ progress through every game!
+* Play alone or 2 players can alternate play!
+* New 16-bit graphics, sound, and other surprises!</desc>
+		<image>~/.emulationstation/downloaded_images/snes/Super Mario All-Stars + Super Mario World (U) [!]-image.jpg</image>
+		<rating>0.8</rating>
+		<releasedate>19931216T000000</releasedate>
+		<developer>Nintendo</developer>
+		<publisher>Nintendo</publisher>
+		<genre>Adventure</genre>
+		<players>2</players>
+	</game>
+	<game>
+		<path>./Super Mario Kart (U) [!].smc</path>
+		<name>Super Mario Kart</name>
+		<desc>The Super Mario GoKart Park is open for tons of racing fun!  Hit the track with Mario, Luigi, Yoshi and the Princess.  Get tough and lock fenders with Donkey Kong, Jr. and Bowser.  Even Toad and Koopa Troopa will mix it up in an all-out quest for the Gold Cup!  Race head-to-head with a friend or challenge the computer in great, split-screen, Mode 7 graphics.
+
+Feel like a bit less speed and a lot more strategy?  Take a crack at the Battle Mode!  In four different maze-like courses you’ll use Koopa Shells, Banana Peels, Super Stars and other wacky weapons to burst your opponent's target balloons and triumph!
+
+* 2 games in 1 - Mario Grand Prix and Battle Mode
+* 8  Familiar Characters
+* 20 Different Tracks
+* 3 Different Skill Levels
+* Battery-backed memory saves your best times!</desc>
+		<image>~/.emulationstation/downloaded_images/snes/Super Mario Kart (U) [!]-image.jpg</image>
+		<rating>0.7</rating>
+		<releasedate>19920901T000000</releasedate>
+		<developer>Nintendo</developer>
+		<publisher>Nintendo</publisher>
+		<genre>Racing</genre>
+		<players>2</players>
+	</game>
+	<game>
+		<path>./Super Mario RPG - Legend of the Seven Stars (U) [!].smc</path>
+		<name>Super Mario RPG: Legend of the Seven Stars</name>
+		<desc>Mario returns in this incredible new role-playing adventure! His latest rival is Smithy, a menacing creature who causes fear and treachery in the Mushroom Kingdom. Mario must recover seven stars and repair the Star Road before he can make his way to Bowser's castle for a final confrontation with Smithy. Powerful weapons, sinister spells and other useful items help Mario to complete his harrowing journey. New friends and old allies support him along the way. Even Bowser lends a hand!</desc>
+		<image>~/.emulationstation/downloaded_images/snes/Super Mario RPG - Legend of the Seven Stars (U) [!]-image.jpg</image>
+		<rating>0.7</rating>
+		<releasedate>19960513T000000</releasedate>
+		<developer>Squaresoft</developer>
+		<publisher>Nintendo</publisher>
+		<genre>Role-Playing</genre>
+	</game>
+	<game>
+		<path>./Super Mario World 2 - Yoshi's Island (U) (M3) (V1.1).smc</path>
+		<name>Super Mario World 2+: Yoshi's Island</name>
+		<desc>The first of several full-length hacks of 'Super Mario World 2: Yoshi's Island' created by Golden Yoshi.  This hack brings a total of 54 entirely original levels to the classic Yoshi's Island that we all love.  While not as polished as his second (and most popular) hack, this one still features excellent level design with some of the most challenging Yoshi stages you'll see.  Make no mistake, these stages are tough, but not unfair.  Veteran players rejoice, but newbies beware; Conquer the original Yoshi's Island first, then give this one a try.</desc>
+		<image>~/.emulationstation/downloaded_images/snes/Super Mario World 2 - Yoshi's Island (U) (M3) (V1.1)-image.jpg</image>
+		<releasedate>20050822T000000</releasedate>
+		<developer>GoldenYoshi</developer>
+		<publisher>Nintendo</publisher>
+		<genre>Platform</genre>
+	</game>
+	<game>
+		<path>./Super Mario World (U) [!].smc</path>
+		<name>Super Mario World:Brutal Mario Final Chapter</name>
+		<desc>Brutal Mario is the all so popular Super Mario world demo, but still not completed. Not to long ago the creator that goes by the name of Carlos. Completed a new world, with a completed version of Bowser's Castle. So let the adventure continue!!!</desc>
+		<image>~/.emulationstation/downloaded_images/snes/Super Mario World (U) [!]-image.jpg</image>
+		<rating>1</rating>
+		<releasedate>20141210T000000</releasedate>
+		<developer>Nintendo</developer>
+		<publisher>Nintendo</publisher>
+		<genre>Adventure</genre>
+		<players>2</players>
+	</game>
+	<game>
+		<path>./Super Metroid (JU) [!].smc</path>
+		<name>Super Metroid</name>
+		<desc>Take on a legion of Space Pirates and a new Metroid force as you forge into the covert underworld of Planet Zebes!  It’s up to you and Samus to recapture the long-surviving Metroid hatchling before evil hands unleash its energy.
+
+An army of ominous creatures are poised for battle at every turn of Zebes’ twisted, threatening passageways… including the menacing Ridley and the great lizard Kraid.  Knock down enemies with a killer somersault and swing on an electric beam through narrow passageways!  They’re no match for you and Samus… but wait!  It seems the Mother Brain has returned…</desc>
+		<image>~/.emulationstation/downloaded_images/snes/Super Metroid (JU) [!]-image.jpg</image>
+		<rating>0.7</rating>
+		<releasedate>19940418T000000</releasedate>
+		<developer>Intelligent Systems</developer>
+		<publisher>Nintendo</publisher>
+		<genre>Action</genre>
+	</game>
+</gameList>
