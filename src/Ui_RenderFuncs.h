@@ -16,6 +16,21 @@ namespace RetroUi
 	};
 
 
+	struct VertexBitmap
+	{
+		float pos[ 3 ];
+		float uv[ 2 ];
+	};
+
+
+	struct VertexString
+	{
+		i32 char_index;
+		float x;
+		float y;
+	};
+
+
 	RenderFuncs render_funcs_OpenGL
 	{
 		.draw_bitmap = []( const RetroGraphics::RenderCommand* command )
@@ -25,11 +40,14 @@ namespace RetroUi
 			glUniformMatrix4fv( glGetUniformLocation( command->DrawBitmap.shader, "mvp" ), 1, GL_FALSE, command->DrawBitmap.mvp );
 			glUniform2fv( glGetUniformLocation( command->DrawBitmap.shader, "size" ), 1, command->DrawBitmap.size );
 
-			int n_verts = 4;//sizeof(vertices) / sizeof(GL_FLOAT);
+			int n_verts = 4; // A quad is 4 verts. //sizeof(vertices) / sizeof(VertexBitmap);
+			GLsizei stride = sizeof( VertexBitmap );
+			auto uv_offset = (const void*)sizeof( VertexBitmap::pos );
+
 			glBindBuffer( GL_ARRAY_BUFFER, command->DrawBitmap.vbo );
-			glVertexAttribPointer( glGetAttribLocation( command->DrawBitmap.shader, "pos" ), 3, GL_FLOAT, GL_FALSE, 5*sizeof(GL_FLOAT), 0 );
-			glVertexAttribPointer( glGetAttribLocation( command->DrawBitmap.shader, "uv" ), 2, GL_FLOAT, GL_FALSE, 5*sizeof(GL_FLOAT), (void*)(3*sizeof(GL_FLOAT)) );
-			//glVertexAttribPointer( glGetAttribLocation( data.shader, "col" ), 3, GL_FLOAT, GL_FALSE, 3*sizeof(GL_FLOAT), 0 );
+			glVertexAttribPointer( glGetAttribLocation( command->DrawBitmap.shader, "pos" ), 3, GL_FLOAT, GL_FALSE, stride, 0 );
+			glVertexAttribPointer( glGetAttribLocation( command->DrawBitmap.shader, "uv" ), 2, GL_FLOAT, GL_FALSE, stride, uv_offset );
+			//glVertexAttribPointer( glGetAttribLocation( data.shader, "col" ), 3, GL_FLOAT, GL_FALSE, stride, 0 );
 
 			// TODO bind relevant texture here.
 			// TODO only activate and rebind if neccessary.
@@ -39,6 +57,38 @@ namespace RetroUi
 
 			glBindTexture( GL_TEXTURE_2D, command->DrawBitmap.bitmap );
 			glDrawArrays( GL_TRIANGLE_STRIP, 0, n_verts );
+		},
+
+
+		.draw_string = []( const RetroGraphics::RenderCommand* command )
+		{
+			glUseProgram( command->DrawString.shader );
+
+
+			glPointSize( command->DrawString.size[1] / 8 ); // TODO Font atlas is 16x8 so font size is y size div by 8.
+
+
+//			glUniform1f( glGetUniformLocation( command->DrawString.shader, "timestamp" ), 0.001f * (float)SDL_GetTicks() );
+			glUniformMatrix4fv( glGetUniformLocation( command->DrawString.shader, "mvp" ), 1, GL_FALSE, command->DrawString.mvp );
+			glUniform2fv( glGetUniformLocation( command->DrawString.shader, "size" ), 1, command->DrawString.size );
+
+			int n_verts = 5; // "frust" is five chars. //sizeof(vertices) / sizeof(VertexString);
+			GLsizei stride = sizeof( VertexString );
+			auto pos_offset = (const void*)sizeof( VertexString::char_index );
+
+			glBindBuffer( GL_ARRAY_BUFFER, command->DrawString.vbo );
+			glVertexAttribPointer( glGetAttribLocation( command->DrawString.shader, "char_index" ), 1, GL_INT, GL_FALSE, stride, 0 );
+			glVertexAttribPointer( glGetAttribLocation( command->DrawString.shader, "pos" ), 2, GL_FLOAT, GL_FALSE, stride, pos_offset );
+			//glVertexAttribPointer( glGetAttribLocation( data.shader, "col" ), 3, GL_FLOAT, GL_FALSE, 3*sizeof(GL_FLOAT), 0 );
+
+			// TODO bind relevant texture here.
+			// TODO only activate and rebind if neccessary.
+			int texture_i = 0;
+			glActiveTexture( GL_TEXTURE0 + texture_i );
+			glUniform1i( glGetUniformLocation( command->DrawString.shader, "texture" ), texture_i );
+
+			glBindTexture( GL_TEXTURE_2D, command->DrawString.bitmap );
+			glDrawArrays( GL_POINTS, 0, n_verts );
 		},
 	};
 }

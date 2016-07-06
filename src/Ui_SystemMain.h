@@ -58,6 +58,7 @@ namespace RetroUi
 			_package_loader->load( "./src/hello_world", _base_package_handle );
 			{
 				auto & package = _packages->handle_lookup.at( _base_package_handle.id );
+				_texture_manager->load( package.fonts.data(), package.fonts.size() );
 				_texture_manager->load( package.bitmaps.data(), package.bitmaps.size() );
 				_shader_manager->load( package.shaders.data(), package.shaders.size() );
 			}
@@ -72,6 +73,10 @@ namespace RetroUi
 				std::string image = RetroMath::fnv1a( 99877*i ) < 2200000000u ? "jp" : "jb";
 				_entity_factory->create_image( _main, "debug", image, glm::vec3(0) );
 			}
+
+
+			_entity_factory->create_string( _ui->scene, "msdf", "hack_bold", "frust", glm::vec3(0,0,1.f) );
+
 
 			_ui->focus = _c_transform->_data.entity[ _c_transform->first_child(_main) ];
 		}

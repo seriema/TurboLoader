@@ -27,19 +27,23 @@ namespace RetroResource
 
 		u32 load( const std::string * names, const std::string * paths, Handle * handles, const u32 size = 1 )
 		{
-			u32 size0 = _bitmaps.handle.size();
-			u32 size1 = size0;
+			u32 bitmaps_size0 = _bitmaps.handle.size();
+			u32 bitmaps_size = bitmaps_size0;
 
-			_bitmaps.handle.reserve( size );
-			_bitmaps.name.reserve( size );
-			_bitmaps.path.reserve( size );
-			_bitmaps.size.reserve( size );
-			_bitmaps.resource.reserve( size );
+			{
+				u32 bitmaps_new_size = bitmaps_size + size;
+				_bitmaps.handle.reserve( bitmaps_new_size );
+				_bitmaps.name.reserve( bitmaps_new_size );
+				_bitmaps.path.reserve( bitmaps_new_size );
+				_bitmaps.size.reserve( bitmaps_new_size );
+				_bitmaps.resource.reserve( bitmaps_new_size );
+				_bitmaps.resource_raw.reserve( bitmaps_new_size );
+			}
 
 			for ( u32 i = 0; i < size; ++i )
 			{
-				const std::string & name = names[ i ].c_str();
-				const std::string & path = paths[ i ].c_str();
+				const std::string& name = names[ i ];
+				const std::string& path = paths[ i ];
 
 				FIBITMAP * bitmap = nullptr;
 				u32 w, h;
@@ -55,23 +59,24 @@ namespace RetroResource
 
 				// TODO Make sure no name collision occurs!
 
-				_bitmaps.handle_index.insert( { handle.id, size1 } );
-				_bitmaps.name_index.insert( { name, size1 } );
+				_bitmaps.handle_index.insert( { handle.id, bitmaps_size } );
+				_bitmaps.name_index.insert( { name, bitmaps_size } );
 
 				_bitmaps.handle.push_back( handle );
 				_bitmaps.name.push_back( name );
 				_bitmaps.path.push_back( path );
 				_bitmaps.size.push_back( glm::vec2(w, h) );
 				_bitmaps.resource.push_back( bitmap );
+				_bitmaps.resource_raw.push_back( get_bits(w, h, bitmap) );
 
-				handles[ size1 - size0 ] = handle;
+				handles[ bitmaps_size - bitmaps_size0 ] = handle;
 
-				++size1;
+				++bitmaps_size;
 
 				std::cout << "[bitmap loader] loaded: (" << handle.id << ") " << w << "x" << h << " '" << path << "'" << std::endl;
 			}
 
-			return size1 - size0;
+			return bitmaps_size - bitmaps_size0;
 		}
 
 		void unload( Handle * handles, const u32 size = 1 )
@@ -100,6 +105,7 @@ namespace RetroResource
 				_bitmaps.path[ i ] = _bitmaps.path[ i_last ]; _bitmaps.path.pop_back();
 				_bitmaps.size[ i ] = _bitmaps.size[ i_last ]; _bitmaps.size.pop_back();
 				_bitmaps.resource[ i ] = _bitmaps.resource[ i_last ]; _bitmaps.resource.pop_back();
+				_bitmaps.resource_raw[ i ] = _bitmaps.resource_raw[ i_last ]; _bitmaps.resource_raw.pop_back();
 
 				--i_last;
 
@@ -126,6 +132,21 @@ namespace RetroResource
 			return true; // TODO return false or error if loading fails.
 
 			//imgdata = FreeImage_GetBits( img ); // TODO if img size isnt power of 2 then use FreeImage_ConvertToRawBits!
+		}
+
+		void* get_bits( int w, int h, FIBITMAP* bitmap )
+		{
+			// https://www.opengl.org/discussion_boards/showthread.php/163929-image-loading?p=1158293#post1158293
+			BYTE* bgra = FreeImage_GetBits( bitmap );
+			GLubyte* rgba = new GLubyte[ 4 * w * h ];
+			for( int j = 0, jSize = w * h; j < jSize; ++j )
+			{
+				rgba[ j * 4 + 0 ] = bgra[ j * 4 + 2 ];
+				rgba[ j * 4 + 1 ] = bgra[ j * 4 + 1 ];
+				rgba[ j * 4 + 2 ] = bgra[ j * 4 + 0 ];
+				rgba[ j * 4 + 3 ] = bgra[ j * 4 + 3 ];
+			}
+			return rgba;
 		}
 	};
 }

@@ -11,14 +11,16 @@
 
 #include "Resource_HandleManager.h"
 
+#include "Resource_FontCollection.h"
 #include "Resource_MeshCollection.h"
 #include "Resource_BitmapCollection.h"
 #include "Resource_ShaderCollection.h"
 #include "Resource_PackageCollection.h"
 
+//#include "Resource_FontLoader.h"
 #include "Resource_MeshLoader.h"
-#include "Resource_ShaderLoader.h"
-#include "Resource_BitmapLoader.h"
+//#include "Resource_ShaderLoader.h"
+//#include "Resource_BitmapLoader.h"
 
 #include "Resource_PackageLoader_Lua.h"
 
@@ -55,26 +57,32 @@ namespace RetroApplication
 			// RETRO RESOURCES
 
 			ioc.singleton< RetroResource::HandleManager >();
+			ioc.singleton< RetroResource::FontCollection >();
 			ioc.singleton< RetroResource::MeshCollection >();
 			ioc.singleton< RetroResource::BitmapCollection >();
 			ioc.singleton< RetroResource::ShaderCollection >();
 			ioc.singleton< RetroResource::PackageCollection >();
 
+//			ioc.singleton< RetroResource::FontLoader >(
+//				*ioc.resolve< RetroResource::HandleManager >(),
+//				*ioc.resolve< RetroResource::FontCollection >() );
+//
 			ioc.singleton< RetroResource::MeshLoader >(
 				*ioc.resolve< RetroResource::HandleManager >(),
 				*ioc.resolve< RetroResource::MeshCollection >() );
-
-			ioc.singleton< RetroResource::ShaderLoader >(
-				*ioc.resolve< RetroResource::HandleManager >(),
-				*ioc.resolve< RetroResource::ShaderCollection >() );
-
-			ioc.singleton< RetroResource::BitmapLoader >(
-				*ioc.resolve< RetroResource::HandleManager >(),
-				*ioc.resolve< RetroResource::BitmapCollection >() );
+//
+//			ioc.singleton< RetroResource::ShaderLoader >(
+//				*ioc.resolve< RetroResource::HandleManager >(),
+//				*ioc.resolve< RetroResource::ShaderCollection >() );
+//
+//			ioc.singleton< RetroResource::BitmapLoader >(
+//				*ioc.resolve< RetroResource::HandleManager >(),
+//				*ioc.resolve< RetroResource::BitmapCollection >() );
 
 			ioc.singleton< RetroResource::IPackageLoader, RetroResource::PackageLoader_Lua >(
 				*ioc.resolve< RetroResource::HandleManager >(),
 				*ioc.resolve< RetroResource::PackageCollection >(),
+				*ioc.resolve< RetroResource::FontCollection >(),
 				*ioc.resolve< RetroResource::MeshCollection >(),
 				*ioc.resolve< RetroResource::BitmapCollection >(),
 				*ioc.resolve< RetroResource::ShaderCollection >() );

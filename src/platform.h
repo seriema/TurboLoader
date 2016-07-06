@@ -17,5 +17,6 @@
 
 typedef std::uint8_t  u8;
 typedef std::uint32_t u32;
+typedef std::int32_t i32;
 
 #endif //PLATFORM_H

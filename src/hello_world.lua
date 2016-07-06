@@ -1,3 +1,8 @@
+
+fonts {
+	hack_bold = "./res/font/hack/Hack-Bold.ttf",
+}
+
 bitmaps {
 	jp = "./res/bitmap/jp.png",
 	jb = "./res/bitmap/jb.png",
@@ -7,4 +12,5 @@ bitmaps {
 
 shaders {
 	debug = "./res/shader/debug",
+	msdf = "./res/shader/msdf",
 }

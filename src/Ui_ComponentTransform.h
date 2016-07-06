@@ -58,28 +58,28 @@ namespace RetroUi
 			data_dst.prev_sibling[ i_dst ]   = _data.prev_sibling.at( i );
 		}
 
-		inline const float x( Entity e ) { return get( _data.x, e ); }
+		inline float x( Entity e ) { return get( _data.x, e ); }
 		inline void set_x( Entity e, float x ) { set( _data.x, e, x ); }
 
-		inline const float y( Entity e ) { return get( _data.y, e ); }
+		inline float y( Entity e ) { return get( _data.y, e ); }
 		inline void set_y( Entity e, float y ) { set( _data.y, e, y ); }
 
-		inline const float z( Entity e ) { return get( _data.z, e ); }
+		inline float z( Entity e ) { return get( _data.z, e ); }
 		inline void set_z( Entity e, float z ) { set( _data.z, e, z ); }
 
-		inline const float scale( Entity e ) { return get( _data.scale, e ); }
+		inline float scale( Entity e ) { return get( _data.scale, e ); }
 		inline void set_scale( Entity e, float scale ) { set( _data.scale, e, scale ); }
 
-		inline const u32 parent( Entity e ) { return get( _data.parent, e ); }
+		inline u32 parent( Entity e ) { return get( _data.parent, e ); }
 		inline void set_parent( Entity e, u32 parent ) { set( _data.parent, e, parent ); }
 
-		inline const u32 first_child( Entity e ) { return get( _data.first_child, e ); }
+		inline u32 first_child( Entity e ) { return get( _data.first_child, e ); }
 		inline void set_first_child( Entity e, u32 first_child ) { set( _data.first_child, e, first_child ); }
 
-		inline const u32 next_sibling( Entity e ) { return get( _data.next_sibling, e ); }
+		inline u32 next_sibling( Entity e ) { return get( _data.next_sibling, e ); }
 		inline void set_next_sibling( Entity e, u32 next_sibling ) { set( _data.next_sibling, e, next_sibling ); }
 
-		inline const u32 prev_sibling( Entity e ) { return get( _data.prev_sibling, e ); }
+		inline u32 prev_sibling( Entity e ) { return get( _data.prev_sibling, e ); }
 		inline void set_prev_sibling( Entity e, u32 prev_sibling ) { set( _data.prev_sibling, e, prev_sibling ); }
 
 		void append_child( Entity e_parent, Entity e_child )

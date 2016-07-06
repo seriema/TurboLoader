@@ -24,13 +24,13 @@ namespace RetroEcs
 		std::unordered_map< u32, u32 > _index;
 
 		template< typename U >
-		inline const U& get( const std::vector<U>& a, Entity e )
+		inline U& get( std::vector<U>& a, Entity e )
 		{
 			return a[ _index.at(e.id) ];
 		}
 
 		template< typename U >
-		inline void set( std::vector<U>& a, Entity e, const U& data )
+		inline void set( std::vector<U>& a, Entity e, U& data )
 		{
 			a[ _index.at(e.id) ] = data;
 		}

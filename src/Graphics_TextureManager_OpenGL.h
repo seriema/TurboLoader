@@ -4,8 +4,6 @@
 #include <unordered_map>
 #include <string>
 
-// TODO Remove free image dependency from this file!
-#include <FreeImage.h>
 #include <glm/vec2.hpp>
 
 #include "platform.h"
@@ -45,8 +43,8 @@ namespace RetroGraphics
 			{
 				RetroResource::Handle handle = handles[ j ];
 				u32 i = _bitmaps.handle_index.at( handle.id );
-				glm::vec2 size = _bitmaps.size[ i ];
-				void * bitmap = _bitmaps.resource[ i ];
+				glm::vec2& size = _bitmaps.size[ i ];
+				void * bitmap = _bitmaps.resource_raw[ i ];
 
 				u32 texture_handle;
 				glGenTextures( 1, &texture_handle );
@@ -62,8 +60,7 @@ namespace RetroGraphics
 				// glPixelStorei( GL_UNPACK_ALIGNMENT, 1 );
 
 				// http://docs.gl/es2/glTexImage2D
-				void * bits = get_bits((u32)size.x, (u32)size.y, (FIBITMAP*)bitmap);
-				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, (GLsizei)size.x, (GLsizei)size.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, bits);
+				glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA, (GLsizei)size.x, (GLsizei)size.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, bitmap );
 				//glGenerateMipmap( GL_TEXTURE_2D );
 
 				// TODO make sure handle isnt already in _handles.
@@ -102,22 +99,6 @@ namespace RetroGraphics
 		inline u32 lookup( const RetroResource::Handle handle ) const
 		{
 			return _handles.at( handle.id );
-		}
-
-	private:
-		void * get_bits( u32 w, u32 h, FIBITMAP * bitmap )
-		{
-			// https://www.opengl.org/discussion_boards/showthread.php/163929-image-loading?p=1158293#post1158293
-			BYTE * bgra = FreeImage_GetBits( bitmap );
-			GLubyte * rgba = new GLubyte[ 4 * w * h ];
-			for( u32 j = 0, jSize = w * h; j < jSize; ++j )
-			{
-				rgba[ j * 4 + 0 ] = bgra[ j * 4 + 2 ];
-				rgba[ j * 4 + 1 ] = bgra[ j * 4 + 1 ];
-				rgba[ j * 4 + 2 ] = bgra[ j * 4 + 0 ];
-				rgba[ j * 4 + 3 ] = bgra[ j * 4 + 3 ];
-			}
-			return rgba;
 		}
 	};
 }

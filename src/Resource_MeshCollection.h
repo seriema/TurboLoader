@@ -16,9 +16,9 @@ namespace RetroResource
 
 	struct Mesh
 	{
-		u32    vertices_n;
-		u32    indices_n;
-		float* vertices; // Hmm cast this to arbitrary interleaved MeshVertex ??
+		u32    vertices_n; // sizeof( vertices )
+		u32    indices_n;  // sizeof( indices )
+		void*  vertices;
 		u32*   indices;
 	};
 

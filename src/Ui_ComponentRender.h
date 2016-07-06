@@ -54,10 +54,10 @@ namespace RetroUi
 			data_dst.data[ i_dst ] = _data.data.at( i );
 		}
 
-		inline const RenderKey key( Entity e ) { return get( _data.key, e ); }
+		inline RenderKey key( Entity e ) { return get( _data.key, e ); }
 		inline void set_key( Entity e, RenderKey key ) { set( _data.key, e, key ); }
 
-		inline const RenderCommand& data( Entity e ) { return get( _data.data, e ); }
+		inline RenderCommand& data( Entity e ) { return get( _data.data, e ); }
 		inline void set_data( Entity e, RenderCommand& data ) { set( _data.data, e, data ); }
 	};
 }

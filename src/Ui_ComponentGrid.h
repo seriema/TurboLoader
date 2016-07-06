@@ -37,11 +37,11 @@ namespace RetroUi
 			data_dst.cell_size[ i_dst ] = _data.cell_size.at( i );
 		}
 
-		inline const glm::ivec2& grid_size( Entity e ) { return get( _data.grid_size, e ); }
-		inline void set_grid_size( Entity e, const glm::ivec2& size ) { set( _data.grid_size, e, size ); }
+		inline glm::ivec2& grid_size( Entity e ) { return get( _data.grid_size, e ); }
+		inline void set_grid_size( Entity e, glm::ivec2& size ) { set( _data.grid_size, e, size ); }
 
-		inline const glm::ivec2& cell_size( Entity e ) { return get( _data.cell_size, e ); }
-		inline void set_cell_size( Entity e, const glm::ivec2& size ) { set( _data.cell_size, e, size ); }
+		inline glm::ivec2& cell_size( Entity e ) { return get( _data.cell_size, e ); }
+		inline void set_cell_size( Entity e, glm::ivec2& size ) { set( _data.cell_size, e, size ); }
 	};
 }
 

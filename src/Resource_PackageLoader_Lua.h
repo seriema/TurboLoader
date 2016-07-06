@@ -2,9 +2,13 @@
 #define A_RETRO_UI_RESOURCE_PACKAGELOADER_LUA_H
 
 #include "Resource_PackageLoader.h"
-#include "Resource_MeshLoader.h"
-#include "Resource_BitmapLoader.h"
-#include "Resource_ShaderLoader.h"
+#include "Resource_HandleManager.h"
+
+#include "Resource_PackageCollection.h"
+#include "Resource_FontCollection.h"
+#include "Resource_MeshCollection.h"
+#include "Resource_BitmapCollection.h"
+#include "Resource_ShaderCollection.h"
 
 namespace RetroResource
 {
@@ -18,18 +22,16 @@ namespace RetroResource
 	{
 		HandleManager&     _handle_manager;
 		PackageCollection& _packages;
+		FontCollection&    _fonts;
 		MeshCollection&    _meshes;
 		BitmapCollection&  _bitmaps;
 		ShaderCollection&  _shaders;
-
-		MeshLoader         _mesh_loader;
-		BitmapLoader       _bitmap_loader;
-		ShaderLoader       _shader_loader;
 
 	public:
 		PackageLoader_Lua(
 			HandleManager& handle_manager,
 			PackageCollection& packages,
+			FontCollection& fonts,
 			MeshCollection& meshes,
 			BitmapCollection& bitmaps,
 			ShaderCollection & shaders );

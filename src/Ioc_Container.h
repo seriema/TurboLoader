@@ -45,7 +45,7 @@ namespace Ioc
 			auto instance = resolve<T>();
 			if ( !instance )
 			{
-				std::cout << "Couln't resolve '" << typeid( T ).name() << "'" << std::endl;
+				std::cout << "[IocContainer::resolve_or_crash] Couln't resolve '" << typeid( T ).name() << "'" << std::endl;
 				throw;
 			}
 			return instance;

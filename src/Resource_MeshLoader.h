@@ -27,7 +27,7 @@ namespace RetroResource
 			return 0;
 		}
 
-		Handle load_single( const std::string name, float* vertices, const u32 vertices_n, u32* indices, const u32 indices_n )
+		Handle load_single( const std::string name, void* vertices, const u32 vertices_n, u32* indices, const u32 indices_n )
 		{
 			Handle handle = _handle_manager.create();
 
@@ -39,7 +39,7 @@ namespace RetroResource
 			_meshes.handle.push_back( handle );
 			_meshes.name.push_back( name );
 			_meshes.path.push_back( "INTERNAL" );
-			_meshes.mesh.push_back( RetroResource::Mesh { vertices_n, indices_n, vertices, indices });
+			_meshes.mesh.push_back( RetroResource::Mesh { vertices_n, indices_n, vertices, indices } );
 
 			return handle;
 		}

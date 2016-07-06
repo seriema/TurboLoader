@@ -79,9 +79,12 @@ namespace RetroUi
 			glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
 
 			// depth
-			glEnable( GL_DEPTH_TEST );
-			glDepthFunc( GL_LEQUAL );
-			glDepthMask( GL_TRUE );
+			glDisable( GL_DEPTH_TEST );
+
+			// TODO Only use depth for rendering solid objects, which we don't do...yet.
+			//glEnable( GL_DEPTH_TEST );
+			//glDepthFunc( GL_LEQUAL );
+			//glDepthMask( GL_TRUE );
 
 			glClearColor( 1.0f, 0.1f, 1.0f, 1.0f );
 		}

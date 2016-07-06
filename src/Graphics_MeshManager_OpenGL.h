@@ -51,13 +51,13 @@ namespace RetroGraphics
 
 				glGenBuffers( 1, &gfx_mesh.vbo );
 				glBindBuffer( GL_ARRAY_BUFFER, gfx_mesh.vbo );
-				glBufferData( GL_ARRAY_BUFFER, mesh.vertices_n*sizeof(GLfloat), mesh.vertices, GL_STATIC_DRAW );
+				glBufferData( GL_ARRAY_BUFFER, mesh.vertices_n, mesh.vertices, GL_STATIC_DRAW );
 
 				if ( mesh.indices != nullptr )
 				{
 					glGenBuffers( 1, &gfx_mesh.ibo );
 					glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, gfx_mesh.ibo );
-					glBufferData( GL_ELEMENT_ARRAY_BUFFER, mesh.indices_n*sizeof(GLuint), mesh.indices, GL_STATIC_DRAW );
+					glBufferData( GL_ELEMENT_ARRAY_BUFFER, mesh.indices_n, mesh.indices, GL_STATIC_DRAW );
 				}
 
 				_handles.insert( { handle.id, gfx_mesh } );

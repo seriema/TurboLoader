@@ -10,12 +10,15 @@
 
 namespace RetroResource
 {
-	using namespace std;
+	using std::string;
+	using std::vector;
+	using std::unordered_map;
 
 	struct Package
 	{
 		Handle           handle;
 		string           name;
+		vector< Handle > fonts;
 		vector< Handle > bitmaps;
 		vector< Handle > shaders;
 	};

@@ -108,7 +108,7 @@ namespace RetroGraphics
 				GLchar msg[4096];
 				len = std::min(len, 4096);
 				glGetShaderInfoLog( shader_handle, len, &len, msg );
-				std::cout << "[shader manager opengl[ shader error '" << shader_type << "':" << std::endl;
+				std::cout << "[RetroGraphics::ShaderManager_OpenGL::create_shader] shader error '" << shader_type << "':" << std::endl;
 				std::cout << "    " << msg << std::endl;
 				return false;
 			}
@@ -127,7 +127,16 @@ namespace RetroGraphics
 			glLinkProgram( prog_handle );
 			glGetProgramiv( prog_handle, GL_LINK_STATUS, &success );
 			if ( success != GL_TRUE )
+			{
+				GLsizei len;
+				glGetProgramiv( prog_handle, GL_INFO_LOG_LENGTH, &len );
+				GLchar msg[4096];
+				len = std::min(len, 4096);
+				glGetProgramInfoLog( prog_handle, len, &len, msg );
+				std::cout << "[RetroGraphics::ShaderManager_OpenGL::create_program] program link error:" << std::endl;
+				std::cout << "    " << msg << std::endl;
 				return false;
+			}
 
 			glValidateProgram( prog_handle );
 			glGetProgramiv( prog_handle, GL_VALIDATE_STATUS, &success );
@@ -139,7 +148,7 @@ namespace RetroGraphics
 				GLchar msg[4096];
 				len = std::min(len, 4096);
 				glGetProgramInfoLog( prog_handle, len, &len, msg );
-				std::cout << "[shader manager opengl] program error:" << std::endl;
+				std::cout << "[RetroGraphics::ShaderManager_OpenGL::create_program] program validation error:" << std::endl;
 				std::cout << "    " << msg << std::endl;
 				return false;
 			}

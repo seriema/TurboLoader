@@ -71,9 +71,12 @@ set(SOURCE_FILES
 	src/Resource_Handle.h
 	src/Resource_HandleManager.h
 	src/Resource_MeshCollection.h
+	src/Resource_FontCollection.h
 	src/Resource_BitmapCollection.h
 	src/Resource_ShaderCollection.h
 	src/Resource_PackageCollection.h
+
+	src/Resource_FontLoader.h
 	src/Resource_MeshLoader.h
 	src/Resource_BitmapLoader.h
 	src/Resource_ShaderLoader.h

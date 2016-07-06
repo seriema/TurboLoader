@@ -65,6 +65,7 @@ namespace RetroGraphics
 			u32        shader;
 			u32        bitmap;
 			float      size[ 2 ];
+			RetroResource::Handle mesh_handle;
 		} DrawString;
 	};
 
