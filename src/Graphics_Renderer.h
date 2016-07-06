@@ -51,6 +51,7 @@ namespace RetroGraphics
 		{
 			RenderFunc func;
 			float      mvp[ 16 ];
+			u32        vbo_n;
 			u32        vbo; // vbo contains attributes such as vert,norm,color, these must then also exist in shader.
 			u32        shader;
 			u32        bitmap;
@@ -61,6 +62,7 @@ namespace RetroGraphics
 		{
 			RenderFunc func;
 			float      mvp[ 16 ];
+			u32        vbo_n;
 			u32        vbo; // vbo contains attributes such as vert,norm,color, these must then also exist in shader.
 			u32        shader;
 			u32        bitmap;

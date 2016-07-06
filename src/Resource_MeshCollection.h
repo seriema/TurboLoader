@@ -19,7 +19,7 @@ namespace RetroResource
 		u32    vertices_n; // sizeof( vertices )
 		u32    indices_n;  // sizeof( indices )
 		void*  vertices;
-		u32*   indices;
+		void*  indices;
 	};
 
 	struct MeshCollection

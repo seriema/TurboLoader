@@ -16,8 +16,8 @@ namespace RetroGraphics
 	{
 		union
 		{
-			u32 raw[ 2 ];
-			struct { u32 vbo, ibo; };
+			u32 raw[ 4 ];
+			struct { u32 vbo_n, ibo_n, vbo, ibo; };
 		};
 	};
 
@@ -47,7 +47,7 @@ namespace RetroGraphics
 				u32 i = _meshes.handle_index.at( handle.id );
 				const RetroResource::Mesh mesh = _meshes.mesh[ i ];
 
-				Mesh gfx_mesh { 0, 0 };
+				Mesh gfx_mesh { mesh.vertices_n, mesh.indices_n, 0, 0 };
 
 				glGenBuffers( 1, &gfx_mesh.vbo );
 				glBindBuffer( GL_ARRAY_BUFFER, gfx_mesh.vbo );

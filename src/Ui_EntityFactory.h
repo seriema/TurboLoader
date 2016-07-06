@@ -133,6 +133,7 @@ namespace RetroUi
 
 			RetroGraphics::RenderCommand data;
 			data.DrawBitmap.func = _render_funcs->draw_bitmap;
+			data.DrawBitmap.vbo_n = reinterpret_cast< RetroGraphics::MeshManager_OpenGL& >( *_mesh_manager ).lookup( _quad_handle ).vbo_n;
 			data.DrawBitmap.vbo = reinterpret_cast< RetroGraphics::MeshManager_OpenGL& >( *_mesh_manager ).lookup( _quad_handle ).vbo;
 			data.DrawBitmap.shader = reinterpret_cast< RetroGraphics::ShaderManager_OpenGL& >( *_shader_manager ).lookup( shader );
 			data.DrawBitmap.bitmap = reinterpret_cast< RetroGraphics::TextureManager_OpenGL& >( *_texture_manager ).lookup( bitmap );
@@ -175,6 +176,7 @@ namespace RetroUi
 
 			RetroGraphics::RenderCommand data;
 			data.DrawString.func = _render_funcs->draw_string;
+			data.DrawString.vbo_n = reinterpret_cast< RetroGraphics::MeshManager_OpenGL& >( *_mesh_manager ).lookup( str_handle ).vbo_n;
 			data.DrawString.vbo = reinterpret_cast< RetroGraphics::MeshManager_OpenGL& >( *_mesh_manager ).lookup( str_handle ).vbo;
 			data.DrawString.shader = reinterpret_cast< RetroGraphics::ShaderManager_OpenGL& >( *_shader_manager ).lookup( shader );
 			data.DrawString.bitmap = reinterpret_cast< RetroGraphics::TextureManager_OpenGL& >( *_texture_manager ).lookup( font_bitmap );

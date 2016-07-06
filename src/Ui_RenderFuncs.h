@@ -40,7 +40,7 @@ namespace RetroUi
 			glUniformMatrix4fv( glGetUniformLocation( command->DrawBitmap.shader, "mvp" ), 1, GL_FALSE, command->DrawBitmap.mvp );
 			glUniform2fv( glGetUniformLocation( command->DrawBitmap.shader, "size" ), 1, command->DrawBitmap.size );
 
-			int n_verts = 4; // A quad is 4 verts. //sizeof(vertices) / sizeof(VertexBitmap);
+			int n_verts = command->DrawBitmap.vbo_n / sizeof( VertexBitmap );
 			GLsizei stride = sizeof( VertexBitmap );
 			auto uv_offset = (const void*)sizeof( VertexBitmap::pos );
 
@@ -72,7 +72,7 @@ namespace RetroUi
 			glUniformMatrix4fv( glGetUniformLocation( command->DrawString.shader, "mvp" ), 1, GL_FALSE, command->DrawString.mvp );
 			glUniform2fv( glGetUniformLocation( command->DrawString.shader, "size" ), 1, command->DrawString.size );
 
-			int n_verts = 5; // "frust" is five chars. //sizeof(vertices) / sizeof(VertexString);
+			u32 n_verts = command->DrawString.vbo_n / sizeof( VertexString );
 			GLsizei stride = sizeof( VertexString );
 			auto pos_offset = (const void*)sizeof( VertexString::char_index );
 
