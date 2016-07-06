@@ -46,8 +46,12 @@ void msdf_outline( vec2 uv )
 
 void main()
 {
+	vec2 p = gl_PointCoord;
+	if ( p.x < 0.01 || p.x > 0.99 || p.y < 0.01 || p.y > 0.99 )
+		discard;
+
 	//vec2 uv = gl_PointCoord;
-	vec2 uv = (f_uv + vec2(gl_PointCoord.x, 1.0-gl_PointCoord.y)) * vec2( 0.0625, 0.125 );
+	vec2 uv = (f_uv + vec2(p.x, 1.0-p.y)) * vec2( 0.0625, 0.125 );
 	//vec2 uv = f_uv + gl_PointCoord / vec2(16.0, 8.0);
 
 	//msdf( uv );
