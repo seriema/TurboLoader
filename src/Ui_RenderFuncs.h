@@ -33,7 +33,8 @@ namespace RetroUi
 
 	RenderFuncs render_funcs_OpenGL
 	{
-		.draw_bitmap = []( const RetroGraphics::RenderCommand* command )
+		// draw_bitmap
+		[]( const RetroGraphics::RenderCommand* command )
 		{
 			glUseProgram( command->DrawBitmap.shader );
 
@@ -59,8 +60,8 @@ namespace RetroUi
 			glDrawArrays( GL_TRIANGLE_STRIP, 0, n_verts );
 		},
 
-
-		.draw_string = []( const RetroGraphics::RenderCommand* command )
+		// draw_string
+		[]( const RetroGraphics::RenderCommand* command )
 		{
 			glUseProgram( command->DrawString.shader );
 
