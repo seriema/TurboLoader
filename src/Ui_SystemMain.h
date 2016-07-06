@@ -67,10 +67,24 @@ namespace RetroUi
 
 			_main = _entity_factory->create_grid( _ui->scene, glm::vec3(-800.f, 400.f, 0.f), glm::ivec2(10), glm::ivec2(166) );
 
-			for ( u32 i = 0, n = 60; i < n; ++i )
+			std::vector<string> images;
+			images.push_back("jp");
+			images.push_back("jb");
+			images.push_back("snes1");
+			images.push_back("snes2");
+			images.push_back("snes3");
+			images.push_back("snes4");
+			images.push_back("snes5");
+			images.push_back("snes6");
+			images.push_back("snes7");
+			for ( u32 i = 0, x = 0, n = 60; i < n; ++i )
 			{
-				std::string image = RetroMath::fnv1a( 99877*i ) < 2200000000u ? "jp" : "jb";
-				_entity_factory->create_image( _main, "debug", image, glm::vec3(0) );
+//				std::string image = RetroMath::fnv1a( 99877*i ) < 2200000000u ? "jp" : "jb";
+				std::string image = images[x];
+				if (++x >= images.size()) {
+					x = 0;
+				}
+				_entity_factory->create_image( _main, "debug", images[x], glm::vec3(0) );
 			}
 
 			_ui->focus = _c_transform->_data.entity[ _c_transform->first_child(_main) ];
