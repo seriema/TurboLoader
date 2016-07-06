@@ -41,8 +41,8 @@ namespace RetroUi
 			glUniformMatrix4fv( glGetUniformLocation( command->DrawBitmap.shader, "mvp" ), 1, GL_FALSE, command->DrawBitmap.mvp );
 			glUniform2fv( glGetUniformLocation( command->DrawBitmap.shader, "size" ), 1, command->DrawBitmap.size );
 
-			int n_verts = command->DrawBitmap.vbo_n / sizeof( VertexBitmap );
 			GLsizei stride = sizeof( VertexBitmap );
+			int n_verts = command->DrawBitmap.vbo_n / stride;
 			auto uv_offset = (const void*)sizeof( VertexBitmap::pos );
 
 			glBindBuffer( GL_ARRAY_BUFFER, command->DrawBitmap.vbo );
@@ -73,8 +73,8 @@ namespace RetroUi
 //			glUniform1f( glGetUniformLocation( command->DrawString.shader, "timestamp" ), 0.001f * (float)SDL_GetTicks() );
 			glUniformMatrix4fv( glGetUniformLocation( command->DrawString.shader, "mvp" ), 1, GL_FALSE, command->DrawString.mvp );
 
-			u32 n_verts = command->DrawString.vbo_n / sizeof( VertexString );
 			GLsizei stride = sizeof( VertexString );
+			u32 n_verts = command->DrawString.vbo_n / stride;
 			auto pos_offset = (const void*)sizeof( VertexString::char_index );
 
 			glBindBuffer( GL_ARRAY_BUFFER, command->DrawString.vbo );

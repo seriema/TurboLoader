@@ -62,7 +62,7 @@ namespace RetroResource
 				_bitmaps.resource_raw.reserve( bitmaps_new_size );
 			}
 
-			for ( int i = 0; i < size; ++i )
+			for ( u32 i = 0; i < size; ++i )
 			{
 				const std::string& name = names[ i ];
 				const std::string& path = paths[ i ];
@@ -125,7 +125,7 @@ namespace RetroResource
 							font_atlas[ y + x++ ] = std::max( 0, std::min( 255, int(255 * rgb.r) ) );
 							font_atlas[ y + x++ ] = std::max( 0, std::min( 255, int(255 * rgb.g) ) );
 							font_atlas[ y + x++ ] = std::max( 0, std::min( 255, int(255 * rgb.b) ) );
-							font_atlas[ y + x++ ] = 255;
+							font_atlas[ y + x++ ] = (char)255;
 						}
 
 						++glyph_y;
@@ -170,7 +170,7 @@ namespace RetroResource
 		{
 			u32 i_last = _fonts.handle.size();
 
-			for ( int j = 0; j < size; ++j )
+			for ( u32 j = 0; j < size; ++j )
 			{
 				Handle handle = handles[ j ];
 				u32 i = _fonts.handle_index.at( handle.id );
