@@ -55,6 +55,8 @@ namespace RetroUi
 			, _entity_factory( entity_factory )
 			, _c_transform( c_transform )
 		{
+			// Load resources.
+
 			_package_loader->load( "./src/hello_world", _base_package_handle );
 			{
 				auto & package = _packages->handle_lookup.at( _base_package_handle.id );
@@ -63,20 +65,24 @@ namespace RetroUi
 				_shader_manager->load( package.shaders.data(), package.shaders.size() );
 			}
 
+			// TODO Move ui context to a proper place one day!
+
 			_ui->scene = _entity_factory->create_scene();
 			_ui->focus = RetroEcs::Entity { 0 };
 
-			_main = _entity_factory->create_grid( _ui->scene, glm::vec3(-800.f, 400.f, 0.f), glm::ivec2(10), glm::ivec2(166) );
+			// Build scene.
 
+			_entity_factory->create_string( _ui->scene, "msdf", "hack_bold", 28, "AAA RETRO UI!", glm::vec3(-330.f, 490.f, 1.f) );
+
+			_main = _entity_factory->create_grid( _ui->scene, glm::vec3(-380.f, 190.f, 0.f), glm::ivec2(10), glm::ivec2(166) );
 			for ( u32 i = 0, n = 60; i < n; ++i )
 			{
 				std::string image = RetroMath::fnv1a( 99877*i ) < 2200000000u ? "jp" : "jb";
-				_entity_factory->create_image( _main, "debug", image, glm::vec3(0) );
+				RetroEcs::Entity e_bitmap = _entity_factory->create_bitmap( _main, "debug", image, glm::vec3(0) );
+				RetroEcs::Entity e_string = _entity_factory->create_string( e_bitmap, "msdf", "hack_bold", 16, "frust", glm::vec3(-50.f,-60.f,1.f) );
 			}
 
-
-			_entity_factory->create_string( _ui->scene, "msdf", "hack_bold", 32, "frust", glm::vec3(0,0,1.f) );
-
+			// Focus first element.
 
 			_ui->focus = _c_transform->_data.entity[ _c_transform->first_child(_main) ];
 		}

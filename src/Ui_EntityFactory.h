@@ -104,9 +104,7 @@ namespace RetroUi
 			Entity e = _entity_manager->create();
 
 			u32 i = _c_transform->create( e );
-			_c_transform->_data.x[ i ] = pos.x;
-			_c_transform->_data.y[ i ] = pos.y;
-			_c_transform->_data.z[ i ] = pos.z;
+			_c_transform->_data.pos[ i ] = pos;
 			_c_transform->set_scale( e, 1.f );
 
 			u32 i_grid = _c_grid->create( e );
@@ -125,7 +123,7 @@ namespace RetroUi
 			_entity_manager->destroy( e );
 		}
 
-		Entity create_image( const RetroEcs::Entity e_parent, const string& shader, const string& bitmap, const glm::vec3& pos )
+		Entity create_bitmap( const RetroEcs::Entity e_parent, const string& shader, const string& bitmap, const glm::vec3& pos )
 		{
 			RetroGraphics::RenderKey key;
 			key.RenderTranslucent.translucency_type = 1;
@@ -144,9 +142,7 @@ namespace RetroUi
 			Entity e = _entity_manager->create();
 
 			_c_transform->create( e );
-			_c_transform->set_x( e, pos.x );
-			_c_transform->set_y( e, pos.y );
-			_c_transform->set_z( e, pos.z );
+			_c_transform->set_pos( e, pos );
 			_c_transform->set_scale( e, 1.f );
 
 			_c_render->create( e );
@@ -158,7 +154,7 @@ namespace RetroUi
 			return e;
 		}
 
-		void destroy_image( Entity e )
+		void destroy_bitmap( Entity e )
 		{
 			_c_transform->destroy( e );
 			_c_render->destroy( e );
@@ -186,9 +182,7 @@ namespace RetroUi
 			Entity e = _entity_manager->create();
 
 			_c_transform->create( e );
-			_c_transform->set_x( e, pos.x );
-			_c_transform->set_y( e, pos.y );
-			_c_transform->set_z( e, pos.z );
+			_c_transform->set_pos( e, pos );
 			_c_transform->set_scale( e, 1.f );
 
 			_c_render->create( e );

@@ -108,10 +108,11 @@ set(SOURCE_FILES
 	src/Ui_ComponentTransform.h
 	src/Ui_ComponentGrid.h
 	src/Ui_SystemMain.h
-	src/Ui_SystemRenderer.h
 	src/Ui_SystemInput.h
-	src/Ui_SystemAnimator.h
 	src/Ui_SystemGrid.h
+	src/Ui_SystemAnimator.h
+	src/Ui_SystemWorldTransform.h
+	src/Ui_SystemRenderer.h
 	src/Ui_RenderFuncs.h
 )
 

@@ -116,7 +116,7 @@ namespace RetroUi
 
 				glm::mat4 scale = glm::scale( glm::vec3(_c_transform->scale(e)) );
 				glm::mat4 rotation = glm::rotate( 0.f, glm::vec3(0,0,1) );
-				glm::mat4 translation = glm::translate( glm::mat4(1.f), glm::vec3(_c_transform->x(e), _c_transform->y(e), _c_transform->z(e)) );
+				glm::mat4 translation = glm::translate( glm::mat4(1.f), _c_transform->world_pos(e) );
 				mvp = vp * translation * rotation * scale;
 
 				RenderCommand& command = _renderer.submit( key );

@@ -30,7 +30,7 @@ namespace RetroEcs
 		}
 
 		template< typename U >
-		inline void set( std::vector<U>& a, Entity e, U& data )
+		inline void set( std::vector<U>& a, Entity e, const U& data )
 		{
 			a[ _index.at(e.id) ] = data;
 		}

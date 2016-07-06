@@ -17,9 +17,8 @@ namespace RetroUi
 		struct InstanceData
 		{
 			vector< Entity > entity;
-			vector< float >  x;
-			vector< float >  y;
-			vector< float >  z;
+			vector< glm::vec3 >  pos;
+			vector< glm::vec3 >  world_pos;
 			vector< float >  scale;
 			vector< u32 >    parent;
 			vector< u32 >    first_child;
@@ -30,9 +29,8 @@ namespace RetroUi
 		ComponentTransform( u32 capacity ) : Component( capacity )
 		{
 			_data.entity.resize( capacity );
-			_data.x.resize( capacity );
-			_data.y.resize( capacity );
-			_data.z.resize( capacity );
+			_data.pos.resize( capacity );
+			_data.world_pos.resize( capacity );
 			_data.scale.resize( capacity );
 			_data.parent.resize( capacity );
 			_data.first_child.resize( capacity );
@@ -48,9 +46,8 @@ namespace RetroUi
 		void _copy( unsigned i, unsigned i_dst, ComponentTransform::InstanceData& data_dst )
 		{
 			data_dst.entity[ i_dst ] = _data.entity.at( i );
-			data_dst.x[ i_dst ]   = _data.x.at( i );
-			data_dst.y[ i_dst ]   = _data.y.at( i );
-			data_dst.z[ i_dst ]   = _data.z.at( i );
+			data_dst.pos[ i_dst ]   = _data.pos.at( i );
+			data_dst.world_pos[ i_dst ]   = _data.world_pos.at( i );
 			data_dst.scale[ i_dst ]   = _data.scale.at( i );
 			data_dst.parent[ i_dst ]   = _data.parent.at( i );
 			data_dst.first_child[ i_dst ]   = _data.first_child.at( i );
@@ -58,14 +55,11 @@ namespace RetroUi
 			data_dst.prev_sibling[ i_dst ]   = _data.prev_sibling.at( i );
 		}
 
-		inline float x( Entity e ) { return get( _data.x, e ); }
-		inline void set_x( Entity e, float x ) { set( _data.x, e, x ); }
+		inline glm::vec3& pos( Entity e ) { return get( _data.pos, e ); }
+		inline void set_pos( Entity e, const glm::vec3& pos ) { set( _data.pos, e, pos ); }
 
-		inline float y( Entity e ) { return get( _data.y, e ); }
-		inline void set_y( Entity e, float y ) { set( _data.y, e, y ); }
-
-		inline float z( Entity e ) { return get( _data.z, e ); }
-		inline void set_z( Entity e, float z ) { set( _data.z, e, z ); }
+		inline glm::vec3& world_pos( Entity e ) { return get( _data.world_pos, e ); }
+		inline void set_world_pos( Entity e, glm::vec3& pos ) { set( _data.world_pos, e, pos ); }
 
 		inline float scale( Entity e ) { return get( _data.scale, e ); }
 		inline void set_scale( Entity e, float scale ) { set( _data.scale, e, scale ); }

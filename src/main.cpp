@@ -18,6 +18,7 @@
 #include "Ui_SystemGrid.h"
 #include "Ui_SystemMain.h"
 #include "Ui_SystemAnimator.h"
+#include "Ui_SystemWorldTransform.h"
 #include "Ui_SystemRenderer.h"
 
 #define A_RETRO_UI_USE_SDL 1
@@ -115,6 +116,9 @@ int main( int argc, char* args[] )
 		builder.system< RetroUi::SystemAnimator,
 				RetroEcs::Time,
 				RetroUi::Context,
+				RetroUi::ComponentTransform >();
+
+		builder.system< RetroUi::SystemWorldTransform,
 				RetroUi::ComponentTransform >();
 
 		builder.system< RetroUi::SystemRenderer,

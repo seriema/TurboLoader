@@ -113,15 +113,14 @@ namespace RetroUi
 				glm::ivec2& grid_size = _c_grid->_data.grid_size[ i_grid ];
 				glm::ivec2& cell_size = _c_grid->_data.cell_size[ i_grid ];
 
-				float grid_x = _c_transform->x( e );
-				float grid_y = _c_transform->y( e );
+				glm::vec3& grid_pos = _c_transform->pos( e );
 
 				u32 n_cell = 0;
 				u32 i_cell = _c_transform->first_child( e );
 				while ( i_cell != _c_transform->INVALID_INDEX )
 				{
-					_c_transform->_data.x[ i_cell ] = grid_x + cell_size.x * (n_cell % grid_size.x);
-					_c_transform->_data.y[ i_cell ] = grid_y - cell_size.y * (n_cell / grid_size.x);
+					_c_transform->_data.pos[ i_cell ].x = grid_pos.x + cell_size.x * (n_cell % grid_size.x);
+					_c_transform->_data.pos[ i_cell ].y = grid_pos.y - cell_size.y * (n_cell / grid_size.x);
 
 					i_cell = _c_transform->_data.next_sibling[ i_cell ];
 					++n_cell;
