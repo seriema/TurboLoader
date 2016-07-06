@@ -238,7 +238,7 @@ namespace RetroUi
 
 			std::vector<VertexString> str;
 			str.resize( text.size() );
-			float char_width = .85f * font_size; // TODO Calc this in a proper way.
+			float char_width = 1.5f * font_size; // TODO Calc this in a proper way.
 			float x = -0.5f * char_width * text.size();
 			float y = .0f;
 			u32 i = 0;

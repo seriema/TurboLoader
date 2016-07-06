@@ -64,8 +64,9 @@ namespace RetroUi
 		{
 			glUseProgram( command->DrawString.shader );
 
-			float resolution_scale = 480.f / 1080.f; // TODO Get this from command some how!
-			glPointSize( resolution_scale * command->DrawString.font_size );
+			float object_scale_y = command->DrawString.mvp[ 5 ];
+			float resolution_scale = 480.f; // TODO Get this from command some how!
+			glPointSize( object_scale_y * resolution_scale * command->DrawString.font_size );
 
 
 //			glUniform1f( glGetUniformLocation( command->DrawString.shader, "timestamp" ), 0.001f * (float)SDL_GetTicks() );
