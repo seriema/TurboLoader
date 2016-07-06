@@ -89,7 +89,9 @@ namespace RetroUi
 		Entity create_scene()
 		{
 			Entity e = _entity_manager->create();
-			_c_transform->create( e );
+			u32 i = _c_transform->create( e );
+			_c_transform->_data.pos[ i ] = glm::vec3(0);
+			_c_transform->_data.scale[ i ] = 1.f;
 			return e;
 		}
 
@@ -99,17 +101,37 @@ namespace RetroUi
 			_entity_manager->destroy( e );
 		}
 
-		Entity create_grid( const RetroEcs::Entity e_parent, const glm::vec3& pos, const glm::ivec2& grid_size, const glm::ivec2& cell_size )
+		Entity create_anchor( const Entity e_parent, const glm::vec3& pos )
 		{
 			Entity e = _entity_manager->create();
 
 			u32 i = _c_transform->create( e );
 			_c_transform->_data.pos[ i ] = pos;
-			_c_transform->set_scale( e, 1.f );
+			_c_transform->_data.scale[ i ] =  1.f;
 
-			u32 i_grid = _c_grid->create( e );
-			_c_grid->_data.grid_size[ i_grid ] = grid_size;
-			_c_grid->_data.cell_size[ i_grid ] = cell_size;
+			_c_transform->append_child( e_parent, e );
+
+			return e;
+		}
+
+		void destroy_anchor( Entity e )
+		{
+			_c_transform->destroy( e );
+			_entity_manager->destroy( e );
+		}
+
+		Entity create_grid( const Entity e_parent, const glm::vec3& pos, const glm::ivec2& grid_size, const glm::ivec2& cell_size )
+		{
+			Entity e = _entity_manager->create();
+			u32 i;
+
+			i = _c_transform->create( e );
+			_c_transform->_data.pos[ i ] = pos;
+			_c_transform->_data.scale[ i ] = 1.f;
+
+			i = _c_grid->create( e );
+			_c_grid->_data.grid_size[ i ] = grid_size;
+			_c_grid->_data.cell_size[ i ] = cell_size;
 
 			_c_transform->append_child( e_parent, e );
 
@@ -123,7 +145,7 @@ namespace RetroUi
 			_entity_manager->destroy( e );
 		}
 
-		Entity create_bitmap( const RetroEcs::Entity e_parent, const string& shader, const string& bitmap, const glm::vec3& pos )
+		Entity create_bitmap( const Entity e_parent, const string& shader, const string& bitmap, const glm::vec3& pos )
 		{
 			RetroGraphics::RenderKey key;
 			key.RenderTranslucent.translucency_type = 1;
@@ -140,14 +162,15 @@ namespace RetroUi
 			size = _bitmaps->size[ _bitmaps->name_index.at(bitmap) ];
 
 			Entity e = _entity_manager->create();
+			u32 i;
 
-			_c_transform->create( e );
-			_c_transform->set_pos( e, pos );
-			_c_transform->set_scale( e, 1.f );
+			i = _c_transform->create( e );
+			_c_transform->_data.pos[ i ] = pos;
+			_c_transform->_data.scale[ i ] = 1.f;
 
-			_c_render->create( e );
-			_c_render->set_key( e, key );
-			_c_render->set_data( e, data );
+			i = _c_render->create( e );
+			_c_render->_data.key[ i ] = key;
+			_c_render->_data.data[ i ] = data;
 
 			_c_transform->append_child( e_parent, e );
 
@@ -161,7 +184,7 @@ namespace RetroUi
 			_entity_manager->destroy( e );
 		}
 
-		Entity create_string( const RetroEcs::Entity e_parent, const string& shader, const string& font_bitmap, const float font_size, const string& text, const glm::vec3& pos )
+		Entity create_string( const Entity e_parent, const string& shader, const string& font_bitmap, const float font_size, const string& text, const glm::vec3& pos )
 		{
 			RetroGraphics::RenderKey key;
 			key.RenderTranslucent.translucency_type = 1;
@@ -180,14 +203,15 @@ namespace RetroUi
 			data.DrawString.mesh_handle = str_handle;
 
 			Entity e = _entity_manager->create();
+			u32 i;
 
-			_c_transform->create( e );
-			_c_transform->set_pos( e, pos );
-			_c_transform->set_scale( e, 1.f );
+			i = _c_transform->create( e );
+			_c_transform->_data.pos[ i ] = pos;
+			_c_transform->_data.scale[ i ] = 1.f;
 
-			_c_render->create( e );
-			_c_render->set_key( e, key );
-			_c_render->set_data( e, data );
+			i = _c_render->create( e );
+			_c_render->_data.key[ i ] = key;
+			_c_render->_data.data[ i ] = data;
 
 			_c_transform->append_child( e_parent, e );
 
@@ -214,8 +238,8 @@ namespace RetroUi
 
 			std::vector<VertexString> str;
 			str.resize( text.size() );
-			float char_width = 1.7f * font_size; // TODO Calc this in a proper way.
-			float x = .0f;
+			float char_width = .85f * font_size; // TODO Calc this in a proper way.
+			float x = -0.5f * char_width * text.size();
 			float y = .0f;
 			u32 i = 0;
 
