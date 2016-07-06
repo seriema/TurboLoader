@@ -165,14 +165,14 @@ namespace RetroUi
 			_entity_manager->destroy( e );
 		}
 
-		Entity create_string( const RetroEcs::Entity e_parent, const string& shader, const string& font_bitmap, const string& text, const glm::vec3& pos )
+		Entity create_string( const RetroEcs::Entity e_parent, const string& shader, const string& font_bitmap, const float font_size, const string& text, const glm::vec3& pos )
 		{
 			RetroGraphics::RenderKey key;
 			key.RenderTranslucent.translucency_type = 1;
 			key.RenderTranslucent.depth = static_cast< u32 >( pos.z );
 
 			// TODO Create a mesh at some proper location!
-			RetroResource::Handle str_handle = create_and_load_text_mesh( text );
+			RetroResource::Handle str_handle = create_and_load_text_mesh( font_size, text );
 
 			RetroGraphics::RenderCommand data;
 			data.DrawString.func = _render_funcs->draw_string;
@@ -180,10 +180,8 @@ namespace RetroUi
 			data.DrawString.vbo = reinterpret_cast< RetroGraphics::MeshManager_OpenGL& >( *_mesh_manager ).lookup( str_handle ).vbo;
 			data.DrawString.shader = reinterpret_cast< RetroGraphics::ShaderManager_OpenGL& >( *_shader_manager ).lookup( shader );
 			data.DrawString.bitmap = reinterpret_cast< RetroGraphics::TextureManager_OpenGL& >( *_texture_manager ).lookup( font_bitmap );
+			data.DrawString.font_size = font_size;
 			data.DrawString.mesh_handle = str_handle;
-
-			glm::vec2& size = reinterpret_cast< glm::vec2& >( data.DrawString.size );
-			size = _bitmaps->size[ _bitmaps->name_index.at(font_bitmap) ];
 
 			Entity e = _entity_manager->create();
 
@@ -216,12 +214,13 @@ namespace RetroUi
 	private:
 		u32 _string_hash = 0u;
 
-		RetroResource::Handle create_and_load_text_mesh( const string& text )
+		RetroResource::Handle create_and_load_text_mesh( const float font_size, const string& text )
 		{
 			++_string_hash;
 
 			std::vector<VertexString> str;
 			str.resize( text.size() );
+			float char_width = 1.7f * font_size; // TODO Calc this in a proper way.
 			float x = .0f;
 			float y = .0f;
 			u32 i = 0;
@@ -229,7 +228,7 @@ namespace RetroUi
 			for ( auto c : text )
 			{
 				str[ i++ ] = { (i32)c, x, y };
-				x += .15f;
+				x += char_width;
 			}
 
 			RetroResource::Handle handle = _mesh_loader->load_single( std::to_string(_string_hash), str.data(), sizeof(VertexString)*str.size(), nullptr, 0 );

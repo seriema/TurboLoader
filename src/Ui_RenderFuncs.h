@@ -65,12 +65,11 @@ namespace RetroUi
 			glUseProgram( command->DrawString.shader );
 
 
-			glPointSize( command->DrawString.size[1] / 8 ); // TODO Font atlas is 16x8 so font size is y size div by 8.
+			glPointSize( command->DrawString.font_size );
 
 
 //			glUniform1f( glGetUniformLocation( command->DrawString.shader, "timestamp" ), 0.001f * (float)SDL_GetTicks() );
 			glUniformMatrix4fv( glGetUniformLocation( command->DrawString.shader, "mvp" ), 1, GL_FALSE, command->DrawString.mvp );
-			glUniform2fv( glGetUniformLocation( command->DrawString.shader, "size" ), 1, command->DrawString.size );
 
 			u32 n_verts = command->DrawString.vbo_n / sizeof( VertexString );
 			GLsizei stride = sizeof( VertexString );

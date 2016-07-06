@@ -75,7 +75,7 @@ namespace RetroUi
 			}
 
 
-			_entity_factory->create_string( _ui->scene, "msdf", "hack_bold", "frust", glm::vec3(0,0,1.f) );
+			_entity_factory->create_string( _ui->scene, "msdf", "hack_bold", 32, "frust", glm::vec3(0,0,1.f) );
 
 
 			_ui->focus = _c_transform->_data.entity[ _c_transform->first_child(_main) ];
