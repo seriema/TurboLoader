@@ -68,6 +68,7 @@ namespace RetroUi
 			: _env( env )
 			, _c_render( c_render )
 			, _c_transform( c_transform )
+			, _renderer( Renderer( env ) )
 		{
 			std::cout << calc_description() << std::endl;
 

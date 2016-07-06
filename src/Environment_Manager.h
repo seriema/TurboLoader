@@ -12,8 +12,8 @@ namespace RetroEnvironment
 	public:
 		virtual ~IManager() {};
 		virtual void swap() = 0;
-		virtual u32 get_ticks() = 0;
-		virtual glm::vec2 resolution() = 0;
+		virtual u32 get_ticks() const = 0;
+		virtual glm::vec2 resolution() const = 0;
 	};
 }
 

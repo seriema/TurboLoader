@@ -2,6 +2,7 @@
 #define A_RETRO_UI_RENDERER_H
 
 #include <algorithm>
+#include <memory>
 
 #include "platform.h"
 #include "Resource_Handle.h"
@@ -26,6 +27,8 @@ namespace
 
 namespace RetroGraphics
 {
+	using std::shared_ptr;
+
 	struct RenderMaterial
 	{
 		u32 shader_handle;
@@ -37,7 +40,7 @@ namespace RetroGraphics
 
 	union RenderCommand;
 
-	typedef void ( *RenderFunc )( const RenderCommand* );
+	typedef void ( *RenderFunc )( const RetroEnvironment::IManager*, const RenderCommand* );
 
 	union RenderCommand
 	{
@@ -74,13 +77,15 @@ namespace RetroGraphics
 
 	class Renderer
 	{
-		u32              _render_count;
-		RenderKey        _render_key[ 1024 ];
-		RenderCommand    _render_command[ 1024 ];
+		shared_ptr< RetroEnvironment::IManager > _env;
+		u32                                      _render_count;
+		RenderKey                                _render_key[ 1024 ];
+		RenderCommand                            _render_command[ 1024 ];
 
 	public:
-		explicit Renderer()
-			: _render_count( 0 )
+		explicit Renderer( shared_ptr< RetroEnvironment::IManager > env )
+			: _env( env )
+			, _render_count( 0 )
 		{}
 
 		RenderCommand & submit( const RenderKey key )
@@ -99,7 +104,7 @@ namespace RetroGraphics
 			{
 				int command_i = _render_key[ i ].RenderCommon.data_index;
 				RenderCommand& command = _render_command[ command_i ];
-				command.Common.func( &command );
+				command.Common.func( &*_env, &command );
 			}
 			_render_count = 0;
 		}

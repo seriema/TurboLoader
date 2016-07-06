@@ -59,23 +59,33 @@ std::shared_ptr<RetroEnvironment::IManager> RetroEnvironment::Factory::create()
 		}
 	}
 
-	SDL_DisplayMode dispMode;
+	SDL_DisplayMode disp_mode;
 	//SDL_GetDesktopDisplayMode(0, &dispMode);
-	SDL_GetCurrentDisplayMode(0, &dispMode);
-
-	cout << "[Environment::Factory::create] Screen size: " << dispMode.w << " x " << dispMode.h << endl;
+	SDL_GetCurrentDisplayMode( 0, &disp_mode );
 
 	SDL_Window* window = SDL_CreateWindow(
-			"SDL Tutorial",
-			SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+		"SDL Tutorial",
+		SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
 #if defined(__APPLE__) || defined(_WIN32)
-			960, 480,
-			SDL_WINDOW_OPENGL | SDL_WINDOW_BORDERLESS
+		960, 480,
+		SDL_WINDOW_OPENGL |
+		SDL_WINDOW_ALLOW_HIGHDPI |
+		SDL_WINDOW_BORDERLESS |
+		SDL_WINDOW_RESIZABLE
 #else
-	dispMode.w, dispMode.h,
+		disp_mode.w, disp_mode.h,
 		SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN
 #endif
 	);
+
+	int draw_w, draw_h, win_w, win_h;
+	SDL_GL_GetDrawableSize( window, &draw_w, &draw_h );
+	SDL_GetWindowSize( window, &win_w, &win_h );
+	cout << "[Environment::Factory::create] Display mode: " << disp_mode.w << " x " << disp_mode.h << endl;
+	cout << "[Environment::Factory::create] Drawable size: " << draw_w << " x " << draw_h << endl;
+	cout << "[Environment::Factory::create] Window size: " << win_w << " x " << win_h << endl;
+
+
 	if( window == nullptr )
 	{
 		cout << "[Environment::Factory::create] FAIL Window could not be created! SDL Error: '" << SDL_GetError() << "'" << endl;

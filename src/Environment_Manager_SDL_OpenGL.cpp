@@ -20,15 +20,15 @@ void RetroEnvironment::Manager_SDL_OpenGL::swap()
 	SDL_GL_SwapWindow( _sdl_window );
 }
 
-u32 RetroEnvironment::Manager_SDL_OpenGL::get_ticks()
+u32 RetroEnvironment::Manager_SDL_OpenGL::get_ticks() const
 {
 	return SDL_GetTicks();
 }
 
 
-glm::vec2 RetroEnvironment::Manager_SDL_OpenGL::resolution()
+glm::vec2 RetroEnvironment::Manager_SDL_OpenGL::resolution() const
 {
 	int w, h;
-	SDL_GetWindowSize(_sdl_window, &w, &h );
+	SDL_GL_GetDrawableSize(_sdl_window, &w, &h );
 	return glm::vec2( w, h );
 }

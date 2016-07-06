@@ -12,8 +12,8 @@ namespace RetroEnvironment
 		Manager_SDL_OpenGL( SDL_Window* sdl_window, SDL_GLContext sdl_gl_context );
 		virtual ~Manager_SDL_OpenGL() override;
 		virtual void swap() override;
-		virtual u32 get_ticks() override;
-		virtual glm::vec2 resolution() override;
+		virtual u32 get_ticks() const override;
+		virtual glm::vec2 resolution() const override;
 	private:
 		SDL_Window*      _sdl_window;
 		SDL_GLContext    _sdl_gl_context;
