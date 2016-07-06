@@ -7,7 +7,8 @@
 #include <utility>
 #include <memory>
 
-#include <glm/mat4x4.hpp>               // glm::mat4
+#include <glm/vec3.hpp>
+#include <glm/mat4x4.hpp>
 #include <glm/gtc/matrix_transform.hpp> // glm::perspective
 #include <glm/gtx/transform.hpp>        // glm::translate, glm::rotate, glm::scale
 #include <glm/gtc/type_ptr.hpp>         // glm::value_ptr
@@ -94,8 +95,9 @@ namespace RetroUi
 			glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 
 			glm::vec2 resolution = _env->resolution();
+			float aspect_ratio = resolution.x / resolution.y;
 			float h = .5f * 1080.f;
-			float w = h * resolution.x / resolution.y;
+			float w = aspect_ratio * h;
 			float z_near = .1f;
 			float z_far = 100.f;
 			glm::mat4 proj = glm::ortho( -w, w, -h, h, z_near, z_far );
@@ -114,7 +116,7 @@ namespace RetroUi
 
 				glm::mat4& mvp = reinterpret_cast< glm::mat4& >( _command->Common.mvp );
 
-				glm::mat4 scale = glm::scale( glm::vec3(_c_transform->scale(e)) );
+				glm::mat4 scale = glm::scale( glm::vec3(_c_transform->world_scale(e)) );
 				glm::mat4 rotation = glm::rotate( 0.f, glm::vec3(0,0,1) );
 				glm::mat4 translation = glm::translate( glm::mat4(1.f), _c_transform->world_pos(e) );
 				mvp = vp * translation * rotation * scale;

@@ -72,14 +72,15 @@ namespace RetroUi
 
 			// Build scene.
 
-			_entity_factory->create_string( _ui->scene, "msdf", "hack_bold", 28, "AAA RETRO UI!", glm::vec3(-330.f, 490.f, 1.f) );
+			_entity_factory->create_string( _ui->scene, "msdf", "hack_bold", 64, "AAA RETRO UI!", glm::vec3(0.f, 490.f, 1.f) );
 
 			_main = _entity_factory->create_grid( _ui->scene, glm::vec3(-380.f, 190.f, 0.f), glm::ivec2(10), glm::ivec2(166) );
 			for ( u32 i = 0, n = 60; i < n; ++i )
 			{
 				std::string image = RetroMath::fnv1a( 99877*i ) < 2200000000u ? "jp" : "jb";
-				RetroEcs::Entity e_bitmap = _entity_factory->create_bitmap( _main, "debug", image, glm::vec3(0) );
-				RetroEcs::Entity e_string = _entity_factory->create_string( e_bitmap, "msdf", "hack_bold", 16, "frust", glm::vec3(-50.f,-60.f,1.f) );
+				RetroEcs::Entity e_anchor = _entity_factory->create_anchor( _main, glm::vec3(0) );
+				RetroEcs::Entity e_bitmap = _entity_factory->create_bitmap( e_anchor, "debug", image, glm::vec3(0) );
+				RetroEcs::Entity e_string = _entity_factory->create_string( e_anchor, "msdf", "hack_bold", 32, "frust", glm::vec3(0.f,-60.f,1.f) );
 			}
 
 			// Focus first element.
