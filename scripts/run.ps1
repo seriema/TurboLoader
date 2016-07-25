@@ -4,4 +4,4 @@
 
 "** Run project **"
 
-.\Debug\a_retro_ui.exe
+.\Debug\turboloader.exe

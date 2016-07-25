@@ -4,4 +4,4 @@
 
 echo "** Run project **"
 
-./a_retro_ui
+./turboloader

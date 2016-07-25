@@ -4,4 +4,4 @@
 
 echo "** Test project **"
 
-./a_retro_test
+./turboloader-test

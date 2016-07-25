@@ -4,4 +4,4 @@
 
 echo "** Test project **"
 
-.\Debug\a_retro_test.exe
+.\Debug\turboloader-test.exe

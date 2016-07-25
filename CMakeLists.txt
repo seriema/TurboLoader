@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8.4)
 set(CMAKE_C_COMPILER gcc)
 set(CMAKE_CXX_COMPILER g++)
-project(a_retro_ui)
+project(turboloader)
 
 #--- CMAKE SETUP -------------------------------------------------------------------------------------------------------
 
@@ -50,10 +50,10 @@ include_directories(
 	${DEPENDENCIES_INCLUDES}
 )
 
-add_library(a_retro_lib
+add_library(turboloader-lib
 	${DEPENDENCIES_SOURCES}
 )
-add_library(a_retro_core
+add_library(turboloader-core
 	src/platform.h
 
 	src/Ioc_Container.h
@@ -110,22 +110,22 @@ add_library(a_retro_core
 )
 
 # MAIN
-add_executable(a_retro_ui
+add_executable(turboloader
 	src/main.cpp
 )
-target_link_libraries(a_retro_ui
-	a_retro_lib
-	a_retro_core
+target_link_libraries(turboloader
+	turboloader-lib
+	turboloader-core
 	${DEPENDENCIES_LIBRARIES}
 )
 
 # TEST
-add_executable(a_retro_test
+add_executable(turboloader-test
 	src/test.cpp
 )
-target_link_libraries(a_retro_test
-	a_retro_lib
-	a_retro_core
+target_link_libraries(turboloader-test
+	turboloader-lib
+	turboloader-core
 	${DEPENDENCIES_LIBRARIES}
 )
 
