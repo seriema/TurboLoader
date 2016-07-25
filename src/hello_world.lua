@@ -9,3 +9,7 @@ bitmaps {
 shaders {
 	debug = "./res/debug",
 }
+
+gui {
+	{ id = "boxart", name = "bitmap", size = {400,200}, data = "${boxart}" },
+}

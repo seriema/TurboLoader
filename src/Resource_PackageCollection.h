@@ -18,6 +18,7 @@ namespace RetroResource
 		string           name;
 		vector< Handle > bitmaps;
 		vector< Handle > shaders;
+		vector< Handle > gui;
 	};
 
 	struct PackageCollection
