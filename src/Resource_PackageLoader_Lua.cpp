@@ -2,9 +2,14 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include <sstream>
+#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/xml_parser.hpp>
 
 #include "platform.h"
 #include "Resource_PackageLoader_Lua.h"
+
+namespace pt = boost::property_tree;
 
 extern "C"
 {
@@ -114,62 +119,35 @@ namespace
 		return 0;
 	}
 
-	int lua_read_gui_size( lua_State* L, GuiTemplate& gui )
+	void lua_read_table( lua_State* L, pt::ptree& tree, int level )
 	{
-		auto package = static_cast< PackageData * >( lua_touserdata(L, lua_upvalueindex(1)) );
+		if ( level > 5 )
+			return;
 
 		lua_pushnil( L );
-		lua_next(L, 5);
-		const auto x = lua_tointeger( L, -1 );
-		lua_pop( L, 1 );
-		lua_next(L, 5);
-		const auto y = lua_tointeger( L, -1 );
-		lua_pop( L, 1 );
-		lua_next(L, 5);
-
-		gui.size = { x, y };
-
-//		lua_pushnil( L );
-//		while ( lua_next(L, 5) != 0 )
-//		{
-//			const auto name = lua_tointeger( L, -2 );
-//			const auto path = lua_tointeger( L, -1 );
-//
-//			lua_pop( L, 1 );
-//		}
-
-		return 0;
-	}
-
-	int lua_read_gui_entry( lua_State* L )
-	{
-		auto package = static_cast< PackageData * >( lua_touserdata(L, lua_upvalueindex(1)) );
-
-		lua_pushnil( L );
-		while ( lua_next(L, 3) != 0 )
+		while ( lua_next( L, level ) != 0 )
 		{
-			GuiTemplate gui;
+			const std::string key = lua_isnumber( L, -2 )
+									? std::to_string( lua_tointeger( L, -2 ))
+									: lua_tostring( L, -2 );
 
-			const auto key = lua_tostring( L, -2 );
-
-			if ( std::strcmp(key, "id") == 0 ) {
-				gui.id = lua_tostring( L, -1 );
-			} else if ( std::strcmp(key, "name") == 0 ) {
-				gui.name = lua_tostring( L, -1 );
-			} else if ( std::strcmp(key, "size") == 0 ) {
-				lua_read_gui_size( L, gui );
-			} else if ( std::strcmp(key, "data") == 0 ) {
-				gui.data = lua_tostring( L, -1 );
-			} else {
-				std::cout << "Lörn to spell! Unknown Lua gui key: '" << key << "'" << std::endl;
+			if ( lua_istable( L, -1 ))
+			{
+				pt::ptree subtree;
+				lua_read_table( L, subtree, level + 2 );
+				tree.put_child( key, subtree );
 			}
+			else
+			{
+				const std::string val = lua_isnumber( L, -1 )
+										? std::to_string( lua_tointeger( L, -1 ))
+										: lua_tostring( L, -1 );
 
-			package->gui_templates.push_back( gui );
+				tree.put( key, val );
+			}
 
 			lua_pop( L, 1 );
 		}
-
-		return 0;
 	}
 
 	int lua_read_gui( lua_State* L )
@@ -178,13 +156,19 @@ namespace
 			return 0;
 
 		auto package = static_cast< PackageData * >( lua_touserdata(L, lua_upvalueindex(1)) );
+		pt::ptree tree;
 
 		lua_pushnil( L );
 		while ( lua_next(L, 1) != 0 )
 		{
-			lua_read_gui_entry( L );
+			lua_read_table( L, tree, 3 );
 			lua_pop( L, 1 );
 		}
+
+		std::cout << std::endl;
+		pt::write_xml( std::cout, tree );
+		std::cout << std::endl;
+		std::cout << std::endl;
 
 		return 0;
 	}
