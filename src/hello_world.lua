@@ -11,5 +11,6 @@ shaders {
 }
 
 gui {
-	{ id = "boxart", name = "bitmap", size = {400,200}, data = "${boxart}" },
+	{ id = "boxart", kind = "bitmap", pos = { 0, 0 }, shader = "debug", data = "img_test_bmp" },
+	--{ id = "boxart", kind = "bitmap", pos = {400,200}, data = "${boxart}" },
 }

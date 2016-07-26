@@ -43,7 +43,7 @@ namespace
 		std::vector< std::string > shader_paths;
 
 		u32                        gui_size;
-		std::vector<pt::ptree> gui_templates;
+		std::vector<pt::ptree> gui_views;
 	};
 
 	bool is_argc( int expected_argc, int argc )
@@ -164,12 +164,12 @@ namespace
 		{
 			pt::ptree tree;
 			lua_read_table( L, tree, 3 );
-			package->gui_templates.push_back( tree );
+			package->gui_views.push_back( tree );
 			++package->gui_size;
 			lua_pop( L, 1 );
 		}
 
-		for ( auto& t : package->gui_templates )
+		for ( auto& t : package->gui_views )
 		{
 			std::cout << std::endl;
 			pt::write_xml( std::cout, t );
@@ -222,7 +222,7 @@ void RetroResource::PackageLoader_Lua::load_gui_views( pt::ptree* views, Handle*
 		auto& view = views[ i ];
 
 		Handle handle = _handle_manager.create();
-		const std::string name = view.get( "name", "[NAME MISSING]" );
+		const std::string name = view.get( "id", "['ID' MISSING]" );
 
 		_views.handle_index.insert( { handle.id, size1 } );
 		_views.name_index.insert( { name, size1 } );
@@ -234,7 +234,7 @@ void RetroResource::PackageLoader_Lua::load_gui_views( pt::ptree* views, Handle*
 
 		++size1;
 
-		std::cout << "[gui loader] loaded: (" << handle.id << ") " << name << std::endl;
+		std::cout << "[gui loader] loaded: (" << handle.id << ") '" << name << "'" << std::endl;
 	}
 }
 
@@ -287,7 +287,7 @@ u32 RetroResource::PackageLoader_Lua::load( const std::string * names, Handle * 
 		gui_handles.resize( package_data.gui_size );
 		_bitmap_loader.load( package_data.bitmap_names.data(), package_data.bitmap_paths.data(), bitmap_handles.data(), package_data.bitmap_size );
 		_shader_loader.load( package_data.shader_names.data(), package_data.shader_paths.data(), shader_handles.data(), package_data.shader_size );
-		load_gui_views( package_data.gui_templates.data(), gui_handles.data(), package_data.gui_size );
+		load_gui_views( package_data.gui_views.data(), gui_handles.data(), package_data.gui_size );
 
 		package_data.bitmap_size = 0;
 		package_data.shader_size = 0;
@@ -296,7 +296,7 @@ u32 RetroResource::PackageLoader_Lua::load( const std::string * names, Handle * 
 		package_data.bitmap_paths.clear();
 		package_data.shader_names.clear();
 		package_data.shader_paths.clear();
-		package_data.gui_templates.clear();
+		package_data.gui_views.clear();
 
 		Handle handle = _handle_manager.create();
 

@@ -20,6 +20,8 @@
 #include "Ui_SystemAnimator.h"
 #include "Ui_SystemRenderer.h"
 
+#include "Resource_GuiViewCollection.h"
+
 #define A_RETRO_UI_USE_SDL 1
 #define A_RETRO_UI_USE_OPENGL 1
 
@@ -78,6 +80,7 @@ int main( int argc, char* args[] )
 
 		builder.add< RetroUi::EntityFactory,
 				RetroResource::BitmapCollection,
+				RetroResource::GuiViewCollection,
 				RetroResource::MeshLoader,
 				RetroEcs::EntityManager,
 				RetroGraphics::IShaderManager,

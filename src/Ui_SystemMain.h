@@ -73,6 +73,8 @@ namespace RetroUi
 				_entity_factory->create_image( _main, "debug", image, glm::vec3(0) );
 			}
 
+			_entity_factory->create_view( _ui->scene, "boxart" );
+
 			_ui->focus = _c_transform->_data.entity[ _c_transform->first_child(_main) ];
 		}
 

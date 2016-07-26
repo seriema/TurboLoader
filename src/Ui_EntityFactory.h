@@ -2,6 +2,8 @@
 #define A_RETRO_UI_UI_ENTITY_FACTORY_H
 
 #include <iostream>
+#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/xml_parser.hpp>
 
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
@@ -27,38 +29,39 @@ namespace RetroUi
 {
 	using std::string;
 	using std::shared_ptr;
+	namespace pt = boost::property_tree;
 
 	class EntityFactory
 	{
-		shared_ptr< RetroResource::BitmapCollection > _bitmaps;
-		shared_ptr< RetroResource::MeshLoader >       _mesh_loader;
-		shared_ptr< RetroEcs::EntityManager >         _entity_manager;
-		shared_ptr< RetroGraphics::IShaderManager >   _shader_manager;
-		shared_ptr< RetroGraphics::ITextureManager >  _texture_manager;
-		shared_ptr< RetroGraphics::IMeshManager >     _mesh_manager;
-		shared_ptr< RetroUi::ComponentGrid >          _c_grid;
-		shared_ptr< RetroUi::ComponentTransform >     _c_transform;
-		shared_ptr< RetroUi::ComponentRender >        _c_render;
+		shared_ptr<RetroResource::BitmapCollection> _bitmaps;
+		shared_ptr<RetroResource::GuiViewCollection> _views;
+		shared_ptr<RetroResource::MeshLoader> _mesh_loader;
+		shared_ptr<RetroEcs::EntityManager> _entity_manager;
+		shared_ptr<RetroGraphics::IShaderManager> _shader_manager;
+		shared_ptr<RetroGraphics::ITextureManager> _texture_manager;
+		shared_ptr<RetroGraphics::IMeshManager> _mesh_manager;
+		shared_ptr<RetroUi::ComponentGrid> _c_grid;
+		shared_ptr<RetroUi::ComponentTransform> _c_transform;
+		shared_ptr<RetroUi::ComponentRender> _c_render;
 
 		RetroResource::Handle _quad_handle;
 
 	public:
 		EntityFactory(
-			shared_ptr< RetroResource::BitmapCollection > bitmaps,
-			shared_ptr< RetroResource::MeshLoader > mesh_loader,
-			shared_ptr< RetroEcs::EntityManager > entity_manager,
-			shared_ptr< RetroGraphics::IShaderManager > shader_manager,
-			shared_ptr< RetroGraphics::ITextureManager > texture_manager,
-			shared_ptr< RetroGraphics::IMeshManager > mesh_manager,
-			shared_ptr< RetroUi::ComponentGrid > c_grid,
-			shared_ptr< RetroUi::ComponentTransform > c_transform,
-			shared_ptr< RetroUi::ComponentRender > c_render )
-			: _entity_manager( entity_manager )
+				shared_ptr< RetroResource::BitmapCollection > bitmaps,
+				shared_ptr<RetroResource::GuiViewCollection> views,
+				shared_ptr< RetroResource::MeshLoader > mesh_loader,
+				shared_ptr< RetroEcs::EntityManager > entity_manager,
+				shared_ptr< RetroGraphics::IShaderManager > shader_manager,
+				shared_ptr< RetroGraphics::ITextureManager > texture_manager,
+				shared_ptr< RetroGraphics::IMeshManager > mesh_manager,
+				shared_ptr< RetroUi::ComponentGrid > c_grid,
+				shared_ptr< RetroUi::ComponentTransform > c_transform,
+				shared_ptr< RetroUi::ComponentRender > c_render )
+				: _bitmaps( bitmaps ), _views( views ), _mesh_manager( mesh_manager ), _entity_manager( entity_manager )
 			, _shader_manager( shader_manager )
 			, _texture_manager( texture_manager )
-			, _mesh_manager( mesh_manager )
 			, _mesh_loader( mesh_loader )
-			, _bitmaps( bitmaps )
 			, _c_grid( c_grid )
 			, _c_transform( c_transform )
 			, _c_render( c_render )
@@ -155,6 +158,35 @@ namespace RetroUi
 			_c_transform->destroy( e );
 			_c_render->destroy( e );
 			_entity_manager->destroy( e );
+		}
+
+		Entity create_view( const RetroEcs::Entity e_parent, std::string&& view_name )
+		{
+//			auto model = get_model();
+			auto& view = _views->view[ _views->name_index[ view_name ]];
+
+			if ( view.get<std::string>( "kind" ) == "bitmap" )
+			{
+				auto shader = view.get<std::string>( "shader" );
+				auto bitmap = view.get<std::string>( "data" );
+				auto pos_x = view.get<i32>( "pos.1" );
+				auto pos_y = view.get<i32>( "pos.2" );
+				glm::vec3 pos( pos_x, pos_y, 0.5f );
+				return create_image( e_parent, shader, bitmap, pos );
+			}
+
+			return Entity { RetroEcs::Aux::INVALID_HANDLE };
+		}
+
+		static pt::ptree get_model()
+		{
+			// Create empty property tree object
+			pt::ptree tree;
+
+			// Parse the XML into the property tree.
+			pt::read_xml( "res/gamelist.xml", tree );
+
+			return tree;
 		}
 	};
 }
