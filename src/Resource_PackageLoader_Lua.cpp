@@ -8,6 +8,7 @@
 
 #include "platform.h"
 #include "Resource_PackageLoader_Lua.h"
+#include "Resource_GuiViewCollection.h"
 
 namespace pt = boost::property_tree;
 
@@ -42,7 +43,7 @@ namespace
 		std::vector< std::string > shader_paths;
 
 		u32                        gui_size;
-		std::vector< GuiTemplate > gui_templates;
+		std::vector<pt::ptree> gui_templates;
 	};
 
 	bool is_argc( int expected_argc, int argc )
@@ -156,19 +157,24 @@ namespace
 			return 0;
 
 		auto package = static_cast< PackageData * >( lua_touserdata(L, lua_upvalueindex(1)) );
-		pt::ptree tree;
+
 
 		lua_pushnil( L );
 		while ( lua_next(L, 1) != 0 )
 		{
+			pt::ptree tree;
 			lua_read_table( L, tree, 3 );
+			package->gui_templates.push_back( tree );
+			++package->gui_size;
 			lua_pop( L, 1 );
 		}
 
-		std::cout << std::endl;
-		pt::write_xml( std::cout, tree );
-		std::cout << std::endl;
-		std::cout << std::endl;
+		for ( auto& t : package->gui_templates )
+		{
+			std::cout << std::endl;
+			pt::write_xml( std::cout, t );
+			std::cout << std::endl;
+		}
 
 		return 0;
 	}
@@ -180,12 +186,13 @@ RetroResource::PackageLoader_Lua::PackageLoader_Lua(
 		PackageCollection& packages,
 		MeshCollection& meshes,
 		BitmapCollection& bitmaps,
-		ShaderCollection & shaders )
+		ShaderCollection& shaders,
+		GuiViewCollection& views )
 	: _handle_manager( handle_manager )
 	, _packages( packages )
 	, _meshes( meshes )
 	, _bitmaps( bitmaps )
-	, _shaders( shaders )
+	, _shaders( shaders ), _views( views )
 	, _mesh_loader( MeshLoader(handle_manager, meshes) )
 	, _bitmap_loader( BitmapLoader(handle_manager, bitmaps) )
 	, _shader_loader( ShaderLoader(handle_manager, shaders) )
@@ -199,6 +206,36 @@ u32 RetroResource::PackageLoader_Lua::load( const std::string name, Handle & han
 {
 	load( &name, &handle );
 	return 1;
+}
+
+void RetroResource::PackageLoader_Lua::load_gui_views( pt::ptree* views, Handle* handles, const u32 size )
+{
+
+	u32 size0 = _views.handle.size();
+	u32 size1 = size0;
+
+	_views.handle.reserve( size );
+	_views.view.reserve( size );
+
+	for ( u32 i = 0; i < size; ++i )
+	{
+		auto& view = views[ i ];
+
+		Handle handle = _handle_manager.create();
+		const std::string name = view.get( "name", "[NAME MISSING]" );
+
+		_views.handle_index.insert( { handle.id, size1 } );
+		_views.name_index.insert( { name, size1 } );
+
+		_views.handle.push_back( handle );
+		_views.view.push_back( view );
+
+		handles[ size1 - size0 ] = handle;
+
+		++size1;
+
+		std::cout << "[gui loader] loaded: (" << handle.id << ") " << name << std::endl;
+	}
 }
 
 u32 RetroResource::PackageLoader_Lua::load( const std::string * names, Handle * handles, const u32 size )
@@ -250,11 +287,7 @@ u32 RetroResource::PackageLoader_Lua::load( const std::string * names, Handle * 
 		gui_handles.resize( package_data.gui_size );
 		_bitmap_loader.load( package_data.bitmap_names.data(), package_data.bitmap_paths.data(), bitmap_handles.data(), package_data.bitmap_size );
 		_shader_loader.load( package_data.shader_names.data(), package_data.shader_paths.data(), shader_handles.data(), package_data.shader_size );
-
-		for (auto &gui : package_data.gui_templates )
-		{
-			gui_handles.push_back( _handle_manager.create() );
-		}
+		load_gui_views( package_data.gui_templates.data(), gui_handles.data(), package_data.gui_size );
 
 		package_data.bitmap_size = 0;
 		package_data.shader_size = 0;

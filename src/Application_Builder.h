@@ -14,6 +14,7 @@
 #include "Resource_MeshCollection.h"
 #include "Resource_BitmapCollection.h"
 #include "Resource_ShaderCollection.h"
+#include "Resource_GuiViewCollection.h"
 #include "Resource_PackageCollection.h"
 
 #include "Resource_MeshLoader.h"
@@ -58,6 +59,7 @@ namespace RetroApplication
 			ioc.singleton< RetroResource::MeshCollection >();
 			ioc.singleton< RetroResource::BitmapCollection >();
 			ioc.singleton< RetroResource::ShaderCollection >();
+			ioc.singleton<RetroResource::GuiViewCollection>();
 			ioc.singleton< RetroResource::PackageCollection >();
 
 			ioc.singleton< RetroResource::MeshLoader >(
@@ -73,11 +75,12 @@ namespace RetroApplication
 				*ioc.resolve< RetroResource::BitmapCollection >() );
 
 			ioc.singleton< RetroResource::IPackageLoader, RetroResource::PackageLoader_Lua >(
-				*ioc.resolve< RetroResource::HandleManager >(),
-				*ioc.resolve< RetroResource::PackageCollection >(),
-				*ioc.resolve< RetroResource::MeshCollection >(),
-				*ioc.resolve< RetroResource::BitmapCollection >(),
-				*ioc.resolve< RetroResource::ShaderCollection >() );
+					*ioc.resolve< RetroResource::HandleManager >(),
+					*ioc.resolve< RetroResource::PackageCollection >(),
+					*ioc.resolve< RetroResource::MeshCollection >(),
+					*ioc.resolve< RetroResource::BitmapCollection >(),
+					*ioc.resolve<RetroResource::ShaderCollection>(),
+					*ioc.resolve<RetroResource::GuiViewCollection>());
 
 			// RETRO GRAPHICS :: REQUIRES RESOURCES
 

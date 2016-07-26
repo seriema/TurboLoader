@@ -74,6 +74,7 @@ add_library(turboloader-core
 	src/Resource_MeshCollection.h
 	src/Resource_BitmapCollection.h
 	src/Resource_ShaderCollection.h
+	src/Resource_GuiViewCollection.h
 	src/Resource_PackageCollection.h
 	src/Resource_MeshLoader.h
 	src/Resource_BitmapLoader.h

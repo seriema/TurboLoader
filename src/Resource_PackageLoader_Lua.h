@@ -5,6 +5,7 @@
 #include "Resource_MeshLoader.h"
 #include "Resource_BitmapLoader.h"
 #include "Resource_ShaderLoader.h"
+#include "Resource_GuiViewCollection.h"
 
 namespace RetroResource
 {
@@ -21,18 +22,22 @@ namespace RetroResource
 		MeshCollection&    _meshes;
 		BitmapCollection&  _bitmaps;
 		ShaderCollection&  _shaders;
+		GuiViewCollection& _views;
 
 		MeshLoader         _mesh_loader;
 		BitmapLoader       _bitmap_loader;
 		ShaderLoader       _shader_loader;
 
+		void load_gui_views( pt::ptree* views, Handle* handles, const u32 size );
+
 	public:
 		PackageLoader_Lua(
-			HandleManager& handle_manager,
-			PackageCollection& packages,
-			MeshCollection& meshes,
-			BitmapCollection& bitmaps,
-			ShaderCollection & shaders );
+				HandleManager& handle_manager,
+				PackageCollection& packages,
+				MeshCollection& meshes,
+				BitmapCollection& bitmaps,
+				ShaderCollection& shaders,
+				GuiViewCollection& views );
 
 		virtual ~PackageLoader_Lua() override;
 		virtual u32 load( const std::string name, Handle& handle ) override;
