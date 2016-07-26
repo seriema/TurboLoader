@@ -104,6 +104,7 @@ int main( int argc, char* args[] )
 				RetroUi::ComponentTransform >();
 
 		builder.system< RetroUi::SystemMain,
+				RetroResource::BitmapLoader,
 				RetroResource::IPackageLoader,
 				RetroResource::PackageCollection,
 				RetroGraphics::IShaderManager,

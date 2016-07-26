@@ -3,10 +3,10 @@
 
 #include <iostream>
 #include <boost/property_tree/ptree.hpp>
-#include <boost/property_tree/xml_parser.hpp>
 
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
+#include <regex>
 
 #include "Resource_MeshLoader.h"
 #include "Resource_BitmapCollection.h"
@@ -160,33 +160,67 @@ namespace RetroUi
 			_entity_manager->destroy( e );
 		}
 
-		Entity create_view( const RetroEcs::Entity e_parent, std::string&& view_name )
+
+		inline static std::string
+		get_value( const std::unordered_map<std::string, std::string>& var_lookup, const pt::ptree& view,
+				   const pt::ptree& model, const std::string& key )
 		{
-//			auto model = get_model();
+			if ( var_lookup.find( key ) == var_lookup.end())
+			{
+				return view.get<std::string>( key );
+			}
+
+			auto& model_key = var_lookup.at( key );
+			return model.get<std::string>( model_key );
+		}
+
+		Entity create_view( const RetroEcs::Entity e_parent, const std::string& view_name, const pt::ptree& model )
+		{
 			auto& view = _views->view[ _views->name_index[ view_name ]];
+
+			std::unordered_map<std::string, std::string> var_lookup;
+			std::regex template_syntax( "\\$\\{(\\w+)\\}" ); // Template syntax is like ES6: ${value}
+			for ( auto& kv : view )
+			{
+				std::smatch template_match;
+				std::string val = kv.second.get_value<std::string>();
+
+				while ( std::regex_search( val, template_match, template_syntax ))
+				{
+					var_lookup[ kv.first ] = template_match[ 1 ];
+					//var_lookup[ template_match[1] ] = kv.first;
+					val = template_match.suffix();
+				}
+			}
+
 
 			if ( view.get<std::string>( "kind" ) == "bitmap" )
 			{
-				auto shader = view.get<std::string>( "shader" );
-				auto bitmap = view.get<std::string>( "data" );
+//				auto shader = view.get<std::string>( "shader" );
+//				auto bitmap = view.get<std::string>( "data" );
+//				auto pos_x = view.get<i32>( "pos.1" );
+//				auto pos_y = view.get<i32>( "pos.2" );
+//				glm::vec3 pos( pos_x, pos_y, 0.5f );
+//
 				auto pos_x = view.get<i32>( "pos.1" );
 				auto pos_y = view.get<i32>( "pos.2" );
 				glm::vec3 pos( pos_x, pos_y, 0.5f );
-				return create_image( e_parent, shader, bitmap, pos );
+
+				for ( auto& m : model.get_child( "gameList" ))
+				{
+					if ( m.first != "game" )
+					{
+						continue;
+					}
+
+					auto shader = get_value( var_lookup, view, m.second, "shader" );
+					auto bitmap_name = get_value( var_lookup, view, m.second, "data" );
+
+					create_image( e_parent, shader, bitmap_name, pos );
+				}
 			}
 
 			return Entity { RetroEcs::Aux::INVALID_HANDLE };
-		}
-
-		static pt::ptree get_model()
-		{
-			// Create empty property tree object
-			pt::ptree tree;
-
-			// Parse the XML into the property tree.
-			pt::read_xml( "res/gamelist.xml", tree );
-
-			return tree;
 		}
 	};
 }
