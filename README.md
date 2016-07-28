@@ -1,6 +1,6 @@
-# a-retro-ui
-[![Build Status](https://travis-ci.com/seriema/a-retro-ui.svg?token=iZ5rGpFVHQ1ypGqzVJrC&branch=master)](https://travis-ci.com/seriema/a-retro-ui)
-[![Build status](https://ci.appveyor.com/api/projects/status/r80b07tyfr6i5wqp/branch/master?svg=true)](https://ci.appveyor.com/project/seriema/a-retro-ui/branch/master)
+# TurboLoader
+[![Build Status](https://travis-ci.org/seriema/TurboLoader.svg?branch=master)](https://travis-ci.org/seriema/TurboLoader)
+[![Build status](https://ci.appveyor.com/api/projects/status/58mtcwqo6wgkq2tf?svg=true)](https://ci.appveyor.com/project/seriema/turboloader)
 
 
 ## Building the project

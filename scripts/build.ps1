@@ -5,4 +5,4 @@
 echo "** Building project **"
 
 cmake .
-msbuild .\a_retro_ui.sln /m
+msbuild .\turboloader.sln /m

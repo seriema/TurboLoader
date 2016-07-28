@@ -22,7 +22,7 @@ build_script:
 
 test_script:
   - echo test_script
-  - .\Debug\a_retro_test.exe
+  - .\Debug\turboloader-test.exe
 
 deploy: off
 
