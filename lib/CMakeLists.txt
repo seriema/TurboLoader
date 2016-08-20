@@ -14,8 +14,7 @@ LIST(APPEND CMAKE_MODULE_PATH
 
 # Add nested dependencies before anything else as they need to be able to
 # work independently from our project setup.
-add_subdirectory("common/msdfgen-1.1")
-
+add_subdirectory("common/msdfgen")
 
 #--- PLATFORM SPECIFIC SETUP -------------------------------------------------------------------------------------------
 
