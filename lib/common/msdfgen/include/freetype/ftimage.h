@@ -456,7 +456,7 @@ FT_BEGIN_HEADER
 #define FT_CURVE_TAG_TOUCH_Y     16  /* reserved for the TrueType hinter */
 
 #define FT_CURVE_TAG_TOUCH_BOTH  ( FT_CURVE_TAG_TOUCH_X | \
-				   FT_CURVE_TAG_TOUCH_Y )
+                                   FT_CURVE_TAG_TOUCH_Y )
 
 #define  FT_Curve_Tag_On       FT_CURVE_TAG_ON
 #define  FT_Curve_Tag_Conic    FT_CURVE_TAG_CONIC
@@ -486,7 +486,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   typedef int
   (*FT_Outline_MoveToFunc)( const FT_Vector*  to,
-							void* user );
+                            void*             user );
 
 #define FT_Outline_MoveTo_Func  FT_Outline_MoveToFunc
 
@@ -512,7 +512,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   typedef int
   (*FT_Outline_LineToFunc)( const FT_Vector*  to,
-							void* user );
+                            void*             user );
 
 #define  FT_Outline_LineTo_Func  FT_Outline_LineToFunc
 
@@ -542,8 +542,8 @@ FT_BEGIN_HEADER
   /*                                                                       */
   typedef int
   (*FT_Outline_ConicToFunc)( const FT_Vector*  control,
-							 const FT_Vector* to,
-							 void* user );
+                             const FT_Vector*  to,
+                             void*             user );
 
 #define  FT_Outline_ConicTo_Func  FT_Outline_ConicToFunc
 
@@ -573,9 +573,9 @@ FT_BEGIN_HEADER
   /*                                                                       */
   typedef int
   (*FT_Outline_CubicToFunc)( const FT_Vector*  control1,
-							 const FT_Vector* control2,
-							 const FT_Vector* to,
-							 void* user );
+                             const FT_Vector*  control2,
+                             const FT_Vector*  to,
+                             void*             user );
 
 #define  FT_Outline_CubicTo_Func  FT_Outline_CubicToFunc
 
@@ -660,10 +660,10 @@ FT_BEGIN_HEADER
   /*                                                                       */
 #ifndef FT_IMAGE_TAG
 #define FT_IMAGE_TAG( value, _x1, _x2, _x3, _x4 )  \
-	  value = ( ( (unsigned long)_x1 << 24 ) | \
-		    ( (unsigned long)_x2 << 16 ) | \
-		    ( (unsigned long)_x3 << 8  ) | \
-		      (unsigned long)_x4         )
+          value = ( ( (unsigned long)_x1 << 24 ) | \
+                    ( (unsigned long)_x2 << 16 ) | \
+                    ( (unsigned long)_x3 << 8  ) | \
+                      (unsigned long)_x4         )
 #endif /* FT_IMAGE_TAG */
 
 
@@ -864,9 +864,9 @@ FT_BEGIN_HEADER
   /*                                                                       */
   typedef void
   (*FT_SpanFunc)( int             y,
-				  int count,
-				  const FT_Span* spans,
-				  void* user );
+                  int             count,
+                  const FT_Span*  spans,
+                  void*           user );
 
 #define FT_Raster_Span_Func   FT_SpanFunc
 
@@ -896,8 +896,8 @@ FT_BEGIN_HEADER
   /*                                                                       */
   typedef int
   (*FT_Raster_BitTest_Func)( int    y,
-							 int x,
-							 void* user );
+                             int    x,
+                             void*  user );
 
 
   /*************************************************************************/
@@ -924,8 +924,8 @@ FT_BEGIN_HEADER
   /*                                                                       */
   typedef void
   (*FT_Raster_BitSet_Func)( int    y,
-							int x,
-							void* user );
+                            int    x,
+                            void*  user );
 
 
   /*************************************************************************/
@@ -1071,7 +1071,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   typedef int
   (*FT_Raster_NewFunc)( void*       memory,
-						FT_Raster* raster );
+                        FT_Raster*  raster );
 
 #define  FT_Raster_New_Func    FT_Raster_NewFunc
 
@@ -1120,8 +1120,8 @@ FT_BEGIN_HEADER
   /*                                                                       */
   typedef void
   (*FT_Raster_ResetFunc)( FT_Raster       raster,
-						  unsigned char* pool_base,
-						  unsigned long pool_size );
+                          unsigned char*  pool_base,
+                          unsigned long   pool_size );
 
 #define  FT_Raster_Reset_Func   FT_Raster_ResetFunc
 
@@ -1145,8 +1145,8 @@ FT_BEGIN_HEADER
   /*                                                                       */
   typedef int
   (*FT_Raster_SetModeFunc)( FT_Raster      raster,
-							unsigned long mode,
-							void* args );
+                            unsigned long  mode,
+                            void*          args );
 
 #define  FT_Raster_Set_Mode_Func  FT_Raster_SetModeFunc
 
@@ -1186,7 +1186,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   typedef int
   (*FT_Raster_RenderFunc)( FT_Raster                raster,
-						   const FT_Raster_Params* params );
+                           const FT_Raster_Params*  params );
 
 #define  FT_Raster_Render_Func    FT_Raster_RenderFunc
 

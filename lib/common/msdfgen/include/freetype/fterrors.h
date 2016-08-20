@@ -151,11 +151,11 @@
 
   /* this macro is used to define an error */
 #define FT_ERRORDEF_( e, v, s )   \
-	  FT_ERRORDEF( FT_ERR_CAT( FT_ERR_PREFIX, e ), v + FT_ERR_BASE, s )
+          FT_ERRORDEF( FT_ERR_CAT( FT_ERR_PREFIX, e ), v + FT_ERR_BASE, s )
 
   /* this is only used for <module>_Err_Ok, which must be 0! */
 #define FT_NOERRORDEF_( e, v, s ) \
-	  FT_ERRORDEF( FT_ERR_CAT( FT_ERR_PREFIX, e ), v, s )
+          FT_ERRORDEF( FT_ERR_CAT( FT_ERR_PREFIX, e ), v, s )
 
 
 #ifdef FT_ERROR_START_LIST

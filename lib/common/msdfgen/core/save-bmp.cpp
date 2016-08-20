@@ -21,15 +21,15 @@ namespace msdfgen {
 template <typename T>
 static bool writeValue(FILE *file, T value) {
     #ifdef __BIG_ENDIAN__
-    T reverse = 0;
-    for (int i = 0; i < sizeof(T); ++i) {
-	reverse <<= 8;
-	reverse |= value&T(0xff);
-	value >>= 8;
-    }
-    return fwrite(&reverse, sizeof(T), 1, file) == 1;
+        T reverse = 0;
+        for (int i = 0; i < sizeof(T); ++i) {
+            reverse <<= 8;
+            reverse |= value&T(0xff);
+            value >>= 8;
+        }
+        return fwrite(&reverse, sizeof(T), 1, file) == 1;
     #else
-	return fwrite( &value, sizeof( T ), 1, file ) == 1;
+        return fwrite(&value, sizeof(T), 1, file) == 1;
     #endif
 }
 
@@ -63,21 +63,20 @@ static bool writeBmpHeader(FILE *file, int width, int height, int &paddedWidth) 
 bool saveBmp(const Bitmap<float> &bitmap, const char *filename) {
     FILE *file = fopen(filename, "wb");
     if (!file)
-		return false;
+        return false;
 
     int paddedWidth;
     writeBmpHeader(file, bitmap.width(), bitmap.height(), paddedWidth);
 
     const uint8_t padding[4] = { };
     for (int y = 0; y < bitmap.height(); ++y) {
-		for ( int x = 0; x < bitmap.width(); ++x )
-		{
-			uint8_t px = (uint8_t) clamp( int( bitmap( x, y ) * 0x100 ), 0xff );
-			fwrite( &px, sizeof( uint8_t ), 1, file );
-			fwrite( &px, sizeof( uint8_t ), 1, file );
-			fwrite( &px, sizeof( uint8_t ), 1, file );
-		}
-		fwrite( padding, 1, paddedWidth - 3 * bitmap.width(), file );
+        for (int x = 0; x < bitmap.width(); ++x) {
+            uint8_t px = (uint8_t) clamp(int(bitmap(x, y)*0x100), 0xff);
+            fwrite(&px, sizeof(uint8_t), 1, file);
+            fwrite(&px, sizeof(uint8_t), 1, file);
+            fwrite(&px, sizeof(uint8_t), 1, file);
+        }
+        fwrite(padding, 1, paddedWidth-3*bitmap.width(), file);
     }
 
     return !fclose(file);
@@ -86,23 +85,22 @@ bool saveBmp(const Bitmap<float> &bitmap, const char *filename) {
 bool saveBmp(const Bitmap<FloatRGB> &bitmap, const char *filename) {
     FILE *file = fopen(filename, "wb");
     if (!file)
-		return false;
+        return false;
 
     int paddedWidth;
     writeBmpHeader(file, bitmap.width(), bitmap.height(), paddedWidth);
 
     const uint8_t padding[4] = { };
     for (int y = 0; y < bitmap.height(); ++y) {
-		for ( int x = 0; x < bitmap.width(); ++x )
-		{
-			uint8_t bgr[3] = {
-					(uint8_t) clamp( int( bitmap( x, y ).b * 0x100 ), 0xff ),
-					(uint8_t) clamp( int( bitmap( x, y ).g * 0x100 ), 0xff ),
-					(uint8_t) clamp( int( bitmap( x, y ).r * 0x100 ), 0xff )
-			};
-			fwrite( bgr, sizeof( uint8_t ), 3, file );
-		}
-		fwrite( padding, 1, paddedWidth - 3 * bitmap.width(), file );
+        for (int x = 0; x < bitmap.width(); ++x) {
+            uint8_t bgr[3] = {
+                (uint8_t) clamp(int(bitmap(x, y).b*0x100), 0xff),
+                (uint8_t) clamp(int(bitmap(x, y).g*0x100), 0xff),
+                (uint8_t) clamp(int(bitmap(x, y).r*0x100), 0xff)
+            };
+            fwrite(bgr, sizeof(uint8_t), 3, file);
+        }
+        fwrite(padding, 1, paddedWidth-3*bitmap.width(), file);
     }
 
     return !fclose(file);

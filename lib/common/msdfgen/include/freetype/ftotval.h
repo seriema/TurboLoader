@@ -97,10 +97,10 @@ FT_BEGIN_HEADER
 #define FT_VALIDATE_JSTF  0x1000
 
 #define FT_VALIDATE_OT  FT_VALIDATE_BASE | \
-			FT_VALIDATE_GDEF | \
-			FT_VALIDATE_GPOS | \
-			FT_VALIDATE_GSUB | \
-			FT_VALIDATE_JSTF
+                        FT_VALIDATE_GDEF | \
+                        FT_VALIDATE_GPOS | \
+                        FT_VALIDATE_GSUB | \
+                        FT_VALIDATE_JSTF
 
   /* */
 
@@ -153,12 +153,12 @@ FT_BEGIN_HEADER
   */
   FT_EXPORT( FT_Error )
   FT_OpenType_Validate( FT_Face    face,
-						FT_UInt validation_flags,
-						FT_Bytes* BASE_table,
-						FT_Bytes* GDEF_table,
-						FT_Bytes* GPOS_table,
-						FT_Bytes* GSUB_table,
-						FT_Bytes* JSTF_table );
+                        FT_UInt    validation_flags,
+                        FT_Bytes  *BASE_table,
+                        FT_Bytes  *GDEF_table,
+                        FT_Bytes  *GPOS_table,
+                        FT_Bytes  *GSUB_table,
+                        FT_Bytes  *JSTF_table );
 
   /* */
 
@@ -184,7 +184,7 @@ FT_BEGIN_HEADER
   */
   FT_EXPORT( void )
   FT_OpenType_Free( FT_Face   face,
-					FT_Bytes table );
+                    FT_Bytes  table );
 
 
  /* */

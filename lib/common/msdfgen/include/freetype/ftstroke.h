@@ -220,7 +220,7 @@ FT_BEGIN_HEADER
    */
   FT_EXPORT( FT_Error )
   FT_Stroker_New( FT_Library   library,
-				  FT_Stroker* astroker );
+                  FT_Stroker  *astroker );
 
 
   /**************************************************************
@@ -254,10 +254,10 @@ FT_BEGIN_HEADER
    */
   FT_EXPORT( void )
   FT_Stroker_Set( FT_Stroker           stroker,
-				  FT_Fixed radius,
-				  FT_Stroker_LineCap line_cap,
-				  FT_Stroker_LineJoin line_join,
-				  FT_Fixed miter_limit );
+                  FT_Fixed             radius,
+                  FT_Stroker_LineCap   line_cap,
+                  FT_Stroker_LineJoin  line_join,
+                  FT_Fixed             miter_limit );
 
 
   /**************************************************************
@@ -314,8 +314,8 @@ FT_BEGIN_HEADER
    */
   FT_EXPORT( FT_Error )
   FT_Stroker_ParseOutline( FT_Stroker   stroker,
-						   FT_Outline* outline,
-						   FT_Bool opened );
+                           FT_Outline*  outline,
+                           FT_Bool      opened );
 
 
   /**************************************************************
@@ -345,8 +345,8 @@ FT_BEGIN_HEADER
    */
   FT_EXPORT( FT_Error )
   FT_Stroker_BeginSubPath( FT_Stroker  stroker,
-						   FT_Vector* to,
-						   FT_Bool open );
+                           FT_Vector*  to,
+                           FT_Bool     open );
 
 
   /**************************************************************
@@ -398,7 +398,7 @@ FT_BEGIN_HEADER
    */
   FT_EXPORT( FT_Error )
   FT_Stroker_LineTo( FT_Stroker  stroker,
-					 FT_Vector* to );
+                     FT_Vector*  to );
 
 
   /**************************************************************
@@ -429,8 +429,8 @@ FT_BEGIN_HEADER
    */
   FT_EXPORT( FT_Error )
   FT_Stroker_ConicTo( FT_Stroker  stroker,
-					  FT_Vector* control,
-					  FT_Vector* to );
+                      FT_Vector*  control,
+                      FT_Vector*  to );
 
 
   /**************************************************************
@@ -464,9 +464,9 @@ FT_BEGIN_HEADER
    */
   FT_EXPORT( FT_Error )
   FT_Stroker_CubicTo( FT_Stroker  stroker,
-					  FT_Vector* control1,
-					  FT_Vector* control2,
-					  FT_Vector* to );
+                      FT_Vector*  control1,
+                      FT_Vector*  control2,
+                      FT_Vector*  to );
 
 
   /**************************************************************
@@ -510,9 +510,9 @@ FT_BEGIN_HEADER
    */
   FT_EXPORT( FT_Error )
   FT_Stroker_GetBorderCounts( FT_Stroker        stroker,
-							  FT_StrokerBorder border,
-							  FT_UInt* anum_points,
-							  FT_UInt* anum_contours );
+                              FT_StrokerBorder  border,
+                              FT_UInt          *anum_points,
+                              FT_UInt          *anum_contours );
 
 
   /**************************************************************
@@ -556,8 +556,8 @@ FT_BEGIN_HEADER
    */
   FT_EXPORT( void )
   FT_Stroker_ExportBorder( FT_Stroker        stroker,
-						   FT_StrokerBorder border,
-						   FT_Outline* outline );
+                           FT_StrokerBorder  border,
+                           FT_Outline*       outline );
 
 
   /**************************************************************
@@ -587,8 +587,8 @@ FT_BEGIN_HEADER
    */
   FT_EXPORT( FT_Error )
   FT_Stroker_GetCounts( FT_Stroker  stroker,
-						FT_UInt* anum_points,
-						FT_UInt* anum_contours );
+                        FT_UInt    *anum_points,
+                        FT_UInt    *anum_contours );
 
 
   /**************************************************************
@@ -613,7 +613,7 @@ FT_BEGIN_HEADER
    */
   FT_EXPORT( void )
   FT_Stroker_Export( FT_Stroker   stroker,
-					 FT_Outline* outline );
+                     FT_Outline*  outline );
 
 
   /**************************************************************
@@ -660,8 +660,8 @@ FT_BEGIN_HEADER
    */
   FT_EXPORT( FT_Error )
   FT_Glyph_Stroke( FT_Glyph    *pglyph,
-				   FT_Stroker stroker,
-				   FT_Bool destroy );
+                   FT_Stroker   stroker,
+                   FT_Bool      destroy );
 
 
   /**************************************************************
@@ -697,9 +697,9 @@ FT_BEGIN_HEADER
    */
   FT_EXPORT( FT_Error )
   FT_Glyph_StrokeBorder( FT_Glyph    *pglyph,
-						 FT_Stroker stroker,
-						 FT_Bool inside,
-						 FT_Bool destroy );
+                         FT_Stroker   stroker,
+                         FT_Bool      inside,
+                         FT_Bool      destroy );
 
  /* */
 

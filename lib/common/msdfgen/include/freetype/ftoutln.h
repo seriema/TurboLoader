@@ -107,8 +107,8 @@ FT_BEGIN_HEADER
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_Outline_Decompose( FT_Outline*              outline,
-						const FT_Outline_Funcs* func_interface,
-						void* user );
+                        const FT_Outline_Funcs*  func_interface,
+                        void*                    user );
 
 
   /*************************************************************************/
@@ -142,16 +142,16 @@ FT_BEGIN_HEADER
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_Outline_New( FT_Library   library,
-				  FT_UInt numPoints,
-				  FT_Int numContours,
-				  FT_Outline* anoutline );
+                  FT_UInt      numPoints,
+                  FT_Int       numContours,
+                  FT_Outline  *anoutline );
 
 
   FT_EXPORT( FT_Error )
   FT_Outline_New_Internal( FT_Memory    memory,
-						   FT_UInt numPoints,
-						   FT_Int numContours,
-						   FT_Outline* anoutline );
+                           FT_UInt      numPoints,
+                           FT_Int       numContours,
+                           FT_Outline  *anoutline );
 
 
   /*************************************************************************/
@@ -180,12 +180,12 @@ FT_BEGIN_HEADER
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_Outline_Done( FT_Library   library,
-				   FT_Outline* outline );
+                   FT_Outline*  outline );
 
 
   FT_EXPORT( FT_Error )
   FT_Outline_Done_Internal( FT_Memory    memory,
-							FT_Outline* outline );
+                            FT_Outline*  outline );
 
 
   /*************************************************************************/
@@ -231,7 +231,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   FT_EXPORT( void )
   FT_Outline_Get_CBox( const FT_Outline*  outline,
-					   FT_BBox* acbox );
+                       FT_BBox           *acbox );
 
 
   /*************************************************************************/
@@ -252,8 +252,8 @@ FT_BEGIN_HEADER
   /*                                                                       */
   FT_EXPORT( void )
   FT_Outline_Translate( const FT_Outline*  outline,
-						FT_Pos xOffset,
-						FT_Pos yOffset );
+                        FT_Pos             xOffset,
+                        FT_Pos             yOffset );
 
 
   /*************************************************************************/
@@ -277,7 +277,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_Outline_Copy( const FT_Outline*  source,
-				   FT_Outline* target );
+                   FT_Outline        *target );
 
 
   /*************************************************************************/
@@ -301,7 +301,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   FT_EXPORT( void )
   FT_Outline_Transform( const FT_Outline*  outline,
-						const FT_Matrix* matrix );
+                        const FT_Matrix*   matrix );
 
 
   /*************************************************************************/
@@ -343,7 +343,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_Outline_Embolden( FT_Outline*  outline,
-					   FT_Pos strength );
+                       FT_Pos       strength );
 
 
   /*************************************************************************/
@@ -397,8 +397,8 @@ FT_BEGIN_HEADER
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_Outline_Get_Bitmap( FT_Library        library,
-						 FT_Outline* outline,
-						 const FT_Bitmap* abitmap );
+                         FT_Outline*       outline,
+                         const FT_Bitmap  *abitmap );
 
 
   /*************************************************************************/
@@ -434,8 +434,8 @@ FT_BEGIN_HEADER
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_Outline_Render( FT_Library         library,
-					 FT_Outline* outline,
-					 FT_Raster_Params* params );
+                     FT_Outline*        outline,
+                     FT_Raster_Params*  params );
 
 
  /**************************************************************************

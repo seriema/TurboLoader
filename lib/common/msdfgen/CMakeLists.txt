@@ -1,33 +1,50 @@
 cmake_minimum_required(VERSION 2.8.4)
 project(msdfgen)
 
-if(MSVC OR CYGWIN)
-	# set environmental path for our cmake/Find*.cmake scripts
-	set(ENV{FREETYPE_DIR} ${CMAKE_CURRENT_SOURCE_DIR} PARENT_SCOPE)
+# Set variables
 
-	set(MSDFGEN_PLATFORM_SPECIFIC_LIBRARIES
-		${CMAKE_CURRENT_SOURCE_DIR}/lib/freetype.lib
+if(MSVC OR CYGWIN)
+	set(MSDFGEN_LIBRARIES
+		lib/freetype
+	)
+else()
+	set(MSDFGEN_LIBRARIES
+		freetype
 	)
 endif()
 
-file(GLOB MSDFGEN_SOURCES_GLOB
-	${CMAKE_CURRENT_SOURCE_DIR}/core/*.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/lib/*.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/ext/*.cpp
-)
+add_definitions(-DMSDFGEN_STANDALONE)
 
-set(MSDFGEN_SOURCES
-	${MSDFGEN_SOURCES_GLOB}
-	PARENT_SCOPE
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2")
+
+file(GLOB MSDFGEN_SOURCES
+	"core/*.cpp"
+	"lib/*.cpp"
+	"ext/*.cpp"
 )
 
 set(MSDFGEN_INCLUDES
-	${CMAKE_CURRENT_SOURCE_DIR}
-	${CMAKE_CURRENT_SOURCE_DIR}/include
-	PARENT_SCOPE
+	include
 )
 
-set(MSDFGEN_LIBRARIES
-	${MSDFGEN_PLATFORM_SPECIFIC_LIBRARIES}
-	PARENT_SCOPE
+
+# Build
+
+include_directories(
+	${MSDFGEN_INCLUDES}
 )
+
+add_library(msdfgen
+	${MSDFGEN_SOURCES}
+)
+target_link_libraries(msdfgen
+	${MSDFGEN_LIBRARIES}
+)
+
+# We currently don't need the executable, only the lib.
+#add_executable(msdfgen-executable
+#	main.cpp
+#)
+#target_link_libraries(msdfgen-executable
+#	msdfgen
+#)

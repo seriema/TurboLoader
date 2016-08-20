@@ -20,7 +20,7 @@ EdgeHolder & Contour::addEdge() {
 
 void Contour::bounds(double &l, double &b, double &r, double &t) const {
     for (std::vector<EdgeHolder>::const_iterator edge = edges.begin(); edge != edges.end(); ++edge)
-		( *edge )->bounds( l, b, r, t );
+        (*edge)->bounds(l, b, r, t);
 }
 
 }

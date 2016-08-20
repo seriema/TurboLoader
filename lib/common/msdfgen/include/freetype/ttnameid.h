@@ -491,7 +491,7 @@ FT_BEGIN_HEADER
 #if 1  /* this looks like the correct value */
 #define TT_MS_LANGID_CHINESE_MACAU                     0x1404
 #else  /* but beware, Microsoft may change its mind...
-	  the most recent Word reference has the following: */
+          the most recent Word reference has the following: */
 #define TT_MS_LANGID_CHINESE_MACAU  TT_MS_LANGID_CHINESE_HONG_KONG
 #endif
 
@@ -675,7 +675,7 @@ FT_BEGIN_HEADER
 #define TT_MS_LANGID_KIRGHIZ_KIRGHIZSTAN /* Cyrillic*/ 0x0440
   /* alias declared in Windows 2000 */
 #define TT_MS_LANGID_KIRGHIZ_KIRGHIZ_REPUBLIC \
-	  TT_MS_LANGID_KIRGHIZ_KIRGHIZSTAN
+          TT_MS_LANGID_KIRGHIZ_KIRGHIZSTAN
 
 #define TT_MS_LANGID_SWAHILI_KENYA                     0x0441
 #define TT_MS_LANGID_TURKMEN_TURKMENISTAN              0x0442
@@ -761,7 +761,7 @@ FT_BEGIN_HEADER
 #define TT_MS_LANGID_SEPEDI_SOUTH_AFRICA               0x046c
   /* Also spelled by XPsp2 Platform SDK (2004-07-26) */
 #define TT_MS_LANGID_SOTHO_SOUTHERN_SOUTH_AFRICA \
-	  TT_MS_LANGID_SEPEDI_SOUTH_AFRICA
+          TT_MS_LANGID_SEPEDI_SOUTH_AFRICA
   /* language codes 0x046d, 0x046e and 0x046f are (still) unknown. */
 #define TT_MS_LANGID_IGBO_NIGERIA                      0x0470
 #define TT_MS_LANGID_KANURI_NIGERIA                    0x0471
@@ -851,7 +851,7 @@ FT_BEGIN_HEADER
   /* Bit  9   Cyrillic               + */
   /*          Cyrillic Supplementary   */
 #define TT_UCR_CYRILLIC                        (1L <<  9) /* U+0400-U+04FF */
-/* U+0500-U+052F */
+                                                          /* U+0500-U+052F */
   /* Bit 10   Armenian */
 #define TT_UCR_ARMENIAN                        (1L << 10) /* U+0530-U+058F */
   /* Bit 11   Hebrew */
@@ -910,16 +910,16 @@ FT_BEGIN_HEADER
   /*          Supplemental Arrows-A + */
   /*          Supplemental Arrows-B   */
 #define TT_UCR_ARROWS                          (1L <<  5) /* U+2190-U+21FF */
-/* U+27F0-U+27FF */
-/* U+2900-U+297F */
+                                                          /* U+27F0-U+27FF */
+                                                          /* U+2900-U+297F */
   /* Bit 38   Mathematical Operators               + */
   /*          Supplemental Mathematical Operators  + */
   /*          Miscellaneous Mathematical Symbols-A + */
   /*          Miscellaneous Mathematical Symbols-B   */
 #define TT_UCR_MATHEMATICAL_OPERATORS          (1L <<  6) /* U+2200-U+22FF */
-/* U+2A00-U+2AFF */
-/* U+27C0-U+27EF */
-/* U+2980-U+29FF */
+                                                          /* U+2A00-U+2AFF */
+                                                          /* U+27C0-U+27EF */
+                                                          /* U+2980-U+29FF */
   /* Bit 39 Miscellaneous Technical */
 #define TT_UCR_MISCELLANEOUS_TECHNICAL         (1L <<  7) /* U+2300-U+23FF */
   /* Bit 40   Control Pictures */
@@ -948,11 +948,11 @@ FT_BEGIN_HEADER
   /* Bit 50   Katakana                     + */
   /*          Katakana Phonetic Extensions   */
 #define TT_UCR_KATAKANA                        (1L << 18) /* U+30A0-U+30FF */
-/* U+31F0-U+31FF */
+                                                          /* U+31F0-U+31FF */
   /* Bit 51   Bopomofo          + */
   /*          Bopomofo Extended   */
 #define TT_UCR_BOPOMOFO                        (1L << 19) /* U+3100-U+312F */
-/* U+31A0-U+31BF */
+                                                          /* U+31A0-U+31BF */
   /* Bit 52   Hangul Compatibility Jamo */
 #define TT_UCR_HANGUL_COMPATIBILITY_JAMO       (1L << 20) /* U+3130-U+318F */
   /* Bit 53   Kanbun */
@@ -974,8 +974,8 @@ FT_BEGIN_HEADER
   /*          High Private Use Surrogates + */
   /*          Low Surrogates                */
 #define TT_UCR_SURROGATES                      (1L << 25) /* U+D800-U+DB7F */
-/* U+DB80-U+DBFF */
-/* U+DC00-U+DFFF */
+                                                          /* U+DB80-U+DBFF */
+                                                          /* U+DC00-U+DFFF */
   /* According to OpenType specs v.1.3+, setting bit 57 implies that there */
   /* is at least one codepoint beyond the Basic Multilingual Plane that is */
   /* supported by this font.  So it really means:            >= U+10000    */
@@ -993,12 +993,12 @@ FT_BEGIN_HEADER
   /*          CJK Unified Ideographs Extension B + */
   /*          Kanbun                               */
 #define TT_UCR_CJK_UNIFIED_IDEOGRAPHS          (1L << 27) /* U+4E00-U+9FFF */
-/* U+2E80-U+2EFF */
-/* U+2F00-U+2FDF */
-/* U+2FF0-U+2FFF */
-/* U+3400-U+4DB5 */
-/*U+20000-U+2A6DF*/
-/* U+3190-U+319F */
+                                                          /* U+2E80-U+2EFF */
+                                                          /* U+2F00-U+2FDF */
+                                                          /* U+2FF0-U+2FFF */
+                                                          /* U+3400-U+4DB5 */
+                                                          /*U+20000-U+2A6DF*/
+                                                          /* U+3190-U+319F */
 
   /* Private Use Area */
 
@@ -1010,7 +1010,7 @@ FT_BEGIN_HEADER
   /* Bit 61   CJK Compatibility Ideographs            + */
   /*          CJK Compatibility Ideographs Supplement   */
 #define TT_UCR_CJK_COMPATIBILITY_IDEOGRAPHS    (1L << 29) /* U+F900-U+FAFF */
-/*U+2F800-U+2FA1F*/
+                                                          /*U+2F800-U+2FA1F*/
   /* Bit 62   Alphabetic Presentation Forms */
 #define TT_UCR_ALPHABETIC_PRESENTATION_FORMS   (1L << 30) /* U+FB00-U+FB4F */
   /* Bit 63   Arabic Presentation Forms-A */
@@ -1056,15 +1056,15 @@ FT_BEGIN_HEADER
   /* Bit 83   Yi Syllables + */
   /*          Yi Radicals    */
 #define TT_UCR_YI                              (1L << 19) /* U+A000-U+A48F */
-/* U+A490-U+A4CF */
+                                                          /* U+A490-U+A4CF */
   /* Bit 84   Tagalog  + */
   /*          Hanunoo  + */
   /*          Buhid    + */
   /*          Tagbanwa   */
 #define TT_UCR_PHILIPPINE                      (1L << 20) /* U+1700-U+171F */
-/* U+1720-U+173F */
-/* U+1740-U+175F */
-/* U+1760-U+177F */
+                                                          /* U+1720-U+173F */
+                                                          /* U+1740-U+175F */
+                                                          /* U+1760-U+177F */
   /* Bit 85   Old Italic */
 #define TT_UCR_OLD_ITALIC                      (1L << 21) /*U+10300-U+1032F*/
   /* Bit 86   Gothic */
@@ -1074,13 +1074,13 @@ FT_BEGIN_HEADER
   /* Bit 88   Byzantine Musical Symbols + */
   /*          Musical Symbols             */
 #define TT_UCR_MUSICAL_SYMBOLS                 (1L << 24) /*U+1D000-U+1D0FF*/
-/*U+1D100-U+1D1FF*/
+                                                          /*U+1D100-U+1D1FF*/
   /* Bit 89   Mathematical Alphanumeric Symbols */
 #define TT_UCR_MATH_ALPHANUMERIC_SYMBOLS       (1L << 25) /*U+1D400-U+1D7FF*/
   /* Bit 90   Private Use (plane 15) + */
   /*          Private Use (plane 16)   */
 #define TT_UCR_PRIVATE_USE_SUPPLEMENTARY       (1L << 26) /*U+F0000-U+FFFFD*/
-/*U+100000-U+10FFFD*/
+                                                        /*U+100000-U+10FFFD*/
   /* Bit 91   Variation Selectors */
 #define TT_UCR_VARIATION_SELECTORS             (1L << 27) /* U+FE00-U+FE0F */
   /* Bit 92   Tags */
@@ -1111,14 +1111,14 @@ FT_BEGIN_HEADER
   /* If you get a warning with such a compiler, use the -i40 switch.       */
   /*                                                                       */
 #define TT_UCR_ARABIC_PRESENTATION_FORMS_A      \
-	 TT_UCR_ARABIC_PRESENTATIONS_A
+         TT_UCR_ARABIC_PRESENTATIONS_A
 #define TT_UCR_ARABIC_PRESENTATION_FORMS_B      \
-	 TT_UCR_ARABIC_PRESENTATIONS_B
+         TT_UCR_ARABIC_PRESENTATIONS_B
 
 #define TT_UCR_COMBINING_DIACRITICAL_MARKS      \
-	 TT_UCR_COMBINING_DIACRITICS
+         TT_UCR_COMBINING_DIACRITICS
 #define TT_UCR_COMBINING_DIACRITICAL_MARKS_SYMB \
-	 TT_UCR_COMBINING_DIACRITICS_SYMB
+         TT_UCR_COMBINING_DIACRITICS_SYMB
 
 
 #endif /* !HAVE_LIMIT_ON_IDENTS */

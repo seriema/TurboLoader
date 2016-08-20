@@ -1,0 +1,15 @@
+platform:
+- x86
+
+environment:
+  matrix:
+
+# VS 2015
+  - BUILD_TYPE: cmake
+    VS_VERSION: Visual Studio 14
+
+shallow_clone: true
+
+build_script:
+  - cmake .
+  - msbuild .\ALL_BUILD.vcxproj /m

@@ -498,10 +498,10 @@ FT_BEGIN_HEADER
 
 #ifndef FT_ENC_TAG
 #define FT_ENC_TAG( value, a, b, c, d )         \
-	  value = ( ( (FT_UInt32)(a) << 24 ) |  \
-		    ( (FT_UInt32)(b) << 16 ) |  \
-		    ( (FT_UInt32)(c) <<  8 ) |  \
-		      (FT_UInt32)(d)         )
+          value = ( ( (FT_UInt32)(a) << 24 ) |  \
+                    ( (FT_UInt32)(b) << 16 ) |  \
+                    ( (FT_UInt32)(c) <<  8 ) |  \
+                      (FT_UInt32)(d)         )
 
 #endif /* FT_ENC_TAG */
 
@@ -1049,7 +1049,7 @@ FT_BEGIN_HEADER
    *
    */
 #define FT_HAS_HORIZONTAL( face ) \
-	  ( face->face_flags & FT_FACE_FLAG_HORIZONTAL )
+          ( face->face_flags & FT_FACE_FLAG_HORIZONTAL )
 
 
   /*************************************************************************
@@ -1063,7 +1063,7 @@ FT_BEGIN_HEADER
    *
    */
 #define FT_HAS_VERTICAL( face ) \
-	  ( face->face_flags & FT_FACE_FLAG_VERTICAL )
+          ( face->face_flags & FT_FACE_FLAG_VERTICAL )
 
 
   /*************************************************************************
@@ -1077,7 +1077,7 @@ FT_BEGIN_HEADER
    *
    */
 #define FT_HAS_KERNING( face ) \
-	  ( face->face_flags & FT_FACE_FLAG_KERNING )
+          ( face->face_flags & FT_FACE_FLAG_KERNING )
 
 
   /*************************************************************************
@@ -1092,7 +1092,7 @@ FT_BEGIN_HEADER
    *
    */
 #define FT_IS_SCALABLE( face ) \
-	  ( face->face_flags & FT_FACE_FLAG_SCALABLE )
+          ( face->face_flags & FT_FACE_FLAG_SCALABLE )
 
 
   /*************************************************************************
@@ -1111,7 +1111,7 @@ FT_BEGIN_HEADER
    *
    */
 #define FT_IS_SFNT( face ) \
-	  ( face->face_flags & FT_FACE_FLAG_SFNT )
+          ( face->face_flags & FT_FACE_FLAG_SFNT )
 
 
   /*************************************************************************
@@ -1126,7 +1126,7 @@ FT_BEGIN_HEADER
    *
    */
 #define FT_IS_FIXED_WIDTH( face ) \
-	  ( face->face_flags & FT_FACE_FLAG_FIXED_WIDTH )
+          ( face->face_flags & FT_FACE_FLAG_FIXED_WIDTH )
 
 
   /*************************************************************************
@@ -1141,7 +1141,7 @@ FT_BEGIN_HEADER
    *
    */
 #define FT_HAS_FIXED_SIZES( face ) \
-	  ( face->face_flags & FT_FACE_FLAG_FIXED_SIZES )
+          ( face->face_flags & FT_FACE_FLAG_FIXED_SIZES )
 
   /* */
 
@@ -1169,7 +1169,7 @@ FT_BEGIN_HEADER
    *
    */
 #define FT_HAS_GLYPH_NAMES( face ) \
-	  ( face->face_flags & FT_FACE_FLAG_GLYPH_NAMES )
+          ( face->face_flags & FT_FACE_FLAG_GLYPH_NAMES )
 
 
   /*************************************************************************
@@ -1184,7 +1184,7 @@ FT_BEGIN_HEADER
    *
    */
 #define FT_HAS_MULTIPLE_MASTERS( face ) \
-	  ( face->face_flags & FT_FACE_FLAG_MULTIPLE_MASTERS )
+          ( face->face_flags & FT_FACE_FLAG_MULTIPLE_MASTERS )
 
 
   /*************************************************************************/
@@ -1770,9 +1770,9 @@ FT_BEGIN_HEADER
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_New_Face( FT_Library   library,
-			   const char* filepathname,
-			   FT_Long face_index,
-			   FT_Face* aface );
+               const char*  filepathname,
+               FT_Long      face_index,
+               FT_Face     *aface );
 
 
   /*************************************************************************/
@@ -1808,10 +1808,10 @@ FT_BEGIN_HEADER
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_New_Memory_Face( FT_Library      library,
-					  const FT_Byte* file_base,
-					  FT_Long file_size,
-					  FT_Long face_index,
-					  FT_Face* aface );
+                      const FT_Byte*  file_base,
+                      FT_Long         file_size,
+                      FT_Long         face_index,
+                      FT_Face        *aface );
 
 
   /*************************************************************************/
@@ -1861,9 +1861,9 @@ FT_BEGIN_HEADER
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_Open_Face( FT_Library           library,
-				const FT_Open_Args* args,
-				FT_Long face_index,
-				FT_Face* aface );
+                const FT_Open_Args*  args,
+                FT_Long              face_index,
+                FT_Face             *aface );
 
 
   /*************************************************************************/
@@ -1885,7 +1885,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_Attach_File( FT_Face      face,
-				  const char* filepathname );
+                  const char*  filepathname );
 
 
   /*************************************************************************/
@@ -1920,7 +1920,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_Attach_Stream( FT_Face        face,
-					FT_Open_Args* parameters );
+                    FT_Open_Args*  parameters );
 
 
   /*************************************************************************/
@@ -1962,7 +1962,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_Select_Size( FT_Face  face,
-				  FT_Int strike_index );
+                  FT_Int   strike_index );
 
 
   /*************************************************************************/
@@ -2083,7 +2083,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_Request_Size( FT_Face          face,
-				   FT_Size_Request req );
+                   FT_Size_Request  req );
 
 
   /*************************************************************************/
@@ -2123,10 +2123,10 @@ FT_BEGIN_HEADER
 
   FT_EXPORT( FT_Error )
   FT_Set_Char_Size( FT_Face     face,
-					FT_F26Dot6 char_width,
-					FT_F26Dot6 char_height,
-					FT_UInt horz_resolution,
-					FT_UInt vert_resolution );
+                    FT_F26Dot6  char_width,
+                    FT_F26Dot6  char_height,
+                    FT_UInt     horz_resolution,
+                    FT_UInt     vert_resolution );
 
 
   /*************************************************************************/
@@ -2151,8 +2151,8 @@ FT_BEGIN_HEADER
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_Set_Pixel_Sizes( FT_Face  face,
-					  FT_UInt pixel_width,
-					  FT_UInt pixel_height );
+                      FT_UInt  pixel_width,
+                      FT_UInt  pixel_height );
 
 
   /*************************************************************************/
@@ -2188,8 +2188,8 @@ FT_BEGIN_HEADER
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_Load_Glyph( FT_Face   face,
-				 FT_UInt glyph_index,
-				 FT_Int32 load_flags );
+                 FT_UInt   glyph_index,
+                 FT_Int32  load_flags );
 
 
   /*************************************************************************/
@@ -2223,8 +2223,8 @@ FT_BEGIN_HEADER
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_Load_Char( FT_Face   face,
-				FT_ULong char_code,
-				FT_Int32 load_flags );
+                FT_ULong  char_code,
+                FT_Int32  load_flags );
 
 
   /*************************************************************************
@@ -2492,8 +2492,8 @@ FT_BEGIN_HEADER
   /*                                                                       */
   FT_EXPORT( void )
   FT_Set_Transform( FT_Face     face,
-					FT_Matrix* matrix,
-					FT_Vector* delta );
+                    FT_Matrix*  matrix,
+                    FT_Vector*  delta );
 
 
   /*************************************************************************/
@@ -2595,7 +2595,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_Render_Glyph( FT_GlyphSlot    slot,
-				   FT_Render_Mode render_mode );
+                   FT_Render_Mode  render_mode );
 
 
   /*************************************************************************/
@@ -2697,10 +2697,10 @@ FT_BEGIN_HEADER
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_Get_Kerning( FT_Face     face,
-				  FT_UInt left_glyph,
-				  FT_UInt right_glyph,
-				  FT_UInt kern_mode,
-				  FT_Vector* akerning );
+                  FT_UInt     left_glyph,
+                  FT_UInt     right_glyph,
+                  FT_UInt     kern_mode,
+                  FT_Vector  *akerning );
 
 
   /*************************************************************************/
@@ -2726,9 +2726,9 @@ FT_BEGIN_HEADER
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_Get_Track_Kerning( FT_Face    face,
-						FT_Fixed point_size,
-						FT_Int degree,
-						FT_Fixed* akerning );
+                        FT_Fixed   point_size,
+                        FT_Int     degree,
+                        FT_Fixed*  akerning );
 
 
   /*************************************************************************/
@@ -2769,9 +2769,9 @@ FT_BEGIN_HEADER
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_Get_Glyph_Name( FT_Face     face,
-					 FT_UInt glyph_index,
-					 FT_Pointer buffer,
-					 FT_UInt buffer_max );
+                     FT_UInt     glyph_index,
+                     FT_Pointer  buffer,
+                     FT_UInt     buffer_max );
 
 
   /*************************************************************************/
@@ -2826,7 +2826,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_Select_Charmap( FT_Face      face,
-					 FT_Encoding encoding );
+                     FT_Encoding  encoding );
 
 
   /*************************************************************************/
@@ -2853,7 +2853,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_Set_Charmap( FT_Face     face,
-				  FT_CharMap charmap );
+                  FT_CharMap  charmap );
 
 
   /*************************************************************************
@@ -2903,7 +2903,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   FT_EXPORT( FT_UInt )
   FT_Get_Char_Index( FT_Face   face,
-					 FT_ULong charcode );
+                     FT_ULong  charcode );
 
 
   /*************************************************************************/
@@ -2951,7 +2951,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   FT_EXPORT( FT_ULong )
   FT_Get_First_Char( FT_Face   face,
-					 FT_UInt* agindex );
+                     FT_UInt  *agindex );
 
 
   /*************************************************************************/
@@ -2985,8 +2985,8 @@ FT_BEGIN_HEADER
   /*                                                                       */
   FT_EXPORT( FT_ULong )
   FT_Get_Next_Char( FT_Face    face,
-					FT_ULong char_code,
-					FT_UInt* agindex );
+                    FT_ULong   char_code,
+                    FT_UInt   *agindex );
 
 
   /*************************************************************************/
@@ -3008,7 +3008,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   FT_EXPORT( FT_UInt )
   FT_Get_Name_Index( FT_Face     face,
-					 FT_String* glyph_name );
+                     FT_String*  glyph_name );
 
 
   /*************************************************************************
@@ -3083,12 +3083,12 @@ FT_BEGIN_HEADER
    */
   FT_EXPORT( FT_Error )
   FT_Get_SubGlyph_Info( FT_GlyphSlot  glyph,
-						FT_UInt sub_index,
-						FT_Int* p_index,
-						FT_UInt* p_flags,
-						FT_Int* p_arg1,
-						FT_Int* p_arg2,
-						FT_Matrix* p_transform );
+                        FT_UInt       sub_index,
+                        FT_Int       *p_index,
+                        FT_UInt      *p_flags,
+                        FT_Int       *p_arg1,
+                        FT_Int       *p_arg2,
+                        FT_Matrix    *p_transform );
 
 
   /*************************************************************************/
@@ -3145,8 +3145,8 @@ FT_BEGIN_HEADER
   /*                                                                       */
   FT_EXPORT( FT_Long )
   FT_MulDiv( FT_Long  a,
-			 FT_Long b,
-			 FT_Long c );
+             FT_Long  b,
+             FT_Long  c );
 
 
   /*************************************************************************/
@@ -3180,7 +3180,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   FT_EXPORT( FT_Long )
   FT_MulFix( FT_Long  a,
-			 FT_Long b );
+             FT_Long  b );
 
 
   /*************************************************************************/
@@ -3208,7 +3208,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   FT_EXPORT( FT_Long )
   FT_DivFix( FT_Long  a,
-			 FT_Long b );
+             FT_Long  b );
 
 
   /*************************************************************************/
@@ -3286,7 +3286,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   FT_EXPORT( void )
   FT_Vector_Transform( FT_Vector*        vec,
-					   const FT_Matrix* matrix );
+                       const FT_Matrix*  matrix );
 
 
   /*************************************************************************/
@@ -3363,9 +3363,9 @@ FT_BEGIN_HEADER
   /*                                                                       */
   FT_EXPORT( void )
   FT_Library_Version( FT_Library   library,
-					  FT_Int* amajor,
-					  FT_Int* aminor,
-					  FT_Int* apatch );
+                      FT_Int      *amajor,
+                      FT_Int      *aminor,
+                      FT_Int      *apatch );
 
 
   /*************************************************************************/
@@ -3421,7 +3421,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   FT_EXPORT( FT_Bool )
   FT_Face_SetUnpatentedHinting( FT_Face  face,
-								FT_Bool value );
+                                FT_Bool  value );
 
   /* */
 

@@ -205,17 +205,17 @@ FT_BEGIN_HEADER
    */
   typedef FT_Error
   (*FTC_Face_Requester)( FTC_FaceID  face_id,
-						 FT_Library library,
-						 FT_Pointer request_data,
-						 FT_Face* aface );
+                         FT_Library  library,
+                         FT_Pointer  request_data,
+                         FT_Face*    aface );
 
  /* */
 
 #define FT_POINTER_TO_ULONG( p )  ( (FT_ULong)(FT_Pointer)(p) )
 
 #define FTC_FACE_ID_HASH( i )                                \
-	  ((FT_UInt32)(( FT_POINTER_TO_ULONG( i ) >> 3 ) ^   \
-		       ( FT_POINTER_TO_ULONG( i ) << 7 ) ) )
+          ((FT_UInt32)(( FT_POINTER_TO_ULONG( i ) >> 3 ) ^   \
+                       ( FT_POINTER_TO_ULONG( i ) << 7 ) ) )
 
 
   /*************************************************************************/
@@ -309,12 +309,12 @@ FT_BEGIN_HEADER
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FTC_Manager_New( FT_Library          library,
-				   FT_UInt max_faces,
-				   FT_UInt max_sizes,
-				   FT_ULong max_bytes,
-				   FTC_Face_Requester requester,
-				   FT_Pointer req_data,
-				   FTC_Manager* amanager );
+                   FT_UInt             max_faces,
+                   FT_UInt             max_sizes,
+                   FT_ULong            max_bytes,
+                   FTC_Face_Requester  requester,
+                   FT_Pointer          req_data,
+                   FTC_Manager        *amanager );
 
 
   /*************************************************************************/
@@ -390,8 +390,8 @@ FT_BEGIN_HEADER
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FTC_Manager_LookupFace( FTC_Manager  manager,
-						  FTC_FaceID face_id,
-						  FT_Face* aface );
+                          FTC_FaceID   face_id,
+                          FT_Face     *aface );
 
 
   /*************************************************************************/
@@ -476,8 +476,8 @@ FT_BEGIN_HEADER
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FTC_Manager_LookupSize( FTC_Manager  manager,
-						  FTC_Scaler scaler,
-						  FT_Size* asize );
+                          FTC_Scaler   scaler,
+                          FT_Size     *asize );
 
 
   /*************************************************************************/
@@ -497,7 +497,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   FT_EXPORT( void )
   FTC_Node_Unref( FTC_Node     node,
-				  FTC_Manager manager );
+                  FTC_Manager  manager );
 
 
   /*************************************************************************
@@ -529,7 +529,7 @@ FT_BEGIN_HEADER
    */
   FT_EXPORT( void )
   FTC_Manager_RemoveFaceID( FTC_Manager  manager,
-							FTC_FaceID face_id );
+                            FTC_FaceID   face_id );
 
 
   /*************************************************************************/
@@ -578,7 +578,7 @@ FT_BEGIN_HEADER
    */
   FT_EXPORT( FT_Error )
   FTC_CMapCache_New( FTC_Manager     manager,
-					 FTC_CMapCache* acache );
+                     FTC_CMapCache  *acache );
 
 
   /************************************************************************
@@ -609,9 +609,9 @@ FT_BEGIN_HEADER
    */
   FT_EXPORT( FT_UInt )
   FTC_CMapCache_Lookup( FTC_CMapCache  cache,
-						FTC_FaceID face_id,
-						FT_Int cmap_index,
-						FT_UInt32 char_code );
+                        FTC_FaceID     face_id,
+                        FT_Int         cmap_index,
+                        FT_UInt32      char_code );
 
 
   /*************************************************************************/
@@ -681,14 +681,14 @@ FT_BEGIN_HEADER
 
 
 #define FTC_IMAGE_TYPE_COMPARE( d1, d2 )      \
-	  ( (d1)->face_id == (d2)->face_id && \
-	    (d1)->width   == (d2)->width   && \
-	    (d1)->flags   == (d2)->flags   )
+          ( (d1)->face_id == (d2)->face_id && \
+            (d1)->width   == (d2)->width   && \
+            (d1)->flags   == (d2)->flags   )
 
 #define FTC_IMAGE_TYPE_HASH( d )                          \
-	  (FT_UFast)( FTC_FACE_ID_HASH( (d)->face_id )  ^ \
-		      ( (d)->width << 8 ) ^ (d)->height ^ \
-		      ( (d)->flags << 4 )               )
+          (FT_UFast)( FTC_FACE_ID_HASH( (d)->face_id )  ^ \
+                      ( (d)->width << 8 ) ^ (d)->height ^ \
+                      ( (d)->flags << 4 )               )
 
 
   /*************************************************************************/
@@ -723,7 +723,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FTC_ImageCache_New( FTC_Manager      manager,
-					  FTC_ImageCache* acache );
+                      FTC_ImageCache  *acache );
 
 
   /*************************************************************************/
@@ -770,10 +770,10 @@ FT_BEGIN_HEADER
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FTC_ImageCache_Lookup( FTC_ImageCache  cache,
-						 FTC_ImageType type,
-						 FT_UInt gindex,
-						 FT_Glyph* aglyph,
-						 FTC_Node* anode );
+                         FTC_ImageType   type,
+                         FT_UInt         gindex,
+                         FT_Glyph       *aglyph,
+                         FTC_Node       *anode );
 
 
   /*************************************************************************/
@@ -823,11 +823,11 @@ FT_BEGIN_HEADER
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FTC_ImageCache_LookupScaler( FTC_ImageCache  cache,
-							   FTC_Scaler scaler,
-							   FT_ULong load_flags,
-							   FT_UInt gindex,
-							   FT_Glyph* aglyph,
-							   FTC_Node* anode );
+                               FTC_Scaler      scaler,
+                               FT_ULong        load_flags,
+                               FT_UInt         gindex,
+                               FT_Glyph       *aglyph,
+                               FTC_Node       *anode );
 
 
   /*************************************************************************/
@@ -928,7 +928,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FTC_SBitCache_New( FTC_Manager     manager,
-					 FTC_SBitCache* acache );
+                     FTC_SBitCache  *acache );
 
 
   /*************************************************************************/
@@ -978,10 +978,10 @@ FT_BEGIN_HEADER
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FTC_SBitCache_Lookup( FTC_SBitCache    cache,
-						FTC_ImageType type,
-						FT_UInt gindex,
-						FTC_SBit* sbit,
-						FTC_Node* anode );
+                        FTC_ImageType    type,
+                        FT_UInt          gindex,
+                        FTC_SBit        *sbit,
+                        FTC_Node        *anode );
 
 
   /*************************************************************************/
@@ -1033,11 +1033,11 @@ FT_BEGIN_HEADER
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FTC_SBitCache_LookupScaler( FTC_SBitCache  cache,
-							  FTC_Scaler scaler,
-							  FT_ULong load_flags,
-							  FT_UInt gindex,
-							  FTC_SBit* sbit,
-							  FTC_Node* anode );
+                              FTC_Scaler     scaler,
+                              FT_ULong       load_flags,
+                              FT_UInt        gindex,
+                              FTC_SBit      *sbit,
+                              FTC_Node      *anode );
 
 
  /* */
@@ -1074,28 +1074,28 @@ FT_BEGIN_HEADER
 
 
 #define FTC_FONT_COMPARE( f1, f2 )                  \
-	  ( (f1)->face_id    == (f2)->face_id    && \
-	    (f1)->pix_width  == (f2)->pix_width  && \
-	    (f1)->pix_height == (f2)->pix_height )
+          ( (f1)->face_id    == (f2)->face_id    && \
+            (f1)->pix_width  == (f2)->pix_width  && \
+            (f1)->pix_height == (f2)->pix_height )
 
 #define FTC_FONT_HASH( f )                              \
-	  (FT_UInt32)( FTC_FACE_ID_HASH((f)->face_id) ^ \
-		       ((f)->pix_width << 8)          ^ \
-		       ((f)->pix_height)              )
+          (FT_UInt32)( FTC_FACE_ID_HASH((f)->face_id) ^ \
+                       ((f)->pix_width << 8)          ^ \
+                       ((f)->pix_height)              )
 
   typedef FTC_FontRec*  FTC_Font;
 
 
   FT_EXPORT( FT_Error )
   FTC_Manager_Lookup_Face( FTC_Manager  manager,
-			   FTC_FaceID   face_id,
-			   FT_Face     *aface );
+                           FTC_FaceID   face_id,
+                           FT_Face     *aface );
 
   FT_EXPORT( FT_Error )
   FTC_Manager_Lookup_Size( FTC_Manager  manager,
-			   FTC_Font     font,
-			   FT_Face     *aface,
-			   FT_Size     *asize );
+                           FTC_Font     font,
+                           FT_Face     *aface,
+                           FT_Size     *asize );
 
 #endif /* FT_CONFIG_OPTION_OLD_INTERNALS */
 

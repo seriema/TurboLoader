@@ -26,7 +26,7 @@ double Vector2::direction() const {
 Vector2 Vector2::normalize(bool allowZero) const {
     double len = length();
     if (len == 0)
-		return Vector2( 0, !allowZero );
+        return Vector2(0, !allowZero);
     return Vector2(x/len, y/len);
 }
 
@@ -37,7 +37,7 @@ Vector2 Vector2::getOrthogonal(bool polarity) const {
 Vector2 Vector2::getOrthonormal(bool polarity, bool allowZero) const {
     double len = length();
     if (len == 0)
-		return polarity ? Vector2( 0, !allowZero ) : Vector2( 0, -!allowZero );
+        return polarity ? Vector2(0, !allowZero) : Vector2(0, -!allowZero);
     return polarity ? Vector2(-y/len, x/len) : Vector2(y/len, -x/len);
 }
 
@@ -45,7 +45,7 @@ Vector2 Vector2::project(const Vector2 &vector, bool positive) const {
     Vector2 n = normalize(true);
     double t = dotProduct(vector, n);
     if (positive && t <= 0)
-		return Vector2();
+        return Vector2();
     return t*n;
 }
 

@@ -1,4 +1,8 @@
 # Multi-channel signed distance field generator
+[![Build Status](https://travis-ci.org/seriema/msdfgen.svg)](https://travis-ci.org/seriema/msdfgen)
+[![Build status](https://ci.appveyor.com/api/projects/status/n0akxrtbwkyjbw3e?svg=true)](https://ci.appveyor.com/project/seriema/msdfgen)
+
+**Note: This is a fork of [msdfgen](https://github.com/Chlumsky/msdfgen) and this branch is specifically for [TurboLoader](https://github.com/seriema/TurboLoader) (a UI for RetroPie).**
 
 This is a utility for generating signed distance fields from vector shapes and font glyphs,
 which serve as a texture representation that can be used in real-time graphics to efficiently reproduce said shapes.
@@ -13,6 +17,11 @@ The following comparison demonstrates the improvement in image quality.
 ![demo-msdf16](https://cloud.githubusercontent.com/assets/18639794/14770355/14cda9f8-0a70-11e6-8346-2bd14b5b832f.png)
 ![demo-sdf16](https://cloud.githubusercontent.com/assets/18639794/14770360/20c51156-0a70-11e6-8f03-ed7632d07997.png)
 ![demo-sdf32](https://cloud.githubusercontent.com/assets/18639794/14770361/251a4406-0a70-11e6-95a7-e30e235ac729.png)
+
+## New in version 1.2
+ - Option to specify that shape is defined in reverse order (-reverseorder)
+ - Option to set a seed for the edge coloring heuristic (-seed \<n\>), which can be used to adjust the output
+ - Fixed parsing of glyph contours starting that start with a curve control point.
 
 ## Getting started
 
@@ -86,7 +95,7 @@ in order to generate a distance field. Please note that all classes and function
 
  - Acquire a `Shape` object. You can either load it via `loadGlyph` or `loadSvgShape`, or construct it manually.
    It consists of closed contours, which in turn consist of edges. An edge is represented by a `LinearEdge`, `QuadraticEdge`,
-   or `CubicEdge`. You can construct them from two endpoints and 0 to 2 Bézier control points.
+   or `CubicEdge`. You can construct them from two endpoints and 0 to 2 BÃ©zier control points.
  - Normalize the shape using its `normalize` method and assign colors to edges if you need a multi-channel SDF.
    This can be performed automatically using the `edgeColoringSimple` heuristic, or manually by setting each edge's
    `color` member. Keep in mind that at least two color channels must be turned on in each edge, and iff two edges meet
@@ -106,22 +115,22 @@ using namespace msdfgen;
 int main() {
     FreetypeHandle *ft = initializeFreetype();
     if (ft) {
-	FontHandle *font = loadFont(ft, "C:\\Windows\\Fonts\\arialbd.ttf");
-	if (font) {
-	    Shape shape;
-	    if (loadGlyph(shape, font, 'A')) {
-		shape.normalize();
-		//                      max. angle
-		edgeColoringSimple(shape, 3.0);
-		//           image width, height
-		Bitmap<FloatRGB> msdf(32, 32);
-		//                     range, scale, translation
-		generateMSDF(msdf, shape, 4.0, 1.0, Vector2(4.0, 4.0));
-		savePng(msdf, "output.png");
-	    }
-	    destroyFont(font);
-	}
-	deinitializeFreetype(ft);
+        FontHandle *font = loadFont(ft, "C:\\Windows\\Fonts\\arialbd.ttf");
+        if (font) {
+            Shape shape;
+            if (loadGlyph(shape, font, 'A')) {
+                shape.normalize();
+                //                      max. angle
+                edgeColoringSimple(shape, 3.0);
+                //           image width, height
+                Bitmap<FloatRGB> msdf(32, 32);
+                //                     range, scale, translation
+                generateMSDF(msdf, shape, 4.0, 1.0, Vector2(4.0, 4.0));
+                savePng(msdf, "output.png");
+            }
+            destroyFont(font);
+        }
+        deinitializeFreetype(ft);
     }
     return 0;
 }
@@ -163,7 +172,7 @@ The text shape description has the following syntax.
  - Points in a contour are separated with semicolons.
  - The last point of each contour must be equal to the first, or the symbol `#` can be used, which represents the first point.
  - There can be an edge segment specification between any two points, also separated by semicolons.
-   This can include the edge's color (`c`, `m`, `y` or `w`) and/or one or two Bézier curve control points inside parentheses.
+   This can include the edge's color (`c`, `m`, `y` or `w`) and/or one or two BÃ©zier curve control points inside parentheses.
 
 For example,
 ```
@@ -173,4 +182,4 @@ would represent a square with magenta and yellow edges,
 ```
 { 0, 1; (+1.6, -0.8; -1.6, -0.8); # }
 ```
-is a teardrop shape formed by a single cubic Bézier curve.
+is a teardrop shape formed by a single cubic BÃ©zier curve.
