@@ -1,4 +1,6 @@
 #include <iostream>
+#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/xml_parser.hpp>
 
 #include <msdfgen.h>
 #include <msdfgen-ext.h>
@@ -22,6 +24,23 @@ extern "C"
 #include "Resource_BitmapLoader.h"
 #include "Resource_ShaderLoader.h"
 #include "Ui_SystemInput.h"
+
+namespace pt = boost::property_tree;
+
+
+inline static std::string get_value( const std::unordered_map<std::string, std::string>& var_lookup, const pt::ptree& view,
+			 const pt::ptree& model, const std::string& key )
+{
+	if ( var_lookup.find( key ) == var_lookup.end())
+	{
+		return view.get<std::string>( key );
+	}
+
+	auto& model_key = var_lookup.at( key );
+	return model.get<std::string>( model_key );
+}
+
+
 
 static int lua_hello_world( lua_State* L )
 {
